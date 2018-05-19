@@ -1,0 +1,19 @@
+import { get } from 'stores/TransportState'
+const { Headers } = window
+
+export function getSuggestions (name) {
+  return get(`${process.env.KENNEL_BASE_URL}searchByName?q=${name}`, {
+    method: 'GET',
+    headers: new Headers({
+      'Authorization': `Bearer ${process.env.KENNEL_TOKEN}`
+    })
+  })
+}
+
+export function getDetails (netid) {
+  return get(`/faculty/rac_pi/${netid}`)
+}
+
+export function getFairShareLeft (netid) {
+  return get(`/faculty/fair_share_left/${netid}`)
+}

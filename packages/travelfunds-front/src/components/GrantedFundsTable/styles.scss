@@ -1,0 +1,102 @@
+.container {
+    padding: 0 5px;
+    margin: 2em 0;
+}
+
+.actionButtons {
+    margin: 2em;
+    text-align: center;
+
+    > * + * {
+        margin-left: 1em;
+    }
+}
+
+.grantedFunds {
+    width: 100%;
+    max-width: 45em;
+    margin: 0 auto;
+
+    input[type="text"] {
+        height: 2em;
+        padding: 0 .2em;
+        max-width: 8em;
+        width: 100%;
+        text-align: right;
+
+        &:disabled {
+            color: #999;
+        }
+    }
+
+    span.error {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+
+    input.has-error {
+        border-color: #a94442;
+    }
+
+    input.remaining-box {
+        -mox-appearance: none;
+        -webkit-appearance: none;
+        border: none;
+    }
+
+    th, td {
+       text-align: center;
+    }
+
+    thead {
+        background-color: rgb(33, 150, 243);
+        margin: .5em 0;
+
+        th {
+            text-align: center;
+            font-weight: normal;
+            font-size: 1.1em;
+            padding: .5em;
+            color: rgba(255,255,255, .9);
+
+            & + th {
+                border-left: 1px solid rgba(255,255,255, .3);
+            }
+        }
+    }
+
+    tbody {
+        border-top: 1px solid rgba(0,0,0, .2);
+        border-bottom: 1px solid rgba(0,0,0, .2);
+    }
+
+    tbody tr td {
+        padding: .5em;
+    }
+
+    tbody tr:nth-child(-n+5) td:first-child {
+        background-color: rgba(0,0,0, .05);
+        border-right: 1px solid rgba(0,0,0, .1);
+        padding-left: 1em; padding-right: 1em;
+    }
+
+    tfoot tr td {
+        padding-left: .5em;
+        padding-right: .5em;
+    }
+
+    tfoot tr:first-child td {
+        padding-top: 1em;
+        padding-bottom: 0;
+    }
+
+    tfoot tr:last-child td {
+        padding-top: 1em;
+    }
+
+    tbody tr td:not(:first-child),
+    tfoot tr td:not(:first-child) {
+        text-align: right;
+    }
+}

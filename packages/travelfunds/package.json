@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "travelfunds",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development DEBUG=koa* nodemon index.js"
+  },
+  "dependencies": {
+    "koa": "^2.5.1",
+    "koa-static": "^4.0.3",
+    "nodemon": "^1.17.4",
+    "travelfunds-api": "^1.0.0",
+    "travelfunds-db": "^1.0.0",
+    "travelfunds-env": "^1.0.0",
+    "travelfunds-front": "^1.0.0"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "travelfunds-api",
+  "version": "1.0.0",
+  "dependencies": {
+    "koa-body": "^2.5.0",
+    "koa-router": "^7.4.0",
+    "lodash": "^4.17.10"
+  },
+  "devDependencies": {
+    "form-data": "^2.3.2",
+    "koa": "^2.5.1",
+    "nodemon": "^1.17.4",
+    "standard": "^11.0.1",
+    "supertest-fetch": "^1.0.4",
+    "travelfunds-db": "^1.0.0",
+    "travelfunds-env": "^1.0.0"
+  }
+}

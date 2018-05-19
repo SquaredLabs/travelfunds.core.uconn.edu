@@ -1,0 +1,54 @@
+@font-face {
+  font-family: "Proxima Nova";
+  font-style: normal;
+  font-weight: bold;
+  src: url("//uconn.edu/shared/fonts/proximanova_bold_macroman/ProximaNova-Bold-webfont.eot?#iefix") format("embedded-opentype"), url("//uconn.edu/shared/fonts/proximanova_bold_macroman/ProximaNova-Bold-webfont.svg#proxima_nova_ltsemibold") format("svg"), url("//uconn.edu/shared/fonts/proximanova_bold_macroman/ProximaNova-Bold-webfont.woff") format("woff"), url("//uconn.edu/shared/fonts/proximanova_bold_macroman/ProximaNova-Bold-webfont.ttf") format("truetype");
+}
+
+$navy-blue: #000E2F;
+$white: #FFFFFF;
+$gray: #7c878e;
+
+// The spec defines sizes in terms of px. However, this will not respond with
+// changes to the font-size of the web browser. As a result, we will calculate
+// the value in font size based units (em).
+$common-default-font-size: 16px;
+
+.container {
+    background-color: $navy-blue;
+
+    height: #{60px/$common-default-font-size}em;
+    padding: 0 #{18px/$common-default-font-size}em;
+
+    display: flex;
+    align-items: center;
+    flex: 1 0 auto;
+
+    color: $white;
+}
+
+.UCONN {
+    font-size: #{32px/$common-default-font-size}em;
+    height: .75em;
+}
+
+.universityOfConnecticut {
+    font-family: 'Proxima Nova';
+    font-size: #{18px/$common-default-font-size}em;
+    text-transform: uppercase;
+    color: rgba(255,255,255, .6);
+    letter-spacing: 2/18 + em;
+
+    display: flex;
+    align-items: center;
+
+    &::before {
+        display: inline-block;
+        content: '';
+        height: 24/18 + em;
+        background-color: rgba(255,255,255, .4);
+        width: 2/18 + em;
+        margin: 0 .75em;
+        vertical-align: middle;
+    }
+}

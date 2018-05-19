@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "travelfunds-env",
+  "version": "1.0.0",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "dotenv-expand": "^4.2.0"
+  }
+}

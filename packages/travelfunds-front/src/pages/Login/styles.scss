@@ -1,0 +1,18 @@
+.container {
+    margin: 3em auto;
+    max-width: 750px;
+    font-size: 1.25em;
+
+    @media (max-width: 782px) {
+        padding: 0 1em;
+    }
+
+    > img {
+        width: 10em;
+        fill: gray;
+    }
+}
+
+.button {
+    margin-top: 1em;
+}

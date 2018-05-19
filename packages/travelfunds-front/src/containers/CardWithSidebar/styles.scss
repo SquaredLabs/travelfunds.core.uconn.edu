@@ -1,0 +1,96 @@
+$blue500: #2196F3;
+$gray700: #616161;
+
+.container {
+    display: flex;
+    box-shadow: 0 0 3px 3px rgba(0,0,0, .1);
+    border-radius: 5px 2px 2px 5px;
+    position: relative;
+}
+
+.sidebar {
+    background-color: $blue500;
+    color: rgba(255,255,255, .9);
+
+    flex: 1;
+    padding: 0 1em 2em;
+
+    border-radius: 5px 0 0 5px;
+
+    a {
+        color: white;
+    }
+}
+
+.sidebarContent {
+    display: none;
+    position: sticky;
+    top: 1em;
+
+    &:first-child {
+        display: block;
+    }
+}
+
+.card {
+    flex: 3;
+}
+
+.progressOverlayContainer {
+    display: none;
+    position: absolute; left: 0;
+    width: 100%; height: 100%;
+
+    border-radius: 5px 2px 2px 5px;
+    overflow: hidden;
+    // Material-UI raised buttons are on a different layer than 0. We'll make
+    // sure to cover them with our own z-index.
+    z-index: 1;
+
+    &.progressActive {
+        display: block;
+    }
+}
+
+.progressOverlay {
+    background-color: transparentize($gray700, .25);
+    width: 100%; height: 100%;
+    z-index: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:global {
+    .fadeInReplace-enter {
+        opacity: 0.01;
+
+        &-active {
+            opacity: 1;
+            transition: opacity 500ms;
+        }
+    }
+
+    .fadeInReplace-leave {
+        display: none;
+    }
+
+    .progressOverlay-enter {
+        opacity: 0.01;
+
+        &-active {
+            opacity: 1;
+            transition: opacity 100ms;
+        }
+    }
+
+    .progressOverlay-leave {
+        opacity: 1;
+
+        &-active {
+            opacity: 0;
+            transition: opacity 100ms;
+        }
+    }
+}

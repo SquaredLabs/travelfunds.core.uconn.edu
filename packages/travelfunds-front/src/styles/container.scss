@@ -1,0 +1,14 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    // This is height instead of min-height since min-height does not well on
+    // IE11 for flex containers. Height will work fine here since overflowed
+    // content will be automatically visible. "overflow: visible" was added here
+    // for explicitness.
+    // See: https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
+    height: 100vh; overflow: visible;
+}
+
+.main {
+    flex: 1 0 auto;
+}
