@@ -14,11 +14,10 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-1": "^6.24.0",
     "classnames": "^2.2.5",
-    "cross-env": "^5.0.1",
     "css-loader": "^0.28.4",
     "currency-formatter": "^1.2.1",
     "dotenv-webpack": "^1.5.5",
-    "extract-text-webpack-plugin": "^3.0.2",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
     "fraction.js": "^4.0.4",
     "html-webpack-plugin": "^3.2.0",
@@ -38,8 +37,9 @@
     "style-loader": "^0.19.1",
     "travelfunds-env": "^1.0.0",
     "validatorjs": "3.13.6",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.4.5",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
@@ -48,8 +48,8 @@
   },
   "scripts": {
     "prestart": "mkdir -p public/build && touch public/build/blank.css",
-    "start": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "webpack -p",
+    "start": "webpack-dev-server --mode=development",
+    "build": "webpack --mode=production",
     "clean": "rm -rf public/build",
     "lint": "standard",
     "test": "echo \"Error: no test specified\" && exit 1"
