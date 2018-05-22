@@ -20,6 +20,7 @@ module.exports = {
   ],
   output: {
     path: path.join(__dirname, 'build'),
+    publicPath: '/',
     filename: '[name].js'
   },
   devServer: {

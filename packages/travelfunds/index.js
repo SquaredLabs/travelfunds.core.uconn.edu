@@ -1,5 +1,7 @@
 require('travelfunds-env')
 
+const fs = require('fs')
+const path = require('path')
 const Koa = require('koa')
 const static = require('koa-static')
 const api = require('travelfunds-api')
@@ -12,6 +14,14 @@ app.use(api.routes(), api.allowedMethods())
 app.context.db = db
 
 app.use(static(front.buildPath))
+
+const indexPath = path.join(front.buildPath, 'index.html')
+app.use(ctx => {
+  if (ctx.path.startsWith('/admin')) {
+    ctx.body = fs.createReadStream(indexPath)
+    ctx.type = 'text/html; charset=utf-8'
+  }
+})
 
 setImmediate(async () => {
   await db.sequelize.sync()
