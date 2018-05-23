@@ -10,10 +10,6 @@ export function getSuggestions (name) {
   })
 }
 
-export function getDetails (netid) {
-  return get(`/faculty/rac_pi/${netid}`)
-}
-
 export function getFairShareLeft (netid) {
   return get(`/faculty/fair_share_left/${netid}`)
 }

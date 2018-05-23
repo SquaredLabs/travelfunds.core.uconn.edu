@@ -1,10 +1,9 @@
 import { observable, computed, action, reaction, runInAction } from 'mobx'
 
 import UiState from 'stores/UiState'
-import { getSuggestions, getDetails, getFairShareLeft } from 'transport/faculty'
+import { getSuggestions, getFairShareLeft } from 'transport/faculty'
 import { submit } from 'transport/form'
 import FacultySuggestion from 'models/FacultySuggestion'
-import racpiIdToDepartmentMap from 'data/racpiIdToDepartmentMap.json'
 import lang from 'lang/en_US'
 import { ContactOptions } from 'config'
 
@@ -16,11 +15,9 @@ class FormState {
     firstName: '',
     lastName: '',
     email: '',
-    payrollNumber: '',
     department: '',
-    uboxNumber: '',
-    yearOfTerminalDegree: '',
-    title: ''
+    title: '',
+    yearOfTerminalDegree: ''
   }
 
   @observable.shallow contactMyself = {
@@ -93,46 +90,6 @@ class FormState {
     })
   }
 
-  @action async fetchAndFillContactDetails (netid) {
-    const racPiToContactPropertiesMap = {
-      email: 'email',
-      phone: 'phoneNumber'
-    }
-
-    const res = await getDetails(netid)
-    const payload = await res.json()
-    runInAction(() => {
-      for (const key in racPiToContactPropertiesMap) {
-        if (this.contact[racPiToContactPropertiesMap[key]] === '') {
-          this.contact[racPiToContactPropertiesMap[key]] = payload[key]
-        }
-      }
-    })
-  }
-
-  @action async fetchAndFillTravelerDetails (netid) {
-    const racPiToFacultyPropertiesMap = {
-      email: 'email',
-      payrollid: 'payrollNumber',
-      mailaddress: 'uboxNumber'
-    }
-
-    const res = await getDetails(netid)
-    const payload = await res.json()
-    runInAction(() => {
-      for (const key in racPiToFacultyPropertiesMap) {
-        if (this.traveler[racPiToFacultyPropertiesMap[key]] === '') {
-          this.traveler[racPiToFacultyPropertiesMap[key]] = payload[key]
-        }
-      }
-
-      // Department is special. We are given back an id that we have to match.
-      if (payload.deptnumber) {
-        this.traveler.department = racpiIdToDepartmentMap[payload.deptnumber]
-      }
-    })
-  }
-
   /*
    * Remaining Funds
    */
@@ -160,12 +117,12 @@ class FormState {
       travelCosts
     })
 
-    if (res.status === 200) {
+    if (res.status === 201) {
       UiState.redirectToFinishedPage()
       return
     }
 
-    if (res.status === 500) {
+    if (res.status >= 400 || res.status <= 500) {
       this.backendErrors = {
         all: [ 'Something unexpected happened. Please try again later.' ]
       }

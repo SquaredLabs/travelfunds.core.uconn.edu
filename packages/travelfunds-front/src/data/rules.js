@@ -18,7 +18,7 @@ Validator.register(
 
 Validator.register(
   'traveler_must_be_me_if_i_am_filling_for_myself',
-  value => FormState.contactOption !== ContactOptions.MYSELF || value === Cookies.get('login'),
+  value => FormState.contactOption !== ContactOptions.MYSELF || value === Cookies.get('user'),
   'You indicated earlier that you would be submitting for yourself. If this is not true, go back and enter yourself as a contact.'
 )
 
@@ -46,11 +46,9 @@ export const rules = observable({
     firstName: 'required|string',
     lastName: 'required|string',
     email: 'required|email',
-    payrollNumber: 'required|numeric|min:0|max:999999',
     department: 'required|string',
-    uboxNumber: 'required|string',
-    yearOfTerminalDegree: 'required|integer|min:1900|before_current_date|traveler_must_be_a_junior_faculty_if_senior_funds_are_used',
-    title: [ 'required', 'string', { 'in': titles } ]
+    title: [ 'required', 'string', { 'in': titles } ],
+    yearOfTerminalDegree: 'required|integer|min:1900|before_current_date|traveler_must_be_a_junior_faculty_if_senior_funds_are_used'
   },
 
   contact: computed(() => {

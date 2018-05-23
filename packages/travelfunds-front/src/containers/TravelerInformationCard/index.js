@@ -24,7 +24,6 @@ export default class extends React.Component {
     FormState.traveler.netid = suggestion.netid
     FormState.traveler.firstName = suggestion.firstName
     FormState.traveler.lastName = suggestion.lastName
-    FormState.fetchAndFillTravelerDetails(suggestion.netid)
   }
 
   render () {
@@ -76,15 +75,6 @@ export default class extends React.Component {
         errorText={errors.email}
         onBlur={() => beginValidating('email')}
       />
-      <SmartInput
-        component={TextField}
-        sidebarTextId='traveler.payrollNumber'
-        value={traveler.payrollNumber}
-        onChange={ev => { traveler.payrollNumber = ev.target.value }}
-        floatingLabelText='Payroll Number'
-        errorText={errors.payrollNumber}
-        onBlur={() => beginValidating('payrollNumber')}
-      />
       <SelectField
         value={traveler.department}
         onChange={(ev, index, val) => {
@@ -98,13 +88,6 @@ export default class extends React.Component {
       >
         { departments.map(dept => <MenuItem key={dept} value={dept} primaryText={dept} />) }
       </SelectField>
-      <TextField
-        value={traveler.uboxNumber}
-        onChange={ev => { traveler.uboxNumber = ev.target.value }}
-        floatingLabelText='Unit/U-Box Number'
-        errorText={errors.uboxNumber}
-        onBlur={() => beginValidating('uboxNumber')}
-      />
       <SelectField
         value={traveler.title}
         onChange={(ev, index, val) => {

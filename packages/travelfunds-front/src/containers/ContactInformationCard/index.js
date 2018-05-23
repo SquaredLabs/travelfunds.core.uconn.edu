@@ -20,14 +20,12 @@ export default class extends React.Component {
   @action selectContact (netid) {
     const { FormState } = this.props
     FormState.contact.netid = netid || ''
-    FormState.fetchAndFillContactDetails(netid)
   }
 
   @action selectFaculty (netid) {
     const { FormState } = this.props
     // Fetch and fill may fail. In that case, we still fill in what we do have
     FormState.traveler.netid = netid || ''
-    FormState.fetchAndFillTravelerDetails(netid)
   }
 
   @action chooseContactOption (contactOption) {

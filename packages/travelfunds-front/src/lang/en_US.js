@@ -27,7 +27,6 @@ export default {
       'This sidebar will show more information about the field you\'re editing.',
       'If you still have any questions that are not answered by the guidelines, please contact Phyllis Horvith at <a href="mailto:phyllis.horvith@uconn.edu">phyllis.horvith@uconn.edu</a>'
     ],
-    'traveler.payrollNumber': "The Traveler's employee number (as listed on time cards, paychecks, etc) is sometimes referred to as a Payroll number. This number is required in order to ensure proper processing and identification when allocating funds.",
     'traveler.yearOfTerminalDegree': 'Following the most recent AAUP contract, the year of terminal degree is used to establish whether the traveler qualifies as "junior" or early career faculty for the purposes of this program. Junior faculty are defined as those within 7 years of their terminal degree. See guidelines for more detail',
     'travelDetails.startDate': [
       'When will you be leaving?',

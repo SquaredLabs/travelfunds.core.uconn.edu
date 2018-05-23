@@ -22,13 +22,18 @@ export function submit (payload) {
       [key]: payload.travelCosts[key] || 0
     }), {})
 
-  payload = { ...payload, contact, travelDetails, travelCosts }
+  const body = {
+    ...contact,
+    ...payload.traveler,
+    ...travelDetails,
+    ...travelCosts
+  }
 
-  return post('/travelrequests', {
+  return post('/api/trips', {
     headers: new Headers({
       'Content-Type': 'application/json'
     }),
     credentials: 'same-origin',
-    body: JSON.stringify(payload)
+    body: JSON.stringify(body)
   })
 }
