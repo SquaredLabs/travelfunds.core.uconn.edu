@@ -22,25 +22,29 @@ const formSteps = [
     title: lang.formSteps.contact,
     shortName: 'contact',
     completed: () => ValidationState.contact.passes,
-    hasErrors: () => ValidationState.contact.hasErrors
+    hasErrors: () => ValidationState.contact.hasErrors,
+    component: ContactInformationCard
   },
   {
     title: lang.formSteps.traveler,
     shortName: 'traveler',
     completed: () => ValidationState.traveler.passes,
-    hasErrors: () => ValidationState.traveler.hasErrors
+    hasErrors: () => ValidationState.traveler.hasErrors,
+    component: TravelerInformationCard
   },
   {
     title: lang.formSteps.travelDetails,
     shortName: 'travelDetails',
     completed: () => ValidationState.travelDetails.passes,
-    hasErrors: () => ValidationState.travelDetails.hasErrors
+    hasErrors: () => ValidationState.travelDetails.hasErrors,
+    component: TravelDetailsCard
   },
   {
     title: lang.formSteps.travelCosts,
     shortName: 'travelCosts',
     completed: () => ValidationState.travelCosts.passes,
-    hasErrors: () => ValidationState.travelCosts.hasErrors
+    hasErrors: () => ValidationState.travelCosts.hasErrors,
+    component: TravelCostsCard
   }
 ]
 
@@ -64,12 +68,8 @@ const FormSteps = inject('FormState')(observer(({ FormState }) => (
 @inject('FormState') @observer
 export default class extends React.Component {
   renderStepperContent (stepIndex) {
-    switch (stepIndex) {
-      case 0: return <ContactInformationCard />
-      case 1: return <TravelerInformationCard />
-      case 2: return <TravelDetailsCard />
-      case 3: return <TravelCostsCard />
-    }
+    const Component = formSteps[stepIndex].component
+    return <Component />
   }
 
   render () {
