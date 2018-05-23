@@ -7,8 +7,13 @@
     "dev": "NODE_ENV=development DEBUG=koa* nodemon index.js"
   },
   "dependencies": {
+    "crypto": "^1.0.1",
     "koa": "^2.5.1",
+    "koa-mount": "^3.0.0",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.8.1",
     "koa-static": "^4.0.3",
+    "koa2-cas": "^1.0.4",
     "nodemon": "^1.17.4",
     "travelfunds-api": "^1.0.0",
     "travelfunds-db": "^1.0.0",

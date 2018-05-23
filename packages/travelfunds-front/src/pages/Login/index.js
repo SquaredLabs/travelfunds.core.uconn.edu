@@ -14,7 +14,7 @@ export default class extends React.Component {
       <RaisedButton
         className={styles.button}
         label='Login'
-        href='/user/login'
+        href='/login'
         primary
       />
     </div>

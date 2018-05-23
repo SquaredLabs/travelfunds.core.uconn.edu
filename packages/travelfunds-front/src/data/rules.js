@@ -1,5 +1,6 @@
 import Validator from 'validatorjs'
 import FormState from 'stores/FormState'
+import * as Cookies from 'js-cookie'
 import { observable, computed } from 'mobx'
 
 import { titles, participationLevels, primaryMethodsOfTravel, ContactOptions } from 'config'
@@ -17,13 +18,13 @@ Validator.register(
 
 Validator.register(
   'traveler_must_be_me_if_i_am_filling_for_myself',
-  value => FormState.contactOption !== ContactOptions.MYSELF || value === window.login.netid,
+  value => FormState.contactOption !== ContactOptions.MYSELF || value === Cookies.get('login'),
   'You indicated earlier that you would be submitting for yourself. If this is not true, go back and enter yourself as a contact.'
 )
 
 Validator.register(
   'i_must_be_traveler_or_contact',
-  value => (new Set([FormState.contact.netid, FormState.traveler.netid])).has(window.login.netid),
+  value => (new Set([FormState.contact.netid, FormState.traveler.netid])).has(Cookies.get('user')),
   'You must be either the contact or the traveling faculty.'
 )
 

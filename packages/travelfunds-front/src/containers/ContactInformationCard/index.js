@@ -1,6 +1,7 @@
 import React from 'react'
 import { action } from 'mobx'
 import { inject, observer } from 'mobx-react'
+import * as Cookies from 'js-cookie'
 
 import AutoComplete from 'material-ui/AutoComplete'
 import TextField from 'material-ui/TextField'
@@ -16,25 +17,22 @@ import styles from './styles.scss'
 
 @inject('FormState', 'ValidationState') @observer
 export default class extends React.Component {
-  @action selectContact (person) {
+  @action selectContact (netid) {
     const { FormState } = this.props
-    FormState.contact.netid = person.netid || ''
-    FormState.contact.name = `${person.firstName || ''} ${person.lastName || ''}`.trim() || ''
-    FormState.fetchAndFillContactDetails(person.netid)
+    FormState.contact.netid = netid || ''
+    FormState.fetchAndFillContactDetails(netid)
   }
 
-  @action selectFaculty (person) {
+  @action selectFaculty (netid) {
     const { FormState } = this.props
     // Fetch and fill may fail. In that case, we still fill in what we do have
-    FormState.traveler.netid = person.netid || ''
-    FormState.traveler.firstName = person.firstName || ''
-    FormState.traveler.lastName = person.lastName || ''
-    FormState.fetchAndFillTravelerDetails(person.netid)
+    FormState.traveler.netid = netid || ''
+    FormState.fetchAndFillTravelerDetails(netid)
   }
 
   @action chooseContactOption (contactOption) {
     const { FormState } = this.props
-    const currentUser = window.login
+    const currentUser = Cookies.get('user')
 
     if (contactOption === ContactOptions.MYSELF) {
       FormState.contactOption = ContactOptions.MYSELF
