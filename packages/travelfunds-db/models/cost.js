@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     expenseCategory: {
       type: DataTypes.ENUM,
       values: [
-        'Primary',
-        'Secondary',
+        'Primary Transport',
+        'Secondary Transport',
         'Mileage',
         'Registration',
         'Meals & Lodging'
@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   Cost.associate = models => {
-    Cost.belongsTo(models.Trip)
+    Cost.belongsTo(models.Trip, {
+      foreignKey: { allowNull: false },
+      onDelete: 'CASCADE'
+    })
     Cost.hasMany(models.Grant)
   }
 

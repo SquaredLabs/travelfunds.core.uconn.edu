@@ -14,5 +14,11 @@ module.exports = {
   email: 'brandon.cheng@uconn.edu',
   department: 'Computer Science & Engineering',
   title: 'Professional Tester',
-  yearOfTerminalDegree: '2019'
+  yearOfTerminalDegree: '2019',
+  // Costs
+  primaryTransport: '50.00',
+  secondaryTransport: '200.00',
+  mileage: '75.00',
+  registration: '100.25',
+  mealsAndLodging: '100.10'
 }

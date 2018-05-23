@@ -4,8 +4,13 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   Grant.associate = models => {
-    Grant.belongsTo(models.Cost)
-    Grant.belongsTo(models.Budget)
+    Grant.belongsTo(models.Cost, {
+      foreignKey: { allowNull: false },
+      onDelete: 'CASCADE'
+    })
+    Grant.belongsTo(models.Budget, {
+      foreignKey: { allowNull: false }
+    })
   }
 
   return Grant
