@@ -8,9 +8,9 @@ export const departments = [
     // Convert to a set to deduplicate departments
     new Set(
       Object.keys(racpiIdToDepartmentMap)
-      .map(key => racpiIdToDepartmentMap[key])
-      .sort())
-    .values()
+        .map(key => racpiIdToDepartmentMap[key])
+        .sort())
+      .values()
   )
 ]
 
