@@ -1,5 +1,4 @@
 module.exports = {
-  submitterNetId: 'brc15007',
   // Event
   startDate: '2018-03-03',
   endDate: '2018-05-06',

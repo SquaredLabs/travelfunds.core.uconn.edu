@@ -7,7 +7,14 @@ const routerToServer = require('../utils/router-to-server')
 const createForm = require('../utils/create-form')
 const validTrip = require('../testing/fixtures/trip-valid')
 
-const fetch = makeFetch(routerToServer(trips))
+const appHook = app => {
+  app.context.db = db
+  // An authenticated user is required to talk to controllers,
+  // so we'll mock a session here.
+  app.context.session = { netid: 'hap11113' }
+  return app
+}
+const fetch = makeFetch(routerToServer(trips, appHook))
 
 afterAll(() => db.sequelize.close())
 
@@ -49,4 +56,18 @@ test('reject a trip request that\'s missing a required field', async () => {
 
   const tripsAfter = await db.Trip.count()
   expect(tripsBefore).toBe(tripsAfter)
+})
+
+test('ensure Trip.submitterNetId is not mass assignable', async () => {
+  const trip = { ...validTrip, submitterNetId: 'mal11042' }
+  const response = await fetch('/trips', {
+    method: 'POST',
+    body: createForm(trip)
+  })
+  expect(response).toHaveProperty('status', 201)
+
+  const location = response.headers.get('Location')
+  const id = location.match(/\/([0-9]+)$/)[1]
+  expect(await db.Trip.findById(id))
+    .not.toHaveProperty('submitterNetId', 'mal11042')
 })

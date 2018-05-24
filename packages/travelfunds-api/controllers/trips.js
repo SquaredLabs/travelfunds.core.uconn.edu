@@ -11,7 +11,6 @@ const multipart = body({ multipart: true })
 router.post('/', multipart, catchValidationError(), async ctx => {
   const requestFields = ctx.request.body.fields || ctx.request.body
   const assignableTripFields = [
-    'submitterNetId',
     'eventTitle',
     'destination',
     'participationLevel',
@@ -28,7 +27,8 @@ router.post('/', multipart, catchValidationError(), async ctx => {
     ...pick(requestFields, assignableTripFields),
     duration: requestFields.startDate && requestFields.endDate
       ? [ requestFields.startDate, requestFields.endDate ]
-      : undefined
+      : undefined,
+    submitterNetId: ctx.session.netid
   }
 
   const costFormTableFieldPairs = [
