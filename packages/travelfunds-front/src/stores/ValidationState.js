@@ -1,4 +1,4 @@
-import { observable, computed, action, toJS } from 'mobx'
+import { observable, action, toJS } from 'mobx'
 import Validator from 'validatorjs'
 
 import FormState from 'stores/FormState'
@@ -18,13 +18,28 @@ import { formStepShortNames } from 'config'
  * Helpers to create a 1D object of observables and computations
  */
 
+const mapThenZip = (keys, f) =>
+  keys.reduce((acc, key) =>
+    ({ ...acc, [key]: f(key) }), {})
+
+const mapToGetterThenZip = (keys, f) => {
+  // Object spread doesn't preserve getters, so we'll go
+  // the manual & procedural route.
+  let obj = {}
+  for (const key of keys) {
+    Object.defineProperty(obj, key, {
+      get: () => f(key),
+      enumerable: true
+    })
+  }
+  return obj
+}
+
 const createShallowObservables = (keys, getInitialValue) =>
-  observable(keys.reduce((acc, key) => (
-    { ...acc, [key]: getInitialValue(key) }
-  ), {}))
+  observable(mapThenZip(keys, getInitialValue))
 
 const createShallowComputations = (keys, computation) =>
-  createShallowObservables(keys, key => computed(() => computation(key)))
+  observable(mapToGetterThenZip(keys, computation))
 
 /*
  * Helpers specific to parts of the form
@@ -101,10 +116,10 @@ const ValidationState = observable(
     ...acc,
     [step]: {
       errors: getFormStepErrors(step),
-      passes: computed(() => formStepPasses(step)),
-      hasErrors: computed(() => formStepHasErrors(step)),
+      get passes () { return formStepPasses(step) },
+      get hasErrors () { return formStepHasErrors(step) },
       beginValidating: action(field => { shouldValidate[step][field] = true }),
-      available: computed(() => formStepIsAvailable(step))
+      get available () { return formStepIsAvailable(step) }
     }
   }), {})
 )

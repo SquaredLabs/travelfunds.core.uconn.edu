@@ -1,7 +1,7 @@
 import Validator from 'validatorjs'
 import FormState from 'stores/FormState'
 import * as Cookies from 'js-cookie'
-import { observable, computed } from 'mobx'
+import { observable } from 'mobx'
 
 import { titles, participationLevels, primaryMethodsOfTravel, ContactOptions } from 'config'
 
@@ -51,7 +51,7 @@ export const rules = observable({
     yearOfTerminalDegree: 'required|integer|min:1900|before_current_date|traveler_must_be_a_junior_faculty_if_senior_funds_are_used'
   },
 
-  contact: computed(() => {
+  get contact () {
     if (FormState.contactOption === ContactOptions.MYSELF) {
       // Required with does not seem to work with mulitple properties. Likely
       // a validatorjs bug since the documentation has an example with this.
@@ -70,7 +70,7 @@ export const rules = observable({
       email: 'required|email',
       phoneNumber: 'string'
     }
-  }),
+  },
 
   travelDetails: {
     startDate: 'required|date',
