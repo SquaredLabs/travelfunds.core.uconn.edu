@@ -54,7 +54,7 @@ const FormSteps = inject('FormState')(observer(({ FormState }) => (
       <Step key={i}>
         <StepButton {...{
           completed: completed(),
-          onTouchTap: () => { FormState.currentFormIndex = i },
+          onClick: () => { FormState.currentFormIndex = i },
           icon: hasErrors() ? <WarningIcon color={red500} /> : i + 1,
           disabled: !ValidationState[shortName].available
         }}>

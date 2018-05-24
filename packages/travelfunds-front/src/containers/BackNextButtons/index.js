@@ -15,14 +15,14 @@ class BackButton extends React.Component {
     return <FlatButton
       className={styles.button}
       label='Back'
-      onTouchTap={() => FormState.currentFormIndex--}
+      onClick={() => FormState.currentFormIndex--}
     />
   }
 }
 
 @inject('FormState', 'ValidationState') @observer
 class NextButton extends React.Component {
-  onTouchTap () {
+  onClick () {
     const { FormState, ValidationState } = this.props
     const stepName = formStepShortNames[FormState.currentFormIndex]
 
@@ -43,7 +43,7 @@ class NextButton extends React.Component {
     return <RaisedButton
       className={styles.button}
       label='Next'
-      onTouchTap={() => this.onTouchTap()}
+      onClick={() => this.onClick()}
       primary
       disabled={this.disabled()}
     />
@@ -52,7 +52,7 @@ class NextButton extends React.Component {
 
 @inject('FormState', 'ValidationState', 'TransportState') @observer
 class SubmitButton extends React.Component {
-  onTouchTap () {
+  onClick () {
     const { FormState, ValidationState } = this.props
     const stepName = formStepShortNames[FormState.currentFormIndex]
 
@@ -78,7 +78,7 @@ class SubmitButton extends React.Component {
     return <RaisedButton
       className={styles.button}
       label='Send Request'
-      onTouchTap={() => this.onTouchTap()}
+      onClick={() => this.onClick()}
       secondary
       disabled={this.disabled()}
     />

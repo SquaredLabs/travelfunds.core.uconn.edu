@@ -112,13 +112,13 @@ export default class extends React.Component {
           className={styles.button}
           label={ContactOptions.OTHER}
           secondary
-          onTouchTap={() => { this.chooseContactOption(ContactOptions.OTHER) }}
+          onClick={() => { this.chooseContactOption(ContactOptions.OTHER) }}
         />
         <RaisedButton
           className={styles.button}
           label={ContactOptions.MYSELF}
           primary
-          onTouchTap={() => { this.chooseContactOption(ContactOptions.MYSELF) }}
+          onClick={() => { this.chooseContactOption(ContactOptions.MYSELF) }}
         />
       </div>
 

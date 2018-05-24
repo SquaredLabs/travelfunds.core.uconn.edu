@@ -8,7 +8,6 @@ import FormState from 'stores/FormState'
 import ValidationState from 'stores/ValidationState'
 import TransportState from 'stores/TransportState'
 
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { blue500 } from 'material-ui/styles/colors'
@@ -26,9 +25,6 @@ ReactGA.pageview(window.location.pathname)
 if (process.env.NODE_ENV === 'production') {
   Raven.config(process.env.SENTRY_DSN_FRONTEND).install()
 }
-
-// Needed by Material-UI. Will be removed in future version of MUI.
-injectTapEventPlugin()
 
 const muiTheme = getMuiTheme({
   palette: {
