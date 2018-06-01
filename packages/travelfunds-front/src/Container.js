@@ -1,5 +1,6 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
+import { Switch, Route } from 'react-router-dom'
 
 import UConnBanner from 'components/UConnBanner'
 import TallAppBar from 'components/TallAppBar'
@@ -16,14 +17,16 @@ const inDevelopment = process.env.NODE_ENV !== 'production'
 @inject('UiState') @observer
 export default class extends React.Component {
   render () {
-    const { UiState: { currentPage: Page } } = this.props
+    const { UiState } = this.props
 
     return <div className={styles.root}>
       { inDevelopment && <DevTools /> }
       <UConnBanner />
       <TallAppBar title='Faculty Travel Funding' showMenuIconButton={false} />
       <main className={styles.main}>
-        <Page />
+        <Switch>
+          <Route exact path='/' component={UiState.rootPage} />
+        </Switch>
       </main>
       <Footer />
     </div>

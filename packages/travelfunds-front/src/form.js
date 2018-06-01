@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
+import { BrowserRouter } from 'react-router-dom'
 import Raven from 'raven-js'
 
 import UiState from 'stores/UiState'
@@ -38,9 +39,11 @@ const stores = { UiState, FormState, ValidationState, TransportState }
 
 const App = () => (
   <Provider {...stores}>
-    <MuiThemeProvider theme={muiTheme}>
-      <Container />
-    </MuiThemeProvider>
+    <BrowserRouter>
+      <MuiThemeProvider theme={muiTheme}>
+        <Container />
+      </MuiThemeProvider>
+    </BrowserRouter>
   </Provider>
 )
 
