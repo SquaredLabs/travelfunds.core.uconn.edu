@@ -7,19 +7,3 @@
         flex: 0 0 48%;
     }
 }
-
-.travelPeriod {
-    display: flex;
-    justify-content: space-between;
-    height: 4.5em;
-
-    flex: 0 0 100%;
-}
-
-.datePicker {
-    flex: 0 0 48%;
-
-    > div:first-child {
-        width: 100% !important;
-    }
-}

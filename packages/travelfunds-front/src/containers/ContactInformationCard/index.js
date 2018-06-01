@@ -3,10 +3,10 @@ import { action } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import * as Cookies from 'js-cookie'
 
-import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 
 import { Accordion, AccordionChild } from 'components/Accordion'
+import SmartInput from 'containers/SmartInput'
 import BackNextButtons from 'containers/BackNextButtons'
 
 import lang from 'lang/en_US'
@@ -57,38 +57,10 @@ export default class extends React.Component {
   }
 
   renderContactFields () {
-    const { FormState, ValidationState } = this.props
-    const { contact } = FormState
-    const { contact: { errors, beginValidating } } = ValidationState
-
     return <div>
-      <br />
-      <TextField
-        label='NetID'
-        value={contact.netid}
-        onChange={ev => { contact.netid = ev.target.value }}
-        error={!!errors.netid}
-        helperText={errors.netid}
-        onBlur={() => beginValidating('netid')}
-      />
-      <br />
-      <TextField
-        label='Email Address'
-        value={contact.email}
-        onChange={ev => { contact.email = ev.target.value }}
-        error={!!errors.email}
-        helperText={errors.email}
-        onBlur={() => beginValidating('email')}
-      />
-      <br />
-      <TextField
-        label='Phone Number'
-        value={contact.phoneNumber}
-        onChange={ev => { contact.phoneNumber = ev.target.value }}
-        error={!!errors.phoneNumber}
-        helperText={errors.phoneNumber}
-        onBlur={() => beginValidating('phoneNumber')}
-      />
+      <SmartInput label='NetID' field='contact.netid' /><br />
+      <SmartInput label='Email Address' field='contact.email' /><br />
+      <SmartInput label='Phone Number' field='contact.phoneNumber' />
     </div>
   }
 
