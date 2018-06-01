@@ -12,8 +12,8 @@ export function submit (payload) {
 
   const travelDetails = {
     ...payload.travelDetails,
-    startDate: toISODateString(payload.travelDetails.startDate),
-    endDate: toISODateString(payload.travelDetails.endDate)
+    startDate: payload.travelDetails.startDate,
+    endDate: payload.travelDetails.endDate
   }
 
   const travelCosts = Object.keys(payload.travelCosts)

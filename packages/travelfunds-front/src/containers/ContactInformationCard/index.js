@@ -3,9 +3,8 @@ import { action } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import * as Cookies from 'js-cookie'
 
-import AutoComplete from 'material-ui/AutoComplete'
-import TextField from 'material-ui/TextField'
-import RaisedButton from 'material-ui/RaisedButton'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 import { Accordion, AccordionChild } from 'components/Accordion'
 import BackNextButtons from 'containers/BackNextButtons'
@@ -63,40 +62,31 @@ export default class extends React.Component {
     const { contact: { errors, beginValidating } } = ValidationState
 
     return <div>
-      <AutoComplete
-        floatingLabelText={FormState.contactOption === ContactOptions.OTHER
-          ? 'Your Name'
-          : 'Administrative Contact Name'}
-        filter={AutoComplete.caseInsensitiveFilter}
-        searchText={FormState.contact.name}
-        dataSource={FormState.contactSuggestions.map(s => s.toString())}
-        onUpdateInput={val => { FormState.contact.name = val }}
-        onNewRequest={(_, i) => this.selectContact(FormState.contactSuggestions[i])}
-        errorText={errors.name}
-        onBlur={() => beginValidating('name')}
-      />
       <br />
       <TextField
-        floatingLabelText='NetID'
+        label='NetID'
         value={contact.netid}
         onChange={ev => { contact.netid = ev.target.value }}
-        errorText={errors.netid}
+        error={!!errors.netid}
+        helperText={errors.netid}
         onBlur={() => beginValidating('netid')}
       />
       <br />
       <TextField
-        floatingLabelText='Email Address'
+        label='Email Address'
         value={contact.email}
         onChange={ev => { contact.email = ev.target.value }}
-        errorText={errors.email}
+        error={!!errors.email}
+        helperText={errors.email}
         onBlur={() => beginValidating('email')}
       />
       <br />
       <TextField
-        floatingLabelText='Phone Number'
+        label='Phone Number'
         value={contact.phoneNumber}
         onChange={ev => { contact.phoneNumber = ev.target.value }}
-        errorText={errors.phoneNumber}
+        error={!!errors.phoneNumber}
+        helperText={errors.phoneNumber}
         onBlur={() => beginValidating('phoneNumber')}
       />
     </div>
@@ -108,17 +98,19 @@ export default class extends React.Component {
       { lang.welcome.map((msg, i) => <p key={i}>{msg}</p>) }
 
       <div className={styles.willThereBeAContactButtons}>
-        <RaisedButton
+        <Button
           className={styles.button}
-          label={ContactOptions.OTHER}
-          secondary
+          variant='raised'
+          color='secondary'
           onClick={() => { this.chooseContactOption(ContactOptions.OTHER) }}
+          children={ContactOptions.OTHER}
         />
-        <RaisedButton
+        <Button
           className={styles.button}
-          label={ContactOptions.MYSELF}
-          primary
+          variant='raised'
+          color='primary'
           onClick={() => { this.chooseContactOption(ContactOptions.MYSELF) }}
+          children={ContactOptions.MYSELF}
         />
       </div>
 

@@ -2,12 +2,16 @@ import React from 'react'
 import { action } from 'mobx'
 import { inject, observer } from 'mobx-react'
 
-import AutoComplete from 'material-ui/AutoComplete'
-import TextField from 'material-ui/TextField'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
 
 import { Accordion, AccordionChild } from 'components/Accordion'
+import MaterialAutosuggest from 'components/MaterialAutosuggest'
 
 import SmartInput from 'containers/SmartInput'
 import BackNextButtons from 'containers/BackNextButtons'
@@ -35,33 +39,52 @@ export default class extends React.Component {
 
     return <div className={styles.container}>
       <div className={styles.identityFields}>
-        <AutoComplete
-          className={styles.nameAutoComplete}
-          floatingLabelText='First Name'
-          filter={AutoComplete.caseInsensitiveFilter}
-          searchText={FormState.traveler.firstName}
-          dataSource={FormState.travelerSuggestions.map(s => s.toString())}
-          onUpdateInput={val => { FormState.traveler.firstName = val }}
-          onNewRequest={(_, i) => this.selectTraveler(FormState.travelerSuggestions[i])}
-          errorText={errors.firstName}
-          onBlur={() => beginValidating('firstName')}
+        <MaterialAutosuggest
+          suggestions={[...FormState.travelerSuggestions]}
+          onSuggestionsFetchRequested={() => FormState.fetchTravelerSuggestions()}
+          onSuggestionsClearRequested={() => { FormState.travelerSuggestions = [] }}
+          getSuggestionValue={s => s.firstName}
+          inputProps={{
+            value: FormState.traveler.firstName,
+            onChange: (_, { newValue }) => {
+              FormState.traveler.firstName = newValue
+            },
+            onBlur: () => beginValidating('firstName')
+          }}
+          onSuggestionSelected={(_, { suggestion }) => {
+            this.selectTraveler(suggestion)
+          }}
+          label='First Name'
+          error={!!errors.firstName}
+          helperText={errors.firstName}
         />
-        <AutoComplete
-          className={styles.nameAutoComplete}
-          floatingLabelText='Last Name'
-          filter={AutoComplete.caseInsensitiveFilter}
-          searchText={FormState.traveler.lastName}
-          dataSource={FormState.travelerSuggestions.map(s => s.toString())}
-          onUpdateInput={val => { FormState.traveler.lastName = val }}
-          onNewRequest={(_, i) => this.selectTraveler(FormState.travelerSuggestions[i])}
-          errorText={errors.lastName}
-          onBlur={() => beginValidating('lastName')}
+        <MaterialAutosuggest
+          suggestions={[...FormState.travelerSuggestions]}
+          onSuggestionsFetchRequested={() => FormState.fetchTravelerSuggestions()}
+          onSuggestionsClearRequested={() => { FormState.travelerSuggestions = [] }}
+          getSuggestionValue={s => s.lastName}
+          inputProps={{
+            value: FormState.traveler.lastName,
+            id: 'lastName',
+            name: 'lastName',
+            onChange: (_, { newValue }) => {
+              FormState.traveler.lastName = newValue
+            },
+            onBlur: () => beginValidating('lastName')
+          }}
+          onSuggestionSelected={(_, { suggestion }) => {
+            this.selectTraveler(suggestion)
+          }}
+          label='Last Name'
+          error={!!errors.lastName}
+          helperText={errors.lastName}
         />
         <TextField
           value={traveler.netid}
           onChange={ev => { traveler.netid = ev.target.value }}
-          floatingLabelText='NetID'
-          errorText={errors.netid}
+          label='NetID'
+          error={!!errors.netid}
+          helperText={errors.netid}
           onBlur={() => beginValidating('netid')}
         />
       </div>
@@ -71,43 +94,54 @@ export default class extends React.Component {
       <TextField
         value={traveler.email}
         onChange={ev => { traveler.email = ev.target.value }}
-        floatingLabelText='Email'
-        errorText={errors.email}
+        label='Email'
+        error={!!errors.email}
+        helperText={errors.email}
         onBlur={() => beginValidating('email')}
       />
-      <SelectField
-        value={traveler.department}
-        onChange={(ev, index, val) => {
-          traveler.department = val
-          beginValidating('department')
-        }}
-        maxHeight={300}
-        autoWidth
-        floatingLabelText='Department'
-        errorText={errors.department}
-      >
-        { departments.map(dept => <MenuItem key={dept} value={dept} primaryText={dept} />) }
-      </SelectField>
-      <SelectField
-        value={traveler.title}
-        onChange={(ev, index, val) => {
-          traveler.title = val
-          beginValidating('title')
-        }}
-        maxHeight={300}
-        autoWidth
-        floatingLabelText='Title'
-        errorText={errors.title}
-      >
-        { titles.map(title => <MenuItem key={title} value={title} primaryText={title} />) }
-      </SelectField>
+      <FormControl error={!!errors.department}>
+        <InputLabel htmlFor='department'>Department</InputLabel>
+        <Select
+          value={traveler.department}
+          onChange={ev => {
+            traveler.department = ev.target.value
+            beginValidating('department')
+          }}
+          autoWidth
+          input={<Input name='department' id='department' />}
+        >
+          { departments.map(dept =>
+            <MenuItem key={dept} value={dept}>{dept} </MenuItem>) }
+        </Select>
+        <FormHelperText>{errors.department}</FormHelperText>
+      </FormControl>
+      <FormControl error={!!errors.title}>
+        <InputLabel htmlFor='title'>Title</InputLabel>
+        <Select
+          value={traveler.title}
+          onChange={ev => {
+            traveler.title = ev.target.value
+            beginValidating('title')
+          }}
+          autoWidth
+          input={<Input name='title' id='title' />}
+        >
+          { titles.map(title =>
+            <MenuItem key={title} value={title}>
+              {title}
+            </MenuItem>) }
+        </Select>
+        { errors.title &&
+          <FormHelperText>{errors.title}</FormHelperText> }
+      </FormControl>
       <SmartInput
         component={TextField}
         sidebarTextId='traveler.yearOfTerminalDegree'
         value={traveler.yearOfTerminalDegree}
         onChange={ev => { traveler.yearOfTerminalDegree = ev.target.value }}
-        floatingLabelText='Year of Terminal Degree'
-        errorText={errors.yearOfTerminalDegree}
+        label='Year of Terminal Degree'
+        error={!!errors.yearOfTerminalDegree}
+        helperText={errors.yearOfTerminalDegree}
         onBlur={() => beginValidating('yearOfTerminalDegree')}
       />
       <BackNextButtons />

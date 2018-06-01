@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { CSSTransitionGroup } from 'react-transition-group'
 import cn from 'classnames'
 
-import CircularProgress from 'material-ui/CircularProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { linkifyGuidelines } from 'utils'
 

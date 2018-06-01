@@ -1,7 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 
-import RaisedButton from 'material-ui/RaisedButton'
+import Button from '@material-ui/core/Button'
 
 import lang from 'lang/en_US'
 import styles from './styles.scss'
@@ -11,11 +11,12 @@ export default class extends React.Component {
   render () {
     return <div className={styles.container}>
       {lang.loginPage.map((msg, i) => <p key={i} dangerouslySetInnerHTML={{ __html: msg }} />)}
-      <RaisedButton
+      <Button
         className={styles.button}
-        label='Login'
+        variant='raised'
         href='/login'
-        primary
+        color='primary'
+        children='Login'
       />
     </div>
   }

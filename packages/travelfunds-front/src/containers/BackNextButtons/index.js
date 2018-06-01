@@ -1,8 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 
-import FlatButton from 'material-ui/FlatButton'
-import RaisedButton from 'material-ui/RaisedButton'
+import Button from '@material-ui/core/Button'
 
 import { formStepShortNames } from 'config'
 import styles from './styles.scss'
@@ -12,10 +11,10 @@ class BackButton extends React.Component {
   render () {
     const { FormState } = this.props
 
-    return <FlatButton
+    return <Button
       className={styles.button}
-      label='Back'
       onClick={() => FormState.currentFormIndex--}
+      children='Back'
     />
   }
 }
@@ -40,12 +39,13 @@ class NextButton extends React.Component {
   }
 
   render () {
-    return <RaisedButton
+    return <Button
       className={styles.button}
-      label='Next'
+      variant='raised'
       onClick={() => this.onClick()}
-      primary
+      color='primary'
       disabled={this.disabled()}
+      children='Next'
     />
   }
 }
@@ -75,12 +75,13 @@ class SubmitButton extends React.Component {
   }
 
   render () {
-    return <RaisedButton
+    return <Button
       className={styles.button}
-      label='Send Request'
+      variant='raised'
       onClick={() => this.onClick()}
-      secondary
+      color='secondary'
       disabled={this.disabled()}
+      children='Send Request'
     />
   }
 }

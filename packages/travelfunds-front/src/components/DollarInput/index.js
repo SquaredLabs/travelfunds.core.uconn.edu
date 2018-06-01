@@ -1,6 +1,6 @@
 import React from 'react'
 import ca from 'classnames'
-import TextField from 'material-ui/TextField'
+import TextField from '@material-ui/core/TextField'
 import styles from './styles.scss'
 
 /*
@@ -33,7 +33,7 @@ export default class extends React.Component {
       step={0.01}
       value={value === '' ? '' : '$' + value}
       className={ca(styles.textField, className)}
-      hintText='$ 0.00'
+      placeholder='$ 0.00'
       onChange={ev => this.onChange(ev)}
     />
   }

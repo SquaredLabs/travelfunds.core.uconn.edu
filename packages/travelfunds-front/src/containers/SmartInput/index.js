@@ -11,9 +11,9 @@ import lang from 'lang/en_US.js'
 @inject('FormState')
 export default class extends React.Component {
   updateSidebar () {
-    const { FormState, floatingLabelText, sidebarTextId } = this.props
-    if (sidebarTextId && floatingLabelText) {
-      FormState.sidebarTitle = floatingLabelText
+    const { FormState, label, sidebarTextId } = this.props
+    if (sidebarTextId && label) {
+      FormState.sidebarTitle = label
       FormState.sidebarContent = lang.tooltips[sidebarTextId]
     }
   }

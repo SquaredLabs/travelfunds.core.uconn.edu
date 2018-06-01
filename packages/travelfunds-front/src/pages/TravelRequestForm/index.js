@@ -1,9 +1,10 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 
-import { Stepper, Step, StepButton } from 'material-ui/Stepper'
-import WarningIcon from 'material-ui/svg-icons/alert/warning'
-import {red500} from 'material-ui/styles/colors'
+import Stepper from '@material-ui/core/Stepper'
+import Step from '@material-ui/core/Step'
+import StepButton from '@material-ui/core/StepButton'
+import Icon from '@material-ui/core/Icon'
 
 import ContactInformationCard from 'containers/ContactInformationCard'
 import TravelerInformationCard from 'containers/TravelerInformationCard'
@@ -48,22 +49,26 @@ const formSteps = [
   }
 ]
 
-const FormSteps = inject('FormState')(observer(({ FormState }) => (
-  <Stepper linear={false} activeStep={FormState.currentFormIndex}>
-    { formSteps.map(({ title, shortName, completed, hasErrors }, i) => (
-      <Step key={i}>
-        <StepButton {...{
-          completed: completed(),
-          onClick: () => { FormState.currentFormIndex = i },
-          icon: hasErrors() ? <WarningIcon color={red500} /> : i + 1,
-          disabled: !ValidationState[shortName].available
-        }}>
-          {title}
-        </StepButton>
-      </Step>
-    )) }
-  </Stepper>
-)))
+@inject('FormState') @observer
+class FormSteps extends React.Component {
+  render () {
+    const { FormState } = this.props
+    return <Stepper nonLinear activeStep={FormState.currentFormIndex}>
+      { formSteps.map(({ title, shortName, completed, hasErrors }, i) =>
+        <Step key={i}>
+          <StepButton {...{
+            completed: completed(),
+            onClick: () => { FormState.currentFormIndex = i },
+            icon: hasErrors() ? <Icon color='error'>warning</Icon> : i + 1,
+            disabled: !ValidationState[shortName].available
+          }}>
+            {title}
+          </StepButton>
+        </Step>
+      ) }
+    </Stepper>
+  }
+}
 
 @inject('FormState') @observer
 export default class extends React.Component {

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import Fraction from 'fraction.js'
 import { mapValues } from 'lodash'
 import DollarInput from './DollarInput'
-import RaisedButton from 'material-ui/RaisedButton'
+import Button from '@material-ui/core/Button'
 
 import styles from './styles.scss'
 
@@ -183,17 +183,19 @@ export default class GrantedFundsTable extends React.Component {
     } = this.props
     return <div className={styles.container}>
       <div className={styles.actionButtons}>
-        <RaisedButton
-          primary
+        <Button
+          variant='raised'
+          color='primary'
           disabled={this.disabled}
           onClick={ev => this.clearGrantedFunds(ev)}
-          label='Clear Granted Funds'
+          children='Clear Granted Funds'
         />
-        <RaisedButton
-          primary
+        <Button
+          variatn='raised'
+          color='primary'
           disabled={this.disabled}
           onClick={ev => this.autocalculate(ev)}
-          label='Autocalculate'
+          children='Autocalculate'
         />
       </div>
       <table className={styles.grantedFunds}>

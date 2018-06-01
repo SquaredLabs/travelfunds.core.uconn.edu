@@ -8,27 +8,29 @@ import FormState from 'stores/FormState'
 import ValidationState from 'stores/ValidationState'
 import TransportState from 'stores/TransportState'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import { blue500 } from 'material-ui/styles/colors'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import blue from '@material-ui/core/colors/blue'
 
 import Container from './Container'
 
 import ReactGA from 'react-ga'
 
-// Google Analytics tracking ID
-ReactGA.initialize(process.env.GOOGLE_ANALYTICS_TRACKING_ID)
-// This just needs to be called once since we have no routes in a single page application
-ReactGA.pageview(window.location.pathname)
+if (process.env.GOOGLE_ANALYTICS_TRACKING_ID) {
+  // Google Analytics tracking ID
+  ReactGA.initialize(process.env.GOOGLE_ANALYTICS_TRACKING_ID)
+  // This just needs to be called once since we have no routes in a single
+  // page application
+  ReactGA.pageview(window.location.pathname)
+}
 
 // Send errors to Sentry.
 if (process.env.NODE_ENV === 'production') {
   Raven.config(process.env.SENTRY_DSN_FRONTEND).install()
 }
 
-const muiTheme = getMuiTheme({
+const muiTheme = createMuiTheme({
   palette: {
-    primary1Color: blue500
+    primary: blue
   }
 })
 
@@ -36,7 +38,7 @@ const stores = { UiState, FormState, ValidationState, TransportState }
 
 const App = () => (
   <Provider {...stores}>
-    <MuiThemeProvider muiTheme={muiTheme}>
+    <MuiThemeProvider theme={muiTheme}>
       <Container />
     </MuiThemeProvider>
   </Provider>

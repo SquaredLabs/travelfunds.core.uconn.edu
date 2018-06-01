@@ -1,0 +1,19 @@
+.container {
+  position: relative;
+
+  label + & {
+    margin-top: 16px;
+  }
+}
+
+.suggestionsContainerOpen {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+}
+
+.suggestionsList {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}

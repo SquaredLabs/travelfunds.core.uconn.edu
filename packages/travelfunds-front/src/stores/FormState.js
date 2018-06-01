@@ -22,14 +22,12 @@ class FormState {
 
   @observable.shallow contactMyself = {
     netid: '',
-    name: '',
     phoneNumber: '',
     email: ''
   }
 
   @observable.shallow contactOther = {
     netid: '',
-    name: '',
     phoneNumber: '',
     email: ''
   }
@@ -139,12 +137,6 @@ class FormState {
     reaction(
       () => this.contact.name,
       () => this.fetchContactSuggestions(),
-      { delay: 500 }
-    )
-
-    reaction(
-      () => [ this.traveler.firstName, this.traveler.lastName ],
-      () => this.fetchTravelerSuggestions(),
       { delay: 500 }
     )
 

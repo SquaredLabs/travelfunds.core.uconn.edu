@@ -1,7 +1,9 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 
-import { Card, CardTitle, CardText } from 'material-ui/Card'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
 
 import styles from './styles.scss'
 
@@ -27,10 +29,10 @@ export default class extends React.Component {
     ))
 
     return <Card className={styles.container}>
-      <CardTitle title='Errors' />
-      <CardText>
+      <CardHeader title='Errors' />
+      <CardContent>
         <ul className={styles.list}>{ errorsList }</ul>
-      </CardText>
+      </CardContent>
     </Card>
   }
 }

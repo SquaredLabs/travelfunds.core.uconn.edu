@@ -57,15 +57,13 @@ export const rules = observable({
       // a validatorjs bug since the documentation has an example with this.
       // We'll create a cyclical requirement instead.
       return {
-        name: 'string|required_with:email',
-        netid: 'regex:/^[a-z]{3}[0-9]{5}$/|required_with:name',
+        netid: 'regex:/^[a-z]{3}[0-9]{5}$/|required_with:email',
         email: 'email|required_with:netid',
         phoneNumber: 'string'
       }
     }
 
     return {
-      name: 'required|string',
       netid: [ 'required', 'regex:/^[a-z]{3}[0-9]{5}$/' ],
       email: 'required|email',
       phoneNumber: 'string'

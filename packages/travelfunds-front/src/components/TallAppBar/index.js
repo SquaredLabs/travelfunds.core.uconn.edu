@@ -1,23 +1,17 @@
 import React from 'react'
 
-import AppBar from 'material-ui/AppBar'
-import muiThemeable from 'material-ui/styles/muiThemeable'
+import { withTheme } from '@material-ui/core/styles'
 
 import styles from './styles.scss'
 
 // This is the extended height app bar that is seen on the Material Design
 // homepage. I could not find it in Material-UI.
 
-const TallAppBar = ({ muiTheme, title, ...rest }) => (
-  <div>
-    <AppBar {...rest} style={{ boxShadow: 'none' }} />
-    <div
-      className={styles.container}
-      style={{ backgroundColor: muiTheme.palette.primary1Color }}
-    >
-      {title}
-    </div>
+const TallAppBar = ({ theme, title, ...rest }) =>
+  <div
+    className={styles.container}
+    style={{ backgroundColor: theme.palette.primary.main }}>
+    {title}
   </div>
-)
 
-export default muiThemeable()(TallAppBar)
+export default withTheme()(TallAppBar)
