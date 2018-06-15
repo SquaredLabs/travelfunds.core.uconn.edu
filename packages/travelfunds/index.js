@@ -30,7 +30,7 @@ const cas = new Cas({
 
 const router = new Router()
 
-api.use(cas.block)
+router.use('/api/(.*)+', cas.block)
 router.use(api.routes(), api.allowedMethods())
 
 router.get('/login', cas.bounce, ctx => {
