@@ -18,6 +18,7 @@ router.get('/:id', async ctx => {
   const trip = await ctx.db.Trip.findById(ctx.params.id, {
     include: [{ model: ctx.db.Cost, include: [ctx.db.Grant] }]
   })
+  if (trip === null) return
   ctx.body = {
     ...trip.dataValues,
     isForSenior: trip.isForSenior
