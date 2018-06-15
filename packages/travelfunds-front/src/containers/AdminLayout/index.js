@@ -62,9 +62,17 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3
   },
+  listItem: {
+    padding: 0
+  },
+  listItemText: {
+    paddingLeft: '8px'
+  },
   link: {
     display: 'flex',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    padding: '12px 24px',
+    width: '100%'
   }
 })
 
@@ -97,12 +105,15 @@ class AdminLayout extends React.Component {
         classes={{ paper: cn(classes.drawerPaper, !this.open && classes.drawerPaperClose) }}>
         <div className={classes.toolbar} />
         <List>
-          <ListItem button>
+          <ListItem button className={classes.listItem}>
             <Link to='/admin/trips' className={classes.link}>
               <ListItemIcon>
                 <Icon>card_travel</Icon>
               </ListItemIcon>
-              <ListItemText primary='Travel Requests' />
+              <ListItemText
+                primary='Travel Requests'
+                className={classes.listItemText}
+              />
             </Link>
           </ListItem>
         </List>
