@@ -38,13 +38,7 @@ router.get('/login', cas.bounce, ctx => {
   ctx.redirect('/')
 })
 
-const indexPath = path.join(front.buildPath, 'index.html')
-router.get('/admin/:resource?/:id?', cas.bounce, ctx => {
-  ctx.body = fs.createReadStream(indexPath)
-  ctx.type = 'text/html; charset=utf-8'
-})
-
-app.use(async (ctx, next) => {
+router.use(async (ctx, next) => {
   // The user cookie is sent to the frontend so it knows who's currently logged
   // in. If the session is invalid, then we'll want to invalidate that cookie
   // as well.
@@ -52,6 +46,12 @@ app.use(async (ctx, next) => {
     ctx.cookies.set('user', null)
   }
   return await next()
+})
+
+const indexPath = path.join(front.buildPath, 'index.html')
+router.get('/admin/:resource?/:id?', cas.bounce, ctx => {
+  ctx.body = fs.createReadStream(indexPath)
+  ctx.type = 'text/html; charset=utf-8'
 })
 
 app.use(static(front.buildPath))
