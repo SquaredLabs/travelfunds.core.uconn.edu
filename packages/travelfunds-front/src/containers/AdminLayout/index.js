@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable } from 'mobx'
+import { observable, action } from 'mobx'
 import { observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
 import cn from 'classnames'
@@ -78,7 +78,18 @@ const styles = theme => ({
 
 @observer
 class AdminLayout extends React.Component {
-  @observable open = true
+  @observable open = window.localStorage
+    ? window.localStorage.getItem('menu-collapsed') === 'false'
+    : true
+
+  @action toggle () {
+    this.open = !this.open
+
+    if (window.localStorage) {
+      window.localStorage.setItem('menu-collapsed', !this.open)
+    }
+  }
+
   render () {
     const { classes, children } = this.props
     return <div className={classes.root}>
@@ -87,7 +98,7 @@ class AdminLayout extends React.Component {
           <IconButton
             color='inherit'
             aria-label='menu'
-            onClick={() => { this.open = !this.open }}
+            onClick={() => this.toggle()}
             className={classes.menuButton}>
             <Icon>menu</Icon>
           </IconButton>
