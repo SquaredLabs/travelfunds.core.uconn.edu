@@ -8,7 +8,7 @@
     text-align: center;
 
     > * + * {
-        margin-left: 1em;
+        margin-left: 1em !important;
     }
 }
 
@@ -16,13 +16,14 @@
     width: 100%;
     max-width: 45em;
     margin: 0 auto;
+    border-spacing: 0;
 
     input[type="text"] {
-        height: 2em;
-        padding: 0 .2em;
+        padding: .2em;
         max-width: 8em;
         width: 100%;
         text-align: right;
+        font-size: inherit;
 
         &:disabled {
             color: #999;
@@ -50,7 +51,7 @@
     }
 
     thead {
-        background-color: rgb(33, 150, 243);
+        background-color: #3F51B5;
         margin: .5em 0;
 
         th {
@@ -69,6 +70,7 @@
     tbody {
         border-top: 1px solid rgba(0,0,0, .2);
         border-bottom: 1px solid rgba(0,0,0, .2);
+        background-color: white;
     }
 
     tbody tr td {
@@ -87,8 +89,14 @@
     }
 
     tfoot tr:first-child td {
+        padding: .5em;
+        background-color: white;
+        border-top: 1px solid rgba(0,0,0, 0.15);
+        border-bottom: 1px solid rgba(0,0,0, 0.15);
+    }
+
+    tfoot tr:nth-child(2) td {
         padding-top: 1em;
-        padding-bottom: 0;
     }
 
     tfoot tr:last-child td {

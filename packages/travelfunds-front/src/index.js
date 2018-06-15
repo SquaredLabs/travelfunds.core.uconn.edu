@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Raven from 'raven-js'
 
 import UiState from 'stores/UiState'
@@ -12,7 +12,8 @@ import TransportState from 'stores/TransportState'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
-import Container from './Container'
+import Form from './pages/Form'
+import Admin from './pages/Admin'
 
 import ReactGA from 'react-ga'
 
@@ -37,15 +38,17 @@ const muiTheme = createMuiTheme({
 
 const stores = { UiState, FormState, ValidationState, TransportState }
 
-const App = () => (
+const App = () =>
   <Provider {...stores}>
     <BrowserRouter>
       <MuiThemeProvider theme={muiTheme}>
-        <Container />
+        <Switch>
+          <Route exact path='/' component={Form} />
+          <Route path='/' component={Admin} />
+        </Switch>
       </MuiThemeProvider>
     </BrowserRouter>
   </Provider>
-)
 
 const root = document.createElement('div')
 document.body.append(root)

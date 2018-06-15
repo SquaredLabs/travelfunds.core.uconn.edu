@@ -16,7 +16,7 @@ module.exports = {
   entry: [
     'babel-polyfill',
     'whatwg-fetch',
-    `./${frontendRoot}/form.js`
+    `./${frontendRoot}/index.js`
   ],
   output: {
     path: path.join(__dirname, 'build'),
