@@ -11,6 +11,7 @@ const crypto = require('crypto')
 const api = require('travelfunds-api')
 const db = require('travelfunds-db')
 const front = require('travelfunds-front')
+const permissionGuard = require('./permission-guard')
 
 const app = new Koa()
 
@@ -30,9 +31,6 @@ const cas = new Cas({
 
 const router = new Router()
 
-router.use('/api/(.*)+', cas.block)
-router.use(api.routes(), api.allowedMethods())
-
 router.get('/login', cas.bounce, ctx => {
   ctx.cookies.set('user', ctx.session.netid, { httpOnly: false })
   ctx.redirect('/')
@@ -48,9 +46,13 @@ router.use(async (ctx, next) => {
   return await next()
 })
 
-const indexPath = path.join(front.buildPath, 'index.html')
-router.get('/admin/:resource?/:id?', cas.bounce, ctx => {
-  ctx.body = fs.createReadStream(indexPath)
+router.use('/admin/(.*)?', cas.bounce)
+router.use('/api/(.*)?', cas.block)
+
+router.use(permissionGuard())
+router.use(api.routes(), api.allowedMethods())
+router.get('/admin/:resource?/:id?', ctx => {
+  ctx.body = fs.createReadStream(path.join(front.buildPath, 'index.html'))
   ctx.type = 'text/html; charset=utf-8'
 })
 

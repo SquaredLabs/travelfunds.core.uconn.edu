@@ -8,12 +8,10 @@ router.prefix('/trips')
 
 const multipart = body({ multipart: true })
 
-// TODO: Guard this endpoint
 router.get('/', async ctx => {
   ctx.body = await ctx.db.Trip.findAll()
 })
 
-// TODO: Guard this endpoint
 router.get('/:id', async ctx => {
   const trip = await ctx.db.Trip.findById(ctx.params.id, {
     include: [{ model: ctx.db.Cost, include: [ctx.db.Grant] }]
@@ -73,7 +71,6 @@ router.post('/', multipart, catchValidationError(), async ctx => {
   ctx.set({ Location: `/api/trips/${trip.id}` })
 })
 
-// TODO: Guard this endpoint
 router.get('/:id/budgets', async ctx => {
   const budgets = await ctx.db.Budget.findAll()
   ctx.body = await Promise.all(budgets.map(async budget =>
@@ -84,7 +81,6 @@ router.get('/:id/budgets', async ctx => {
     })))
 })
 
-// TODO: Guard this endpoint
 router.get('/:id/fairshareleft', async ctx => {
   const trip = await ctx.db.Trip.findById(ctx.params.id)
   ctx.body = await trip.fairShareLeft
