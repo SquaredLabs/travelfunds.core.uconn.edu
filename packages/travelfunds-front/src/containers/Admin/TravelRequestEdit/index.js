@@ -5,6 +5,8 @@ import fetch from 'isomorphic-fetch'
 import TripInformation from './TripInformation'
 import GrantedFundsTable from 'components/GrantedFundsTable'
 
+import styles from './styles.scss'
+
 @observer
 export default class TravelRequestEdit extends React.Component {
   trip = null
@@ -44,7 +46,7 @@ export default class TravelRequestEdit extends React.Component {
   }
 
   render () {
-    return <div>
+    return <div className={styles.container}>
       { this.trip &&
         <TripInformation trip={this.trip} /> }
       { !this.fetching && this.trip && this.budgets &&
