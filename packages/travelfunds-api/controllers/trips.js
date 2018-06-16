@@ -8,6 +8,15 @@ router.prefix('/trips')
 
 const multipart = body({ multipart: true })
 
+router.param('trip', async (id, ctx, next) => {
+  ctx.trip = await ctx.db.Trip.findById(id)
+  if (!ctx.trip) {
+    ctx.status = 404
+    return
+  }
+  return next()
+})
+
 router.get('/', async ctx => {
   ctx.body = await ctx.db.Trip.findAll()
 })
@@ -81,9 +90,8 @@ router.get('/:id/budgets', async ctx => {
     })))
 })
 
-router.get('/:id/fairshareleft', async ctx => {
-  const trip = await ctx.db.Trip.findById(ctx.params.id)
-  ctx.body = await trip.fairShareLeft
+router.get('/:trip/fairshareleft', async ctx => {
+  ctx.body = await ctx.trip.fairShareLeft
 })
 
 module.exports = router
