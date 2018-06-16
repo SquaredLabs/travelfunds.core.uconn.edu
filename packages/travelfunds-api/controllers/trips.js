@@ -85,13 +85,13 @@ router.get('/:id/budgets', async ctx => {
   ctx.body = await Promise.all(budgets.map(async budget =>
     ({
       ...budget.dataValues,
-      balance: await budget.balance,
-      seniorFundsLeft: await budget.seniorFundsLeft
+      balance: await budget.getBalance(),
+      seniorFundsLeft: await budget.getSeniorFundsLeft()
     })))
 })
 
 router.get('/:trip/fairshareleft', async ctx => {
-  ctx.body = await ctx.trip.fairShareLeft
+  ctx.body = await ctx.trip.getFairShareLeft()
 })
 
 module.exports = router
