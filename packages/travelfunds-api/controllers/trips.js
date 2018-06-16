@@ -110,11 +110,17 @@ router.put('/:id/grants', multipart, async ctx => {
   ctx.status = 201
 })
 
-router.put('/:id/response', multipart, async ctx => {
-  await ctx.db.Trip.update(
-    { response: ctx.request.body },
+router.patch('/:id', multipart, async ctx => {
+  const [ affectedRows ] = await ctx.db.Trip.update(
+    ctx.request.body,
     { where: { id: ctx.params.id } })
-  ctx.status = 201
+
+  if (affectedRows < 1) {
+    ctx.status = 500
+    return
+  }
+
+  ctx.status = 204
 })
 
 module.exports = router

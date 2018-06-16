@@ -6,6 +6,11 @@ import { Link } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Icon from '@material-ui/core/Icon'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormLabel from '@material-ui/core/FormLabel'
 import TripInformation from './TripInformation'
 import GrantedFundsTable from 'components/GrantedFundsTable'
 
@@ -20,6 +25,7 @@ export default class TravelRequestEdit extends React.Component {
   grants = []
 
   @observable fetching = false
+  @observable status = null
   @observable response = ''
 
   async fetchTrip () {
@@ -28,6 +34,7 @@ export default class TravelRequestEdit extends React.Component {
     })
     this.trip = await res.json()
     this.response = this.trip.response
+    this.status = this.trip.status
   }
 
   async fetchBudgets () {
@@ -64,11 +71,12 @@ export default class TravelRequestEdit extends React.Component {
     })
   }
 
-  postResponseMessage () {
-    return fetch(`/api/trips/${this.props.match.params.id}/response`, {
-      method: 'put',
+  postTripUpdates () {
+    return fetch(`/api/trips/${this.props.match.params.id}`, {
+      method: 'PATCH',
       credentials: 'include',
-      body: this.response
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: this.status, response: this.response })
     })
   }
 
@@ -77,9 +85,9 @@ export default class TravelRequestEdit extends React.Component {
     try {
       const responses = await Promise.all([
         this.postGrants(),
-        this.postResponseMessage()
+        this.postTripUpdates()
       ])
-      if (responses.some(x => x.status !== 201)) throw new Error()
+      if (responses.some(x => x.status >= 300 || x.status < 200)) throw new Error()
     } catch (err) {
       UiState.addSnackbarMessage(
         'Failed to update trip. Please try again later.',
@@ -114,6 +122,24 @@ export default class TravelRequestEdit extends React.Component {
           value={this.response}
           onChange={ev => { this.response = ev.target.value }}
         /> }
+      { this.trip &&
+        <FormControl component='fieldset' className={styles.statusFormControl}>
+          <FormLabel component='legend'>Status</FormLabel>
+          <RadioGroup
+            className={styles.statusRadioGroup}
+            name='status'
+            value={this.status}
+            onChange={(_, status) => { this.status = status }}>
+            { ['Approved', 'Denied', 'Withdrawn', 'Pending', 'Disbursed']
+              .map(status =>
+                <FormControlLabel
+                  key={status}
+                  value={status}
+                  control={<Radio />}
+                  label={status}
+                />) }
+          </RadioGroup>
+        </FormControl> }
       { !this.fetching && this.trip && this.budgets &&
         <div className={styles.actions}>
           <Button

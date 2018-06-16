@@ -20,6 +20,15 @@
   width: 100%;
 }
 
+.statusFormControl {
+  margin: 2em 0 !important;
+  display: flex !important;
+}
+
+.statusRadioGroup {
+  flex-direction: row !important;
+}
+
 .tripInformation {
   padding-bottom: 1em;
   box-sizing: border-box;
