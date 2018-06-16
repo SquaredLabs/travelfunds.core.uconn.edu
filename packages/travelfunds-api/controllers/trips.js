@@ -94,4 +94,27 @@ router.get('/:trip/fairshareleft', async ctx => {
   ctx.body = await ctx.trip.getFairShareLeft()
 })
 
+router.put('/:id/grants', multipart, async ctx => {
+  const trip = await ctx.db.Trip.findById(ctx.params.id, {
+    include: [{ model: ctx.db.Cost }]
+  })
+
+  await Promise.all(trip.Costs.map(cost =>
+    ctx.db.Grant.update({ amount: 0 }, { where: { CostId: cost.id } })))
+
+  await Promise.all(ctx.request.body
+    .filter(grant => grant.amount > 0)
+    .map(grant =>
+      ctx.db.Grant.upsert(pick(grant, ['amount', 'BudgetId', 'CostId']))))
+
+  ctx.status = 201
+})
+
+router.put('/:id/response', multipart, async ctx => {
+  await ctx.db.Trip.update(
+    { response: ctx.request.body },
+    { where: { id: ctx.params.id } })
+  ctx.status = 201
+})
+
 module.exports = router

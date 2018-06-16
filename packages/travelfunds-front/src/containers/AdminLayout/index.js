@@ -17,6 +17,8 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
+import SnackbarQueue from 'containers/SnackbarQueue'
+
 // Adapted from clipped and mini drawer example
 // https://material-ui.com/demos/drawers/#drawer
 
@@ -78,22 +80,22 @@ const styles = theme => ({
 
 @observer
 class AdminLayout extends React.Component {
-  @observable open = window.localStorage
+  @observable menuOpen = window.localStorage
     ? window.localStorage.getItem('menu-collapsed') === 'false'
     : true
 
   @action toggle () {
-    this.open = !this.open
+    this.menuOpen = !this.menuOpen
 
     if (window.localStorage) {
-      window.localStorage.setItem('menu-collapsed', !this.open)
+      window.localStorage.setItem('menu-collapsed', !this.menuOpen)
     }
   }
 
   render () {
     const { classes, children } = this.props
     return <div className={classes.root}>
-      <AppBar className={cn(classes.appBar, this.open && classes.appBarShift)}>
+      <AppBar className={cn(classes.appBar, this.menuOpen && classes.appBarShift)}>
         <Toolbar disableGutters>
           <IconButton
             color='inherit'
@@ -113,7 +115,7 @@ class AdminLayout extends React.Component {
       </AppBar>
       <Drawer
         variant='permanent'
-        classes={{ paper: cn(classes.drawerPaper, !this.open && classes.drawerPaperClose) }}>
+        classes={{ paper: cn(classes.drawerPaper, !this.menuOpen && classes.drawerPaperClose) }}>
         <div className={classes.toolbar} />
         <List>
           <ListItem button className={classes.listItem}>
@@ -133,6 +135,7 @@ class AdminLayout extends React.Component {
         <div className={classes.toolbar} />
         {children}
       </main>
+      <SnackbarQueue />
     </div>
   }
 }

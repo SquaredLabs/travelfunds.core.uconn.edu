@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: { allowNull: false },
       onDelete: 'CASCADE'
     })
-    Cost.hasMany(models.Grant)
+    Cost.hasMany(models.Grant, { foreignKey: { allowNull: false }})
   }
 
   return Cost

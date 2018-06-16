@@ -5,11 +5,12 @@ module.exports = (sequelize, DataTypes) => {
 
   Grant.associate = models => {
     Grant.belongsTo(models.Cost, {
-      foreignKey: { allowNull: false },
+      foreignKey: { allowNull: false, unique: 'trip' },
       onDelete: 'CASCADE'
     })
     Grant.belongsTo(models.Budget, {
-      foreignKey: { allowNull: false }
+      foreignKey: { allowNull: false, unique: 'trip' },
+      onDelete: 'CASCADE'
     })
   }
 

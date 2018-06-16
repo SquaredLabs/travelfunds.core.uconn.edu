@@ -39,7 +39,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: null,
       allowNull: true
-    }
+    },
+
+    // Administration
+    response: DataTypes.TEXT
   })
 
   Trip.associate = models =>

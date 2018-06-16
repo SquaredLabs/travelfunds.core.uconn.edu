@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable, computed, action } from 'mobx'
+import { observable, computed, action, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import Fraction from 'fraction.js'
 import { flatten } from 'lodash'
@@ -88,7 +88,11 @@ export default class GrantedFundsTable extends React.Component {
     if (existingGrant) {
       existingGrant.amount = new Fraction(value)
     } else {
-      cost.Grants.push({ BudgetId: budgetId, amount: new Fraction(value) })
+      cost.Grants.push({
+        amount: new Fraction(value),
+        BudgetId: budgetId,
+        CostId: costId
+      })
     }
   }
 
@@ -121,17 +125,30 @@ export default class GrantedFundsTable extends React.Component {
     }
   }
 
+  componentWillMount (props) {
+    this.grantsAutorun = autorun(() => {
+      this.props.onGrantsChange(
+        this.trip.Costs
+          .map(x => x.Grants)
+          .reduce((acc, el) => [...acc, ...el]))
+    })
+  }
+
+  componentWillUnmount () {
+    this.grantsAutorun()
+  }
+
   render () {
     return <div className={styles.container}>
       <div className={styles.actionButtons}>
         <Button
-          variant='raised'
+          variant='outlined'
           disabled={this.disabled}
           onClick={ev => this.clearGrantedFunds(ev)}
           children='Clear Granted Funds'
         />
         <Button
-          variant='raised'
+          variant='outlined'
           color='primary'
           disabled={this.disabled}
           onClick={ev => this.autocalculate(ev)}

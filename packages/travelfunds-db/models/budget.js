@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   Budget.associate = models =>
-    Budget.hasMany(models.Grant)
+    Budget.hasMany(models.Grant, { foreignKey: { allowNull: false } })
 
   Budget.prototype.getBalance = async function () {
     const query = /* @sql */`

@@ -4,6 +4,22 @@
   margin: auto;
 }
 
+.actions {
+  margin: 2em 0;
+
+  > * + * {
+    margin-left: 1em !important;
+  }
+}
+
+.iconRight {
+  margin-left: 0.5em;
+}
+
+.optionalMessage {
+  width: 100%;
+}
+
 .tripInformation {
   padding-bottom: 1em;
   box-sizing: border-box;
