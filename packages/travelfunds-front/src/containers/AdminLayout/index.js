@@ -43,6 +43,8 @@ const styles = theme => ({
     position: 'relative',
     whiteSpace: 'nowrap',
     width: 240,
+    minHeight: '100vh',
+    height: '100%',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
