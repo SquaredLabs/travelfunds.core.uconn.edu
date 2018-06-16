@@ -1,7 +1,7 @@
 import React from 'react'
 import { observable, action } from 'mobx'
 import { observer } from 'mobx-react'
-import { Link } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import cn from 'classnames'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -16,6 +16,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import blueGrey from '@material-ui/core/colors/blueGrey'
 
 import SnackbarQueue from 'containers/SnackbarQueue'
 
@@ -75,6 +76,9 @@ const styles = theme => ({
     textDecoration: 'none',
     padding: '12px 24px',
     width: '100%'
+  },
+  activeLink: {
+    backgroundColor: blueGrey[50]
   }
 })
 
@@ -119,7 +123,7 @@ class AdminLayout extends React.Component {
         <div className={classes.toolbar} />
         <List>
           <ListItem button className={classes.listItem}>
-            <Link to='/admin/trips' className={classes.link}>
+            <NavLink to='/admin/trips' className={classes.link} activeClassName={classes.activeLink}>
               <ListItemIcon>
                 <Icon>card_travel</Icon>
               </ListItemIcon>
@@ -127,7 +131,7 @@ class AdminLayout extends React.Component {
                 primary='Travel Requests'
                 className={classes.listItemText}
               />
-            </Link>
+            </NavLink>
           </ListItem>
         </List>
       </Drawer>
