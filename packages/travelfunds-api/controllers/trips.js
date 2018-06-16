@@ -80,8 +80,8 @@ router.post('/', multipart, catchValidationError(), async ctx => {
   ctx.set({ Location: `/api/trips/${trip.id}` })
 })
 
-router.get('/:id/budgets', async ctx => {
-  const budgets = await ctx.db.Budget.findAll()
+router.get('/:trip/budgets', async ctx => {
+  const budgets = await ctx.trip.getBudgets()
   ctx.body = await Promise.all(budgets.map(async budget =>
     ({
       ...budget.dataValues,

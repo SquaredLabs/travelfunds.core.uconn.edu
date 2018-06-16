@@ -58,6 +58,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   })
 
+  Trip.prototype.getBudgets = function () {
+    return sequelize.models.Budget.findAll({
+      where: { fiscalYear: this.fiscalYear }
+    })
+  }
+
   Trip.prototype.getFairShareLeft = async function () {
     const query = /* @sql */`
       SELECT :fairShareAmount - SUM(COALESCE("Grants".amount, 0)) as amount
