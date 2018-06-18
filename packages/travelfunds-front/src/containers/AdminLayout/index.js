@@ -114,7 +114,7 @@ class AdminLayout extends React.Component {
             Travel Funds Admin
           </Typography>
           <Button color='inherit' component={props =>
-            <Link to='/logout' {...props} />}>
+            <a href='/logout' {...props} />}>
             Logout
           </Button>
         </Toolbar>

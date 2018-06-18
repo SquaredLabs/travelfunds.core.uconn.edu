@@ -36,6 +36,11 @@ router.get('/login', cas.bounce, ctx => {
   ctx.redirect('/')
 })
 
+router.get('/logout', ctx => {
+  ctx.session = null
+  ctx.redirect('/')
+})
+
 router.use(async (ctx, next) => {
   // The user cookie is sent to the frontend so it knows who's currently logged
   // in. If the session is invalid, then we'll want to invalidate that cookie
