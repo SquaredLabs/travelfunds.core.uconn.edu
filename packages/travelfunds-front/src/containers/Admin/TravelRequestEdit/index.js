@@ -99,13 +99,11 @@ export default class TravelRequestEdit extends React.Component {
   }
 
   @action async saveAndSendEmail () {
-    await Promise.all([
-      this.save(),
-      fetch(`/api/trips/${this.props.match.params.id}/send-email-update`, {
-        method: 'POST',
-        credentials: 'include'
-      })
-    ])
+    await this.save()
+    await fetch(`/api/trips/${this.props.match.params.id}/send-email-update`, {
+      method: 'POST',
+      credentials: 'include'
+    })
     this.props.history.push('/admin/trips')
   }
 
