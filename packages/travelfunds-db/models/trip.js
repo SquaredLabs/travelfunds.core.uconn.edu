@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     email: { type: DataTypes.STRING, allowNull: false },
     department: { type: DataTypes.STRING, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
-    yearOfTerminalDegree: { type: DataTypes.INTEGER, allowNull: false },
+    yearOfTerminalDegree: DataTypes.INTEGER,
 
     // Contact
     contactEmail: {
