@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     seniorAllocationLimit: {
       type: DataTypes.DECIMAL(3,2),
       allowNull: false,
-      defaultvalue: config.defaultSeniorAllocationLimit
+      defaultValue: config.defaultSeniorAllocationLimit
     },
     kfsNumber: DataTypes.INTEGER
   })
