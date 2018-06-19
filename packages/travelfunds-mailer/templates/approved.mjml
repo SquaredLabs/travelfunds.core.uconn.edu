@@ -30,12 +30,12 @@
             <td>OVPR</td>
           </tr>
           <tr style="border-bottom: 1px solid black;">
-            <td style="padding-bottom: 12px;">KFS Numbers</td>
+            <td style="padding-bottom: 12px;">KFS Number</td>
             <td style="padding-bottom: 12px;">{{budgets.AAUP.kfsNumber}}</td>
             <td style="padding-bottom: 12px;">{{budgets.OVPR.kfsNumber}}</td>
           </tr>
           <tr>
-            <td style="padding-top: 12px;">Grants</td>
+            <td style="padding-top: 12px;">Award Amount</td>
             <td style="padding-top: 12px;">{{grants.AAUP}}</td>
             <td style="padding-top: 12px;">{{grants.OVPR}}</td>
           </tr>
