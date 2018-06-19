@@ -17,7 +17,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: config.defaultSeniorAllocationLimit
     },
-    kfsNumber: DataTypes.INTEGER
+    kfsNumber: DataTypes.INTEGER,
+    usableByLawProfessors: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    usableForAttendanceOnly: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    }
   })
 
   Budget.associate = models =>

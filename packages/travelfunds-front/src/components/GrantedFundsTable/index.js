@@ -75,6 +75,16 @@ export default class GrantedFundsTable extends React.Component {
       .sub(getGrantedTotal(this.trip.Costs))
   }
 
+  @computed get usableBudgets () {
+    // TODO: Ask for a better way to distinguish law professors
+    const isLawProfessor = this.trip.department.startsWith('Law')
+    const attendanceOnly = this.trip.participationLevel === 'Attendance Only'
+
+    return this.budgets
+      .filter(budget => !(!budget.usableByLawProfessors && isLawProfessor))
+      .filter(budget => !(!budget.usableForAttendanceOnly && attendanceOnly))
+  }
+
   tableHeaders = [
     'Category',
     'Requested',
@@ -108,7 +118,7 @@ export default class GrantedFundsTable extends React.Component {
     this.clearGrantedFunds()
 
     for (const cost of this.trip.Costs) {
-      for (const budget of this.budgets) {
+      for (const budget of this.usableBudgets) {
         const awarded = sumObjectValues(cost.Grants.map(x => x.amount))
 
         const amount = minFraction(
