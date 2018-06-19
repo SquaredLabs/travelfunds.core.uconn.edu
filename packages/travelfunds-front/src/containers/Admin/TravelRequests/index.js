@@ -98,7 +98,7 @@ class TravelRequests extends React.Component {
   }
 
   @computed get filteredTrips () {
-    const searchText = this.searchText.toLowerCase()
+    const searchText = this.searchText.trim().toLowerCase()
 
     if (searchText === '') {
       return this.sortedTrips
@@ -126,7 +126,7 @@ class TravelRequests extends React.Component {
     return <Paper>
       <TripToolbar
         searchText={this.searchText}
-        onSearchChange={ev => { this.searchText = ev.target.value.trim() }}
+        onSearchChange={ev => { this.searchText = ev.target.value }}
       />
       <Table>
         <Head
