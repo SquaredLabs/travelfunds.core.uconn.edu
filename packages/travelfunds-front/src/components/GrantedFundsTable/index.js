@@ -60,7 +60,7 @@ export default class GrantedFundsTable extends React.Component {
         : new Fraction(budget.seniorFundsLeft)
 
       return { ...budget, balance, seniorFundsLeft }
-    })
+    }).sort((a, b) => a.id < b.id ? -1 : 1)
   }
 
   @computed get fairShareLeft () {
