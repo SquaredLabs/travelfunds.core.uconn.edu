@@ -86,6 +86,28 @@ module.exports = (sequelize, DataTypes) => {
     return Trip.findByIdWithAllRelations(this.id)
   }
 
+  Trip.prototype.getGrantTotalsByBudget = async function () {
+    const query = `
+      SELECT
+      	"Budgets".id,
+        "Budgets".name,
+        SUM(COALESCE("Grants".amount, 0)) as granted
+      FROM "Trips"
+      JOIN "Costs" ON "Costs"."TripId" = "Trips".id
+      JOIN "Grants" ON "Grants"."CostId" = "Costs".id
+      JOIN "Budgets" ON "Budgets".id = "Grants"."BudgetId"
+      WHERE
+        "Trips".id = :id
+      GROUP BY
+        "Trips".id,
+        "Budgets".id
+    `
+    return sequelize.query(query, {
+      replacements: { id: this.id },
+      type: sequelize.QueryTypes.SELECT
+    })
+  }
+
   Trip.findByIdWithAllRelations = function (id) {
     return Trip.findById(id, {
       include: {

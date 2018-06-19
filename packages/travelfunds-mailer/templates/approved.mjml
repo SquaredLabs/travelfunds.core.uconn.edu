@@ -35,29 +35,9 @@
             <td style="padding-bottom: 12px;">{{budgets.OVPR.kfsNumber}}</td>
           </tr>
           <tr>
-            <td style="padding-top: 12px;">Primary Transport</td>
-            <td style="padding-top: 12px;">{{grants.AAUP.PrimaryTransport}}</td>
-            <td style="padding-top: 12px;">{{grants.OVPR.PrimaryTransport}}</td>
-          </tr>
-          <tr>
-            <td>Secondary Transport</td>
-            <td>{{grants.AAUP.SecondaryTransport}}</td>
-            <td>{{grants.OVPR.SecondaryTransport}}</td>
-          </tr>
-          <tr>
-            <td>Mileage</td>
-            <td>{{grants.AAUP.Mileage}}</td>
-            <td>{{grants.OVPR.Mileage}}</td>
-          </tr>
-          <tr>
-            <td>Registration</td>
-            <td>{{grants.AAUP.Registration}}</td>
-            <td>{{grants.OVPR.Registration}}</td>
-          </tr>
-          <tr>
-            <td>Meals and Lodging</td>
-            <td>{{grants.AAUP.Meals&Lodging}}</td>
-            <td>{{grants.OVPR.Meals&Lodging}}</td>
+            <td style="padding-top: 12px;">Grants</td>
+            <td style="padding-top: 12px;">{{grants.AAUP}}</td>
+            <td style="padding-top: 12px;">{{grants.OVPR}}</td>
           </tr>
         </mj-table>
 
