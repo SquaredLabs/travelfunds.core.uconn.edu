@@ -79,26 +79,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Trip.prototype.getFairShareLeft = async function () {
-    const query = /* @sql */`
-      SELECT :fairShareAmount - SUM(COALESCE("Grants".amount, 0)) as amount
-      FROM "Trips"
-      JOIN "Costs" on "Costs"."TripId" = "Trips".id
-      JOIN "Grants" on "Grants"."CostId" = "Costs".id
-      JOIN "Budgets" on "Budgets".id = "Grants"."BudgetId"
-      WHERE
-        "Trips".netid = :netid AND
-        "Budgets"."fiscalYear" = :fiscalYear
-      UNION SELECT :fairShareAmount
-    `
-    const res = await sequelize.query(query, {
-      replacements: {
-        fairShareAmount: config.fairShareAmount,
-        netid: this.netid,
-        fiscalYear: this.fiscalYear
-      },
-      type: sequelize.QueryTypes.SELECT
-    })
-    return res[0].amount
+    return Trip.getFairShareLeftWithNetIdAndFY(this.netid, this.fiscalYear)
   }
 
   Trip.prototype.withAllRelations = function () {
@@ -115,6 +96,30 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     })
+  }
+
+  Trip.getFairShareLeftWithNetIdAndFY = async function (netid, fiscalYear) {
+    fiscalYear = fiscalYear || config.fiscalYearForDate(new Date())
+    const query = /* @sql */`
+      SELECT :fairShareAmount - SUM(COALESCE("Grants".amount, 0)) as amount
+      FROM "Trips"
+      JOIN "Costs" on "Costs"."TripId" = "Trips".id
+      JOIN "Grants" on "Grants"."CostId" = "Costs".id
+      JOIN "Budgets" on "Budgets".id = "Grants"."BudgetId"
+      WHERE
+        "Trips".netid = :netid AND
+        "Budgets"."fiscalYear" = :fiscalYear
+      UNION SELECT :fairShareAmount
+    `
+    const res = await sequelize.query(query, {
+      replacements: {
+        fairShareAmount: config.fairShareAmount,
+        netid,
+        fiscalYear
+      },
+      type: sequelize.QueryTypes.SELECT
+    })
+    return res[0].amount
   }
 
   return Trip

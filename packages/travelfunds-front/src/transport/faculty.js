@@ -11,5 +11,5 @@ export function getSuggestions (name) {
 }
 
 export function getFairShareLeft (netid) {
-  return get(`/faculty/fair_share_left/${netid}`)
+  return get(`/api/faculty/${netid}/fair-share-left/`)
 }
