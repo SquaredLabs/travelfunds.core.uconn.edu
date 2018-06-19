@@ -1,5 +1,11 @@
 require('travelfunds-env')
 
+const Raven = require('raven')
+
+if (process.env.NODE_ENV === 'production') {
+  Raven.config(process.env.SENTRY_DSN).install()
+}
+
 const fs = require('fs')
 const path = require('path')
 const Koa = require('koa')
