@@ -75,7 +75,9 @@ class EmailExpansionPanel extends React.Component {
     console.log('emailexpansionpanel')
     const { email, onClick } = this.props
     return <ExpansionPanel key={email.id} onClick={onClick}>
-      <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
+      <ExpansionPanelSummary
+        className={styles.summary}
+        expandIcon={<Icon>expand_more</Icon>}>
         {email.subject}
         <span className={styles.emailDate}>
           {format(email.createdAt, 'MMM Do, YYYY - h:mma')}
