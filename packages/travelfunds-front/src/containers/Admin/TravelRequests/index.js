@@ -49,7 +49,7 @@ class TravelRequests extends React.Component {
     {
       label: 'Traveler',
       value: trip => `${trip.firstName} ${trip.lastName}`,
-      getSortProperty: trip => `${trip.firstName} ${trip.lastName}`
+      getSortProperty: trip => `${trip.firstName} ${trip.lastName}`.toLowerCase()
     },
     {
       label: 'Event Start',
