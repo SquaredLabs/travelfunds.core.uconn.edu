@@ -37,6 +37,11 @@ class TravelRequests extends React.Component {
       getSortProperty: trip => trip.id
     },
     {
+      label: 'Fiscal Year',
+      value: trip => trip.fiscalYear,
+      getSortProperty: trip => trip.fiscalYear
+    },
+    {
       label: 'Status',
       value: trip => trip.status,
       getSortProperty: trip => trip.status

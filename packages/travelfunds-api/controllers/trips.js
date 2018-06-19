@@ -28,7 +28,11 @@ router.param('tripWithAllRelations', async (id, ctx, next) => {
 })
 
 router.get('/', async ctx => {
-  ctx.body = await ctx.db.Trip.findAll()
+  const trips = await ctx.db.Trip.findAll()
+  ctx.body = trips.map(trip => ({
+    ...trip.dataValues,
+    fiscalYear: trip.fiscalYear
+  }))
 })
 
 router.get('/:id', async ctx => {
@@ -38,6 +42,8 @@ router.get('/:id', async ctx => {
   if (trip === null) return
   ctx.body = {
     ...trip.dataValues,
+    fullId: trip.fullId,
+    fiscalYear: trip.fiscalYear,
     isForSenior: trip.isForSenior
   }
 })
