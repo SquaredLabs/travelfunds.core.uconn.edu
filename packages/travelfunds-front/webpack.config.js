@@ -21,7 +21,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'build'),
     publicPath: '/',
-    filename: '[name].js'
+    filename: '[name].[hash].js'
   },
   devServer: {
     hot: true,
@@ -67,7 +67,7 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin({
-      filename: '[name].css',
+      filename: '[name].[hash].css',
       // Disabling causes ETP to fallback and style-loader to inject CSS in
       // <head><style></head>, allowing hot reloading
       disable: process.env.NODE_ENV === 'development'
