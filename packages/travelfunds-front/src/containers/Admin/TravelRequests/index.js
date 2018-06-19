@@ -142,7 +142,7 @@ class TravelRequests extends React.Component {
       </Table>
       <TablePagination
         component='div'
-        count={this.tripsOnCurrentPage.length}
+        count={this.filteredTrips.length}
         page={this.page}
         rowsPerPage={this.rowsPerPage}
         rowsPerPageOptions={[10, 25, 50]}
