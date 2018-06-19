@@ -1,0 +1,10 @@
+<mj-text>
+  Form ID: {{fullId}}<br />
+  Submitted: {{createdAt}}<br />
+  Faculty Name: {{firstName}} {{lastName}}<br />
+  Faculty Title: {{title}}<br />
+  Year of Terminal Degree: {{yearOfTerminalDegree}}<br />
+  Event Title: {{eventTitle}}<br />
+  Destination: {{destination}}<br />
+  Travel Period: {{duration}}
+</mj-text>

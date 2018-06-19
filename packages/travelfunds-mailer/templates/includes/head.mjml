@@ -1,0 +1,11 @@
+<mj-head>
+  <mj-title>{{subject}}</mj-title>
+  <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto:400,500" />
+  <mj-attributes>
+    <mj-all
+      font-family="Roboto, Arial"
+      font-size="18px"
+      line-height="24px"
+    />
+  </mj-attributes>
+</mj-head>

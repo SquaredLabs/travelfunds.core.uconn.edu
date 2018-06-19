@@ -1,0 +1,12 @@
+<mj-section
+  background-color="#2196f3"
+  full-width="full-width"
+  padding-top="64px">
+  <mj-column>
+    <mj-text
+      font-size="32px"
+      color="#fff">
+      Travel Funds
+    </mj-text>
+  </mj-column>
+</mj-section>

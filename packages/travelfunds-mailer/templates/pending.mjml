@@ -1,0 +1,84 @@
+<mjml>
+  <mj-include path="./includes/head.mjml" />
+  <mj-body background-color="#fff">
+    <mj-include path="./includes/title.mjml" />
+
+    <mj-section>
+      <mj-column>
+        <mj-text font-weight="500">
+          Thank you for your submission!
+        </mj-text>
+        <mj-text>
+          This email confirms your submitted request for travel funding. Your request is currently pending and will be reviewed. The amount awarded will be determined by the qualifying amount providing all budgeted funds are available, individual fiscal year allotments have not been reached, and all of the submitted information is accurate. See the <a href="http://research.uconn.edu/funding/faculty-travel/">guidelines</a> for more information.
+        </mj-text>
+        <mj-text text-decoration="underline">
+          This is not the final travel award. Your travel award will be sent after your request has been reviewed.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-divider border-width="1px" border-color="lightgray" />
+
+    <mj-section>
+      <mj-column>
+
+        <mj-text font-weight="500">Form</mj-text>
+        <mj-text>
+          ID: {{id}}<br />
+          Submitted: {{createdAt}}
+        </mj-text>
+
+        <mj-divider border-width="1px" border-color="lightgray" />
+
+        <mj-text font-weight="500">Traveler</mj-text>
+        <mj-text>
+          {{firstName}} {{lastName}}<br />
+          {{title}}<br />
+          {{department}}<br />
+          {{email}}<br />
+          {{netid}}<br />
+        </mj-text>
+
+        <mj-divider border-width="1px" border-color="lightgray" />
+
+        <mj-text font-weight="500">Trip Information</mj-text>
+        <mj-text>
+          Travel Period: {{duration}}<br />
+          Destination: {{destination}}<br />
+          Event Title: {{eventTitle}}<br />
+          Participation Level: {{participationLevel}}<br />
+        </mj-text>
+
+        <mj-divider border-width="1px" border-color="lightgray" />
+
+        <mj-text font-weight="500">Cost Information</mj-text>
+        <mj-table font-size="18px" line-height="24px">
+          <tr>
+            <td>Primary Transport</td>
+            <td>{{costs.PrimaryTransport}}</td>
+          </tr>
+          <tr>
+            <td>Secondary Transport</td>
+            <td>{{costs.SecondaryTransport}}</td>
+          </tr>
+          <tr>
+            <td>Mileage</td>
+            <td>{{costs.Mileage}}</td>
+          </tr>
+          <tr>
+            <td>Registration</td>
+            <td>{{costs.Registration}}</td>
+          </tr>
+          <tr>
+            <td>Meals and Lodging</td>
+            <td>{{costs.Meals&Lodging}}</td>
+          </tr>
+        </mj-table>
+
+      </mj-column>
+    </mj-section>
+
+    <mj-include path="./includes/footer.mjml" />
+
+  </mj-body>
+</mjml>

@@ -5,7 +5,8 @@
   "dependencies": {
     "koa-body": "^2.5.0",
     "koa-router": "^7.4.0",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "travelfunds-mailer": "^1.0.0"
   },
   "devDependencies": {
     "form-data": "^2.3.2",

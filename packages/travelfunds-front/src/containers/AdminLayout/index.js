@@ -84,6 +84,11 @@ const styles = theme => ({
   }
 })
 
+const links = [
+  { icon: 'card_travel', text: 'Travel Requests', href: '/admin/trips' },
+  { icon: 'email', text: 'Email Log', href: '/admin/emails' }
+]
+
 @observer
 class AdminLayout extends React.Component {
   @observable menuOpen = window.localStorage
@@ -124,17 +129,22 @@ class AdminLayout extends React.Component {
         classes={{ paper: cn(classes.drawerPaper, !this.menuOpen && classes.drawerPaperClose) }}>
         <div className={classes.toolbar} />
         <List>
-          <ListItem button className={classes.listItem}>
-            <NavLink to='/admin/trips' className={classes.link} activeClassName={classes.activeLink}>
-              <ListItemIcon>
-                <Icon>card_travel</Icon>
-              </ListItemIcon>
-              <ListItemText
-                primary='Travel Requests'
-                className={classes.listItemText}
-              />
-            </NavLink>
-          </ListItem>
+          { links.map(link =>
+            <ListItem key={link.href} button className={classes.listItem}>
+              <NavLink
+                to={link.href}
+                className={classes.link}
+                activeClassName={classes.activeLink}>
+                <ListItemIcon>
+                  <Icon>{link.icon}</Icon>
+                </ListItemIcon>
+                <ListItemText
+                  primary={link.text}
+                  className={classes.listItemText}
+                />
+              </NavLink>
+            </ListItem>
+          )}
         </List>
       </Drawer>
       <main className={classes.content}>

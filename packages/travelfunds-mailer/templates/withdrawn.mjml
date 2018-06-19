@@ -1,0 +1,37 @@
+<mjml>
+  <mj-include path="./includes/head.mjml" />
+  <mj-body background-color="#fff">
+    <mj-include path="./includes/title.mjml" />
+
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          This confirms your request to cancel your travel funding request.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    {{#response}}<mj-include path="./includes/response.mjml" />{{/response}}
+
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          Please contact research@uconn.edu for further information if necessary.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-divider border-width="1px" border-color="lightgray" />
+
+    <mj-section>
+      <mj-column>
+
+        <mj-include path="./includes/condensed-trip-info.mjml" />
+
+      </mj-column>
+    </mj-section>
+
+    <mj-include path='./includes/footer.mjml' />
+
+  </mj-body>
+</mjml>

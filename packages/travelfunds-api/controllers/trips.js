@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const body = require('koa-body')
 const { pick } = require('lodash')
+const mailer = require('travelfunds-mailer')
 const catchValidationError = require('../middleware/catch-validation-error')
 
 const router = new Router()
@@ -10,6 +11,15 @@ const multipart = body({ multipart: true })
 
 router.param('trip', async (id, ctx, next) => {
   ctx.trip = await ctx.db.Trip.findById(id)
+  if (!ctx.trip) {
+    ctx.status = 404
+    return
+  }
+  return next()
+})
+
+router.param('tripWithAllRelations', async (id, ctx, next) => {
+  ctx.trip = await ctx.db.Trip.findByIdWithAllRelations(id)
   if (!ctx.trip) {
     ctx.status = 404
     return
@@ -78,6 +88,10 @@ router.post('/', multipart, catchValidationError(), async ctx => {
 
   ctx.status = 201
   ctx.set({ Location: `/api/trips/${trip.id}` })
+
+  // This is an async function, but we're not going to wait for it to finish
+  // before returning an HTTP response.
+  trip.withAllRelations().then(mailer.send)
 })
 
 router.get('/:trip/budgets', async ctx => {
@@ -121,6 +135,11 @@ router.patch('/:id', multipart, async ctx => {
   }
 
   ctx.status = 204
+})
+
+router.post('/:tripWithAllRelations/send-email-update', async ctx => {
+  await mailer.send(ctx.trip)
+  ctx.status = 200
 })
 
 module.exports = router

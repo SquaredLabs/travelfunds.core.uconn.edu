@@ -43,10 +43,21 @@ module.exports = (sequelize, DataTypes) => {
 
     // Administration
     response: DataTypes.TEXT
+  }, {
+    hooks: {
+      beforeValidate: trip => {
+        trip.response = (this.response && trip.response.trim()) || null
+      }
+    }
   })
 
   Trip.associate = models =>
     Trip.hasMany(models.Cost)
+
+  Object.defineProperty(Trip.prototype, 'fullId', {
+    enumerable: true,
+    get: function () { return 'FY' + this.fiscalYear % 100 + '-' + this.id }
+  })
 
   Object.defineProperty(Trip.prototype, 'fiscalYear', {
     enumerable: true,
@@ -88,6 +99,22 @@ module.exports = (sequelize, DataTypes) => {
       type: sequelize.QueryTypes.SELECT
     })
     return res[0].amount
+  }
+
+  Trip.prototype.withAllRelations = function () {
+    return Trip.findByIdWithAllRelations(this.id)
+  }
+
+  Trip.findByIdWithAllRelations = function (id) {
+    return Trip.findById(id, {
+      include: {
+        model: sequelize.models.Cost,
+        include: {
+          model: sequelize.models.Grant,
+          include: sequelize.models.Budget
+        }
+      }
+    })
   }
 
   return Trip

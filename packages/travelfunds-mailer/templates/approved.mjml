@@ -1,0 +1,84 @@
+<mjml>
+  <mj-include path="./includes/head.mjml" />
+  <mj-body background-color="#fff">
+    <mj-include path="./includes/title.mjml" />
+
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          Your travel request has been approved as of {{updatedAt}}.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    {{#response}}<mj-include path="./includes/response.mjml" />{{/response}}
+
+    <mj-divider border-width="1px" border-color="lightgray" />
+
+    <mj-section>
+      <mj-column>
+
+        <mj-include path="./includes/condensed-trip-info.mjml" />
+
+        <mj-divider border-width="1px" border-color="lightgray" />
+
+        <mj-text font-weight="500">Cost Information</mj-text>
+        <mj-table font-size="18px" line-height="24px">
+          <tr>
+            <td></td>
+            <td>AAUP</td>
+            <td>OVPR</td>
+          </tr>
+          <tr style="border-bottom: 1px solid black;">
+            <td style="padding-bottom: 12px;">KFS Numbers</td>
+            <td style="padding-bottom: 12px;">{{budgets.AAUP.kfsNumber}}</td>
+            <td style="padding-bottom: 12px;">{{budgets.OVPR.kfsNumber}}</td>
+          </tr>
+          <tr>
+            <td style="padding-top: 12px;">Primary Transport</td>
+            <td style="padding-top: 12px;">{{grants.AAUP.PrimaryTransport}}</td>
+            <td style="padding-top: 12px;">{{grants.OVPR.PrimaryTransport}}</td>
+          </tr>
+          <tr>
+            <td>Secondary Transport</td>
+            <td>{{grants.AAUP.SecondaryTransport}}</td>
+            <td>{{grants.OVPR.SecondaryTransport}}</td>
+          </tr>
+          <tr>
+            <td>Mileage</td>
+            <td>{{grants.AAUP.Mileage}}</td>
+            <td>{{grants.OVPR.Mileage}}</td>
+          </tr>
+          <tr>
+            <td>Registration</td>
+            <td>{{grants.AAUP.Registration}}</td>
+            <td>{{grants.OVPR.Registration}}</td>
+          </tr>
+          <tr>
+            <td>Meals and Lodging</td>
+            <td>{{grants.AAUP.Meals&Lodging}}</td>
+            <td>{{grants.OVPR.Meals&Lodging}}</td>
+          </tr>
+        </mj-table>
+
+        <mj-divider border-width="1px" border-color="lightgray" />
+
+        <mj-text>
+          <p>This is your OVPR/AAUP Travel Award. If you find it necessary to request alterations to this award, e.g., a change in air ticket price, or the cancellation of a trip please forward this award letter to research@uconn.edu or fax (860) 486-5381.</p>
+          <p>
+            <strong>PLEASE NOTE THE FOLLOWING CONCERNING THE FACULTY TRAVEL AWARD PAYMENT POLICY</strong>:
+            <ol>
+              <li>Travelers will be reimbursed for expenses upon return and submission of travel receipts.</li>
+              <li>Faculty who wish to prepay for travel arrangements including the use of Sanditz must use the following procedure: Use a non-travel award KFS account such as a departmental account or IDC account to secure travel arrangements. Once travel is complete, the expense can be moved to the travel award account(s) in KFS.</li>
+            </ol>
+          </p>
+          <p>A request for reimbursement of expenses (available on the travel website at http://www.travel.uconn.edu) must be submitted to the Travel office upon completion of the travel. If reimbursements are not processed in a timely manner, funds may not be available to you. Contact your office support staff should you need further assistance.</p>
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <mj-include path='./includes/footer.mjml' />
+
+  </mj-body>
+</mjml>

@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(3,2),
       allowNull: false,
       defaultvalue: config.defaultSeniorAllocationLimit
-    }
+    },
+    kfsNumber: DataTypes.INTEGER
   })
 
   Budget.associate = models =>
