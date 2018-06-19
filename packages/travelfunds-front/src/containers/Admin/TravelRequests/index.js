@@ -13,8 +13,13 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
 import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
+import TextField from '@material-ui/core/TextField'
+
+import styles from './styles.scss'
 
 @observer
 class TravelRequests extends React.Component {
@@ -23,6 +28,7 @@ class TravelRequests extends React.Component {
   @observable rowsPerPage = 25
   @observable sortDirection = 'desc'
   @observable sortColumn = 'ID'
+  @observable searchText = ''
 
   columns = [
     {
@@ -86,8 +92,26 @@ class TravelRequests extends React.Component {
     })
   }
 
+  @computed get filteredTrips () {
+    const searchText = this.searchText.toLowerCase()
+
+    if (searchText === '') {
+      return this.sortedTrips
+    }
+
+    return this.sortedTrips
+      .filter(x => {
+        const name = `${x.firstName.toLowerCase()} ${x.lastName.toLowerCase()}`
+
+        return [
+          name.indexOf(searchText) >= 0,
+          x.id === parseInt(searchText)
+        ].some(x => x)
+      })
+  }
+
   @computed get tripsOnCurrentPage () {
-    return this.sortedTrips.slice(
+    return this.filteredTrips.slice(
       this.page * this.rowsPerPage,
       (this.page + 1) * this.rowsPerPage
     )
@@ -95,6 +119,10 @@ class TravelRequests extends React.Component {
 
   render () {
     return <Paper>
+      <TripToolbar
+        searchText={this.searchText}
+        onSearchChange={ev => { this.searchText = ev.target.value.trim() }}
+      />
       <Table>
         <Head
           sortDirection={this.sortDirection}
@@ -119,6 +147,22 @@ class TravelRequests extends React.Component {
     </Paper>
   }
 }
+
+const TripToolbar = observer(({ searchText, onSearchChange }) =>
+  <Toolbar>
+    <Typography variant='title' id='tableTitle'>
+      Travel Requests
+    </Typography>
+    <div className={styles.toolbarActions}>
+      <TextField
+        label='Search by ID or faculty name'
+        fullWidth
+        value={searchText}
+        onChange={onSearchChange}
+      />
+    </div>
+  </Toolbar>
+)
 
 const Head = observer(({ sortDirection, sortColumn, columns, onSort }) =>
   <TableHead >
