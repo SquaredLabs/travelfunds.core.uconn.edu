@@ -1,5 +1,5 @@
 import React from 'react'
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
 import fetch from 'isomorphic-fetch'
 import { format } from 'date-fns'
@@ -57,7 +57,10 @@ class TravelRequests extends React.Component {
 
   @action async fetchTrips () {
     const res = await fetch('/api/trips', { credentials: 'include' })
-    this.trips = await res.json()
+    const json = await res.json()
+    runInAction(() => {
+      this.trips = json
+    })
   }
 
   componentDidMount () {
@@ -69,8 +72,11 @@ class TravelRequests extends React.Component {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
     }
     this.sortColumn = column.label
+  }
 
-    this.trips = this.trips.sort((a, b) => {
+  @computed get sortedTrips () {
+    const column = this.columns.find(x => x.label === this.sortColumn)
+    return this.trips.sort((a, b) => {
       const aProp = column.getSortProperty(a)
       const bProp = column.getSortProperty(b)
 
@@ -80,8 +86,8 @@ class TravelRequests extends React.Component {
     })
   }
 
-  @computed get visibleTrips () {
-    return this.trips.slice(
+  @computed get tripsOnCurrentPage () {
+    return this.sortedTrips.slice(
       this.page * this.rowsPerPage,
       (this.page + 1) * this.rowsPerPage
     )
@@ -97,13 +103,13 @@ class TravelRequests extends React.Component {
           onSort={this.handleSort}
         />
         <Body
-          trips={this.visibleTrips}
+          trips={this.tripsOnCurrentPage}
           columns={this.columns}
         />
       </Table>
       <TablePagination
         component='div'
-        count={this.trips.length}
+        count={this.tripsOnCurrentPage.length}
         page={this.page}
         rowsPerPage={this.rowsPerPage}
         rowsPerPageOptions={[10, 25, 50]}
