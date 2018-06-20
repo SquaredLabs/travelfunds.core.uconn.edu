@@ -6,7 +6,7 @@ const basename = path.basename(module.filename)
 const config = require(path.join(__dirname, '../database'))
 
 const env = process.env.NODE_ENV
-const sequelize = new Sequelize({ ...config.common, ...config[env] })
+const sequelize = new Sequelize(config[env])
 
 const models = fs.readdirSync(__dirname)
   .filter(file =>
