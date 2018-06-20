@@ -19,9 +19,10 @@ import lang from 'lang/en_US.js'
 export default class extends React.Component {
   updateSidebar () {
     const { FormState, label, field } = this.props
-    if (field && label) {
+    const tooltip = lang.tooltips[field]
+    if (field && label && tooltip) {
       FormState.sidebarTitle = label
-      FormState.sidebarContent = lang.tooltips[field]
+      FormState.sidebarContent = tooltip
     }
   }
 
