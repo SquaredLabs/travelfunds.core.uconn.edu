@@ -51,5 +51,7 @@ const App = () =>
   </Provider>
 
 const root = document.createElement('div')
-document.body.append(root)
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.append(root)
+})
 ReactDOM.render(<App />, root)
