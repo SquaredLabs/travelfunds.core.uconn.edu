@@ -26,6 +26,7 @@ module.exports = {
   devServer: {
     hot: true,
     contentBase: path.join(__dirname, frontendRoot),
+    historyApiFallback: true,
     proxy: {
       '/api': backendUrl,
       '/login': backendUrl,
