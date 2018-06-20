@@ -28,12 +28,7 @@ module.exports = {
     contentBase: path.join(__dirname, frontendRoot),
     proxy: {
       '/': {
-        target: backendUrl,
-        changeOrigin: true,
-        // Forward webpack dev server's host so AuthCAS can generate the
-        // correct callback URL.
-        onProxyReq: (proxyReq, req) =>
-          proxyReq.setHeader('X-Forwarded-Host', req.headers.host)
+        target: backendUrl
       }
     }
   },
