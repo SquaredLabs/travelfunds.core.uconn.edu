@@ -46,8 +46,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     hooks: {
       beforeValidate: trip => {
-        trip.contactEmail = (this.contactEmail && trip.contactEmail.trim()) || null
-        trip.response = (this.response && trip.response.trim()) || null
+        trip.contactEmail = (trip.contactEmail && trip.contactEmail.trim()) || null
+        trip.response = (trip.response && trip.response.trim()) || null
       }
     }
   })
