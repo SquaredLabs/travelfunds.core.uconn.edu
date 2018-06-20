@@ -20,6 +20,7 @@ const createSend = transportOptions => {
     const message = {
       from: process.env.SMTP_FROM,
       to: trip.email,
+      cc: trip.contactEmail,
       subject: title,
       html
     }
