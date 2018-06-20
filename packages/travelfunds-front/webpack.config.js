@@ -27,9 +27,9 @@ module.exports = {
     hot: true,
     contentBase: path.join(__dirname, frontendRoot),
     proxy: {
-      '/': {
-        target: backendUrl
-      }
+      '/api': backendUrl,
+      '/login': backendUrl,
+      '/logout': backendUrl
     }
   },
   resolve: {
