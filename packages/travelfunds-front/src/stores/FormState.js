@@ -5,7 +5,6 @@ import { getSuggestions, getFairShareLeft } from 'transport/faculty'
 import { submit } from 'transport/form'
 import FacultySuggestion from 'models/FacultySuggestion'
 import lang from 'lang/en_US'
-import { ContactOptions } from 'config'
 
 class FormState {
   @observable currentFormIndex = 0
@@ -20,24 +19,8 @@ class FormState {
     yearOfTerminalDegree: ''
   }
 
-  @observable.shallow contactMyself = {
-    netid: '',
-    phoneNumber: '',
+  @observable.shallow contact = {
     email: ''
-  }
-
-  @observable.shallow contactOther = {
-    netid: '',
-    phoneNumber: '',
-    email: ''
-  }
-
-  @computed get contact () {
-    if (this.contactOption === ContactOptions.OTHER) {
-      return this.contactOther
-    }
-
-    return this.contactMyself
   }
 
   @observable.shallow travelDetails = {

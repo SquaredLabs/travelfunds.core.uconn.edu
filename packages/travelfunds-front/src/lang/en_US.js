@@ -13,12 +13,8 @@ export default {
 
   welcome: [
     'Welcome to the Faculty Travel Request Form. Applications will be processed on a first-come, first served basis.',
-    'Will you be filling out this form for yourself or on the behalf of someone else?'
+    'To begin, please enter an email for an administrative contact. The contact will also receive updates to the faculty\'s trip status.'
   ],
-
-  askForInformationAboutContact: 'Please make sure your information is correct and fill out anything that\'s missing.',
-
-  askForOptionalContact: 'If you would like to add an additional contact, fill out the fields below. The contact will also receive an email confirmation. Otherwise, hit next.',
 
   finished: 'Thanks for submitting a request for travel funding. A confirmation email will be sent to both the contact and the traveling faculty now. A followup email will be sent with the funding status once the request has been reviewed.',
 

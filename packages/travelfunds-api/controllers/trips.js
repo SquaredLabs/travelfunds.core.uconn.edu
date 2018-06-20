@@ -61,7 +61,8 @@ router.post('/', multipart, catchValidationError(), async ctx => {
     'email',
     'department',
     'title',
-    'yearOfTerminalDegree'
+    'yearOfTerminalDegree',
+    'contactEmail'
   ]
   const createTripFields = {
     ...pick(requestFields, assignableTripFields),

@@ -3,12 +3,9 @@ import { toISODateString } from 'utils'
 const { Headers } = window
 
 export function submit (payload) {
-  const contact = Object.keys(payload.contact)
-    .reduce((acc, key) => {
-      return payload.contact[key] !== ''
-        ? { ...acc, [key]: payload.contact[key] }
-        : acc
-    }, {})
+  const contact = {
+    contactEmail: payload.contact.email
+  }
 
   const travelDetails = {
     ...payload.travelDetails,

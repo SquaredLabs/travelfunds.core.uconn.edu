@@ -14,11 +14,6 @@ export const departments = [
   )
 ]
 
-export const ContactOptions = Object.freeze({
-  MYSELF: 'Myself',
-  OTHER: 'Someone Else'
-})
-
 export const titles = [
   'Academic/Research Asst/Assoc',
   'Adjunct Lecturer',
