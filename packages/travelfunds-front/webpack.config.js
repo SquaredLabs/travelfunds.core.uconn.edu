@@ -30,8 +30,6 @@ module.exports = {
       '/': {
         target: backendUrl,
         changeOrigin: true,
-        // Prevent production build from interferring with style-loader
-        pathRewrite: { '^/build/bundle.css': '/build/blank.css' },
         // Forward webpack dev server's host so AuthCAS can generate the
         // correct callback URL.
         onProxyReq: (proxyReq, req) =>

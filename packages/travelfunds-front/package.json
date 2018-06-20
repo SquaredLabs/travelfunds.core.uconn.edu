@@ -49,7 +49,6 @@
     "standard": "^11.0.1"
   },
   "scripts": {
-    "prestart": "mkdir -p public/build && touch public/build/blank.css",
     "start": "webpack-dev-server --mode=development",
     "build": "webpack --mode=production",
     "clean": "rm -rf public/build",
