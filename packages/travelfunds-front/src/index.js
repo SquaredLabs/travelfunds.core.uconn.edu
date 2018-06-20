@@ -52,6 +52,6 @@ const App = () =>
 
 const root = document.createElement('div')
 document.addEventListener('DOMContentLoaded', () => {
-  document.body.append(root)
+  document.body.appendChild(root)
 })
 ReactDOM.render(<App />, root)
