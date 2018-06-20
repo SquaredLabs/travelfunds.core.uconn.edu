@@ -13,7 +13,8 @@ module.exports = () => async (ctx, next) => {
     const pathMatches = (x.path instanceof RegExp)
       ? x.path.test(ctx.path)
       : x.path === ctx.path
-    return x.method === ctx.method && pathMatches
+    const methodMatches = x.method.toLowerCase() === ctx.method.toLowerCase()
+    return methodMatches && pathMatches
   })
 
   if (inWhitelist || isAdministrator) {
