@@ -18,10 +18,10 @@ import lang from 'lang/en_US.js'
 @inject('FormState', 'ValidationState') @observer
 export default class extends React.Component {
   updateSidebar () {
-    const { FormState, label, key } = this.props
-    if (key && label) {
+    const { FormState, label, field } = this.props
+    if (field && label) {
       FormState.sidebarTitle = label
-      FormState.sidebarContent = lang.tooltips[key]
+      FormState.sidebarContent = lang.tooltips[field]
     }
   }
 
