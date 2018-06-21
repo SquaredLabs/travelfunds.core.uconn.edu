@@ -12,6 +12,9 @@ import TransportState from 'stores/TransportState'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
+
 import Form from './pages/Form'
 import Admin from './pages/Admin'
 
@@ -42,10 +45,12 @@ const App = () =>
   <Provider {...stores}>
     <BrowserRouter>
       <MuiThemeProvider theme={muiTheme}>
-        <Switch>
-          <Route exact path='/' component={Form} />
-          <Route path='/' component={Admin} />
-        </Switch>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Switch>
+            <Route exact path='/' component={Form} />
+            <Route path='/' component={Admin} />
+          </Switch>
+        </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     </BrowserRouter>
   </Provider>

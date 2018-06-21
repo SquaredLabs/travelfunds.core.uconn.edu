@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react'
 
 import TextField from '@material-ui/core/TextField'
 import MaterialAutosuggest from 'components/MaterialAutosuggest'
+import DatePicker from 'material-ui-pickers/DatePicker'
 
 import lang from 'lang/en_US.js'
 
@@ -74,6 +75,18 @@ export default class extends React.Component {
           },
           value
         },
+        error,
+        helperText
+      }} />
+    }
+
+    if (Component === DatePicker) {
+      return <Component {...{
+        ...rest,
+        onFocus,
+        onBlur,
+        onChange: date => onChange({ target: { value: date } }),
+        value: value || null,
         error,
         helperText
       }} />
