@@ -1,5 +1,5 @@
 import { post } from 'stores/TransportState'
-import { toISODateString } from 'utils'
+import { format } from 'date-fns'
 const { Headers } = window
 
 export function submit (payload) {
@@ -9,8 +9,8 @@ export function submit (payload) {
 
   const travelDetails = {
     ...payload.travelDetails,
-    startDate: payload.travelDetails.startDate,
-    endDate: payload.travelDetails.endDate
+    startDate: format(payload.travelDetails.startDate, 'YYYY-MM-DD'),
+    endDate: format(payload.travelDetails.endDate, 'YYYY-MM-DD')
   }
 
   const travelCosts = Object.keys(payload.travelCosts)
