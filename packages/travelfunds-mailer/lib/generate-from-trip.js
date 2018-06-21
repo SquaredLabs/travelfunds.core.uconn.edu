@@ -38,7 +38,7 @@ const generate = async trip =>
     createdAt: format(trip.createdAt, 'MMMM Do YYYY, h:mm a'),
     updatedAt: format(trip.updatedAt, 'MMMM Do YYYY, h:mm a'),
     duration: trip.duration
-      .map(x => format(x, 'MMMM Mo YYYY'))
+      .map(x => format(x, 'MMMM Do YYYY'))
       .join(' – '),
     costs: getMustachifiedCosts(trip),
     grants: await getMustachifiedGrants(trip),
