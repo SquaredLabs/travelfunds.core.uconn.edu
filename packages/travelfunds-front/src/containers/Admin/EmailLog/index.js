@@ -74,7 +74,6 @@ class EmailLog extends React.Component {
 @observer
 class EmailExpansionPanel extends React.Component {
   render () {
-    console.log('emailexpansionpanel')
     const { email, onClick } = this.props
     return <ExpansionPanel key={email.id} onClick={onClick}>
       <ExpansionPanelSummary
