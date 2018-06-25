@@ -33,7 +33,7 @@ export default class TravelRequestEdit extends React.Component {
       credentials: 'include'
     })
     this.trip = await res.json()
-    this.response = this.trip.response
+    this.response = this.trip.response || ''
     this.status = this.trip.status
   }
 
