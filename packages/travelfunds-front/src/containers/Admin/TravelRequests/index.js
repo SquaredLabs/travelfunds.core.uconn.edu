@@ -200,7 +200,11 @@ const Body = observer(({ trips, columns }) =>
         key={trip.id}
         hover>
         {columns.map(column =>
-          <TableCell key={column.label}>{column.value(trip)}</TableCell>
+          <TableCell
+            key={column.label}
+            className={styles.tableCell}>
+            {column.value(trip)}
+          </TableCell>
         )}
       </TableRow>)}
   </TableBody>
