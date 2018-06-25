@@ -1,5 +1,5 @@
 import React from 'react'
-import { action, computed, observable, runInAction } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { observer } from 'mobx-react'
 import fetch from 'isomorphic-fetch'
 import { format } from 'date-fns'
@@ -18,11 +18,13 @@ import Typography from '@material-ui/core/Typography'
 import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 import styles from './styles.scss'
 
 @observer
 class TravelRequests extends React.Component {
+  @observable fetching = false
   @observable trips = []
   @observable page = 0
   @observable rowsPerPage = 25
@@ -67,11 +69,11 @@ class TravelRequests extends React.Component {
   ]
 
   @action async fetchTrips () {
+    this.fetching = true
     const res = await fetch('/api/trips', { credentials: 'include' })
     const json = await res.json()
-    runInAction(() => {
-      this.trips = json
-    })
+    this.trips = json
+    this.fetching = false
   }
 
   componentDidMount () {
@@ -140,6 +142,7 @@ class TravelRequests extends React.Component {
           columns={this.columns}
         />
       </Table>
+      { this.fetching && <LinearProgress /> }
       <TablePagination
         component='div'
         count={this.filteredTrips.length}

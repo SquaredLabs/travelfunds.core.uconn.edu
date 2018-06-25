@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable, action, computed, runInAction } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import fetch from 'isomorphic-fetch'
 import { format } from 'date-fns'
@@ -7,21 +7,25 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import TablePagination from '@material-ui/core/TablePagination'
 import Icon from '@material-ui/core/Icon'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import styles from './styles.scss'
 
 @observer
 class EmailLog extends React.Component {
+  @observable fetching = false
   @observable emails = []
   @observable page = 0
   @observable rowsPerPage = 15
 
   @action async fetchEmails () {
+    this.fetching = true
     const res = await fetch('/api/emails', { credentials: 'include' })
     const json = await res.json()
     this.emails = json
       .map(x => ({ ...x, html: null }))
       .sort((a, b) => a.id < b.id ? 1 : -1)
+    this.fetching = false
   }
 
   @action async fetchEmail (id) {
@@ -30,10 +34,7 @@ class EmailLog extends React.Component {
 
     const res = await fetch(`/api/emails/${id}/html`, { credentials: 'include' })
     const text = await res.text()
-    runInAction(() => {
-      console.log(text)
-      email.html = text
-    })
+    email.html = text
   }
 
   @computed get visibleEmails () {
@@ -49,6 +50,7 @@ class EmailLog extends React.Component {
 
   render () {
     return <div>
+      { this.fetching && <CircularProgress className={styles.progress} /> }
       { this.visibleEmails.map(email =>
         <EmailExpansionPanel
           key={email.id}
