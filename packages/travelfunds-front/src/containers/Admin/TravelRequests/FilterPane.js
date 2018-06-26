@@ -26,7 +26,7 @@ export default ({ filters, filterOptions, onFilterChange, ...rest }) =>
             input={<Input id={label} />}
             renderValue={selected => selected.join(', ')}
           >
-            {Object.values(filterOptions[label]).map(option => (
+            {Object.values(filterOptions[label]).sort().map(option => (
               <MenuItem key={option} value={option}>
                 <Checkbox checked={filters[label].indexOf(option) !== -1} />
                 <ListItemText primary={option} />
