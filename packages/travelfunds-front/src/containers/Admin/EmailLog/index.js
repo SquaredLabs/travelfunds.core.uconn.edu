@@ -6,6 +6,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import TablePagination from '@material-ui/core/TablePagination'
 import Icon from '@material-ui/core/Icon'
+import IconButton from '@material-ui/core/IconButton'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { getAll, getHTML } from 'transport/email'
 
@@ -79,6 +80,12 @@ class EmailExpansionPanel extends React.Component {
         className={styles.summary}
         expandIcon={<Icon>expand_more</Icon>}>
         {email.subject}
+        <IconButton
+          className={styles.linkButton}
+          href={`/api/emails/${email.id}/html`}
+          target='_blank'>
+          <Icon>link</Icon>
+        </IconButton>
         <span className={styles.emailDate}>
           {format(email.createdAt, 'MMM Do, YYYY - h:mma')}
         </span>
