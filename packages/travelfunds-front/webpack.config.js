@@ -15,7 +15,6 @@ module.exports = {
     : 'source-map',
   entry: [
     'babel-polyfill',
-    'whatwg-fetch',
     `./${frontendRoot}/index.js`
   ],
   output: {
