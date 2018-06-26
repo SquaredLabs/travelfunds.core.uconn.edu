@@ -13,4 +13,10 @@
 
 .filterPane {
   padding: 1em !important;
+  min-width: 15em;
+
+  & > * {
+    display: flex !important;
+    margin: 1.5em 0 !important;
+  }
 }

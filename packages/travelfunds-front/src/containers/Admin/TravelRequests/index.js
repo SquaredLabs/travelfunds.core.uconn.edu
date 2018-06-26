@@ -29,7 +29,10 @@ const defaultObservableValues = {
   searchText: '',
   sortColumn: 'ID',
   sortDirection: 'desc',
-  showOnlyPending: false
+  filters: {
+    'Status': [],
+    'Fiscal Year': []
+  }
 }
 
 const initialObservableValues = (window.localStorage && JSON.parse(window.localStorage.getItem('travel-requests-storage')))
@@ -41,12 +44,11 @@ class TravelRequests extends React.Component {
   @observable fetching = false
   @observable trips = []
   @observable page = 0
-  @observable rowsPerPage = initialObservableValues.rowsPerPage
-  @observable sortDirection = initialObservableValues.sortDirection
-  @observable sortColumn = initialObservableValues.sortColumn
-  @observable searchText = initialObservableValues.searchText
-  // TODO: Replace this with a fully featured filter
-  @observable showOnlyPending = initialObservableValues.showOnlyPending
+  @observable rowsPerPage = initialObservableValues.rowsPerPage || defaultObservableValues.rowsPerPage
+  @observable sortDirection = initialObservableValues.sortDirection || defaultObservableValues.sortDirection
+  @observable sortColumn = initialObservableValues.sortColumn || defaultObservableValues.sortColumn
+  @observable searchText = initialObservableValues.searchText || defaultObservableValues.searchText
+  @observable filters = initialObservableValues.filters || defaultObservableValues.filters
 
   columns = [
     {
@@ -57,12 +59,14 @@ class TravelRequests extends React.Component {
     {
       label: 'Fiscal Year',
       value: trip => trip.fiscalYear,
-      getSortProperty: trip => trip.fiscalYear
+      getSortProperty: trip => trip.fiscalYear,
+      filterable: true
     },
     {
       label: 'Status',
       value: trip => trip.status,
-      getSortProperty: trip => trip.status
+      getSortProperty: trip => trip.status,
+      filterable: true
     },
     {
       label: 'Traveler',
@@ -120,11 +124,17 @@ class TravelRequests extends React.Component {
     const searchText = this.searchText.trim().toLowerCase()
 
     return this.sortedTrips
+      .filter(trip =>
+        this.columns
+          .map(column => !column.filterable ||
+            (this.filters[column.label].length > 0
+              ? this.filters[column.label].indexOf(column.value(trip)) >= 0
+              : true))
+          .every(x => x))
       .filter(x => {
         const name = `${x.firstName.toLowerCase()} ${x.lastName.toLowerCase()}`
 
-        return (name.indexOf(searchText) >= 0 || x.id === parseInt(searchText)) &&
-          (this.showOnlyPending ? x.status === 'Pending' : true)
+        return name.indexOf(searchText) >= 0 || x.id === parseInt(searchText)
       })
   }
 
@@ -133,6 +143,15 @@ class TravelRequests extends React.Component {
       this.page * this.rowsPerPage,
       (this.page + 1) * this.rowsPerPage
     )
+  }
+
+  @computed get filterOptions () {
+    return this.columns
+      .filter(x => x.filterable)
+      .reduce((acc, column) => ({
+        ...acc,
+        [column.label]: [...new Set(this.trips.map(column.value))]
+      }), {})
   }
 
   componentWillMount () {
@@ -157,7 +176,9 @@ class TravelRequests extends React.Component {
       <TripToolbar
         searchText={this.searchText}
         onSearchChange={ev => { this.searchText = ev.target.value }}
-        onFilterButtonClick={() => { this.showOnlyPending = !this.showOnlyPending }}
+        filters={this.filters}
+        filterOptions={this.filterOptions}
+        onFilterChange={filters => { this.filters = filters }}
       />
       <Table>
         <Head
@@ -187,10 +208,16 @@ class TravelRequests extends React.Component {
 
 @observer
 class TripToolbar extends React.Component {
-  @observable.ref filterAnchorRef = null
+  @observable showFilterPane = false
 
   render () {
-    const { searchText, onSearchChange, onFilterButtonClick } = this.props
+    const {
+      searchText,
+      onSearchChange,
+      filters,
+      filterOptions,
+      onFilterChange
+    } = this.props
     return <Toolbar>
       <Typography variant='title' id='tableTitle'>
         Travel Requests
@@ -204,24 +231,16 @@ class TripToolbar extends React.Component {
           onChange={onSearchChange}
         />
         <IconButton
-          onClick={ev => {
-            this.filterAnchorRef = ev.currentTarget
-            onFilterButtonClick()
-          }}>
+          onClick={() => { this.showFilterPane = true }}>
           <Icon>filter_list</Icon>
         </IconButton>
       </div>
       <FilterPane
-        open={Boolean(this.filterAnchorRef)}
-        onClose={() => { this.filterAnchorRef = null }}
-        anchorEl={this.filterAnchorRef}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          horizontal: 'right'
-        }}
+        open={this.showFilterPane}
+        onClose={() => { this.showFilterPane = false }}
+        filters={filters}
+        filterOptions={filterOptions}
+        onFilterChange={onFilterChange}
       />
     </Toolbar>
   }
