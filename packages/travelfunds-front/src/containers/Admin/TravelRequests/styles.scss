@@ -1,9 +1,16 @@
 .toolbarActions {
   margin-left: auto;
-  max-width: 20em;
-  width: 100%;
+  display: flex;
 }
 
 .tableCell {
   padding-right: 24px !important;
+}
+
+.searchField {
+  min-width: 15em !important;
+}
+
+.filterPane {
+  padding: 1em !important;
 }

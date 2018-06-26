@@ -20,6 +20,7 @@ import TextField from '@material-ui/core/TextField'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 import { getAll } from 'transport/trip'
+import FilterPane from './FilterPane'
 
 import styles from './styles.scss'
 
@@ -32,6 +33,8 @@ class TravelRequests extends React.Component {
   @observable sortDirection = 'desc'
   @observable sortColumn = 'ID'
   @observable searchText = ''
+  // TODO: Replace this with a fully featured filter
+  @observable showOnlyPending = false
 
   columns = [
     {
@@ -104,18 +107,12 @@ class TravelRequests extends React.Component {
   @computed get filteredTrips () {
     const searchText = this.searchText.trim().toLowerCase()
 
-    if (searchText === '') {
-      return this.sortedTrips
-    }
-
     return this.sortedTrips
       .filter(x => {
         const name = `${x.firstName.toLowerCase()} ${x.lastName.toLowerCase()}`
 
-        return [
-          name.indexOf(searchText) >= 0,
-          x.id === parseInt(searchText)
-        ].some(x => x)
+        return (name.indexOf(searchText) >= 0 || x.id === parseInt(searchText)) &&
+          (this.showOnlyPending ? x.status === 'Pending' : true)
       })
   }
 
@@ -131,6 +128,7 @@ class TravelRequests extends React.Component {
       <TripToolbar
         searchText={this.searchText}
         onSearchChange={ev => { this.searchText = ev.target.value }}
+        onFilterButtonClick={() => { this.showOnlyPending = !this.showOnlyPending }}
       />
       <Table>
         <Head
@@ -158,21 +156,47 @@ class TravelRequests extends React.Component {
   }
 }
 
-const TripToolbar = observer(({ searchText, onSearchChange }) =>
-  <Toolbar>
-    <Typography variant='title' id='tableTitle'>
-      Travel Requests
-    </Typography>
-    <div className={styles.toolbarActions}>
-      <TextField
-        label='Search by ID or faculty name'
-        fullWidth
-        value={searchText}
-        onChange={onSearchChange}
+@observer
+class TripToolbar extends React.Component {
+  @observable.ref filterAnchorRef = null
+
+  render () {
+    const { searchText, onSearchChange, onFilterButtonClick } = this.props
+    return <Toolbar>
+      <Typography variant='title' id='tableTitle'>
+        Travel Requests
+      </Typography>
+      <div className={styles.toolbarActions}>
+        <TextField
+          className={styles.searchField}
+          label='Search by ID or faculty name'
+          fullWidth
+          value={searchText}
+          onChange={onSearchChange}
+        />
+        <IconButton
+          onClick={ev => {
+            this.filterAnchorRef = ev.currentTarget
+            onFilterButtonClick()
+          }}>
+          <Icon>filter_list</Icon>
+        </IconButton>
+      </div>
+      <FilterPane
+        open={Boolean(this.filterAnchorRef)}
+        onClose={() => { this.filterAnchorRef = null }}
+        anchorEl={this.filterAnchorRef}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}
+        transformOrigin={{
+          horizontal: 'right'
+        }}
       />
-    </div>
-  </Toolbar>
-)
+    </Toolbar>
+  }
+}
 
 const Head = observer(({ sortDirection, sortColumn, columns, onSort }) =>
   <TableHead >
