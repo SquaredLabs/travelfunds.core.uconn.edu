@@ -62,7 +62,11 @@ router.use('/api/(.*)?', csrf({
   setToken: (token, ctx) => {
     ctx.session.csrfToken = token
     // Deliver the CSRF token downstream
-    ctx.cookies.set('csrf-token', token, { httpOnly: false, overwrite: true })
+    ctx.cookies.set('csrf-token', token, {
+      httpOnly: false,
+      overwrite: true,
+      maxAge: 86400000 * 7
+    })
   }
 }))
 router.use('/api/(.*)?', cas.block)
@@ -76,7 +80,7 @@ router.get('/admin/:resource?/:id?', ctx => {
 })
 
 app.use(static(front.buildPath))
-app.use(session(app))
+app.use(session({ maxAge: 86400000 * 7 }, app))
 app.use(router.routes(), router.allowedMethods())
 
 setImmediate(async () => {
