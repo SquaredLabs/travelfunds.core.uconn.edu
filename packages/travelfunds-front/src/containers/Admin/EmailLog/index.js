@@ -8,6 +8,7 @@ import TablePagination from '@material-ui/core/TablePagination'
 import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import TextField from '@material-ui/core/TextField'
 import { getAll, getHTML } from 'transport/email'
 
 import styles from './styles.scss'
@@ -18,6 +19,7 @@ class EmailLog extends React.Component {
   @observable emails = []
   @observable page = 0
   @observable rowsPerPage = 15
+  @observable searchText = ''
 
   @action async fetchEmails () {
     this.fetching = true
@@ -37,8 +39,15 @@ class EmailLog extends React.Component {
     email.html = await getHTML(id)
   }
 
-  @computed get visibleEmails () {
-    return this.emails.slice(
+  @computed get filtered () {
+    const searchText = this.searchText.trim()
+    return this.emails
+      .filter(x =>
+        x.subject.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
+  }
+
+  @computed get getCurrentPage () {
+    return this.filtered.slice(
       this.page * this.rowsPerPage,
       (this.page + 1) * this.rowsPerPage
     )
@@ -50,8 +59,15 @@ class EmailLog extends React.Component {
 
   render () {
     return <div>
+      <div className={styles.searchField}>
+        <TextField
+          label='Search emails by title'
+          value={this.searchText}
+          onChange={ev => { this.searchText = ev.target.value }}
+        />
+      </div>
       { this.fetching && <CircularProgress className={styles.progress} /> }
-      { this.visibleEmails.map(email =>
+      { this.getCurrentPage.map(email =>
         <EmailExpansionPanel
           key={email.id}
           email={email}
@@ -65,7 +81,7 @@ class EmailLog extends React.Component {
         page={this.page}
         rowsPerPage={this.rowsPerPage}
         rowsPerPageOptions={[15, 50, 100]}
-        count={this.emails.length}
+        count={this.filtered.length}
       />
     </div>
   }
