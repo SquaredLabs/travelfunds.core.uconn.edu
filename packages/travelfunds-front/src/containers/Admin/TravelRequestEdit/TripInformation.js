@@ -10,6 +10,11 @@ export default ({ trip }) =>
     <Divider />
     <h2>Traveler</h2>
     <dl>
+      <dt>Contact</dt>
+      {trip.contactEmail
+        ? <dd>{trip.contactEmail}</dd>
+        : <dd>No contact entered</dd>}
+
       <dt>Name</dt>
       <dd>{trip.firstName} {trip.lastName}</dd>
 
