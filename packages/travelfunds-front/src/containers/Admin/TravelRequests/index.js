@@ -1,5 +1,5 @@
 import React from 'react'
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, reaction } from 'mobx'
 import { observer } from 'mobx-react'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
@@ -24,17 +24,29 @@ import FilterPane from './FilterPane'
 
 import styles from './styles.scss'
 
+const defaultObservableValues = {
+  rowsPerPage: 25,
+  searchText: '',
+  sortColumn: 'ID',
+  sortDirection: 'desc',
+  showOnlyPending: false
+}
+
+const initialObservableValues = (window.localStorage && JSON.parse(window.localStorage.getItem('travel-requests-storage')))
+  ? JSON.parse(window.localStorage.getItem('travel-requests-storage'))
+  : defaultObservableValues
+
 @observer
 class TravelRequests extends React.Component {
   @observable fetching = false
   @observable trips = []
   @observable page = 0
-  @observable rowsPerPage = 25
-  @observable sortDirection = 'desc'
-  @observable sortColumn = 'ID'
-  @observable searchText = ''
+  @observable rowsPerPage = initialObservableValues.rowsPerPage
+  @observable sortDirection = initialObservableValues.sortDirection
+  @observable sortColumn = initialObservableValues.sortColumn
+  @observable searchText = initialObservableValues.searchText
   // TODO: Replace this with a fully featured filter
-  @observable showOnlyPending = false
+  @observable showOnlyPending = initialObservableValues.showOnlyPending
 
   columns = [
     {
@@ -121,6 +133,23 @@ class TravelRequests extends React.Component {
       this.page * this.rowsPerPage,
       (this.page + 1) * this.rowsPerPage
     )
+  }
+
+  componentWillMount () {
+    if (window.localStorage) {
+      reaction(
+        () => Object.keys(defaultObservableValues).map(key => this[key]),
+        () => window.localStorage.setItem(
+          'travel-requests-storage',
+          JSON.stringify(Object
+            .keys(defaultObservableValues)
+            .reduce((acc, key) => ({ ...acc, [key]: this[key] }), {}))),
+        {
+          fireImmediately: true,
+          delay: 500
+        }
+      )
+    }
   }
 
   render () {
