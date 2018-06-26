@@ -131,16 +131,8 @@ router.put('/:id/grants', multipart, async ctx => {
   ctx.status = 201
 })
 
-router.patch('/:id', multipart, async ctx => {
-  const [ affectedRows ] = await ctx.db.Trip.update(
-    ctx.request.body,
-    { where: { id: ctx.params.id } })
-
-  if (affectedRows < 1) {
-    ctx.status = 500
-    return
-  }
-
+router.patch('/:trip', multipart, async ctx => {
+  await ctx.trip.update(ctx.request.body)
   ctx.status = 204
 })
 

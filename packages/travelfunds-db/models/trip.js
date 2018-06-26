@@ -44,6 +44,16 @@ module.exports = (sequelize, DataTypes) => {
     // Administration
     response: DataTypes.TEXT
   }, {
+    validate: {
+      yearOfTerminalDegreePresent () {
+        // There are records in production that do not have a
+        // yearOfTerminalDegree field, so allowNull cannot be set to false. New
+        // travel requests should still have this field however.
+        if (this.isNewRecord && !this.yearOfTerminalDegree) {
+          throw new Error('Year of Terminal Degree is required.')
+        }
+      }
+    },
     hooks: {
       beforeValidate: trip => {
         trip.contactEmail = (trip.contactEmail && trip.contactEmail.trim()) || null
