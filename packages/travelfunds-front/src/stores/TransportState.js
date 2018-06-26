@@ -1,8 +1,6 @@
 import { observable, computed, action } from 'mobx'
-const { fetch, Headers } = window
-
-// const csrfToken = document.querySelector('meta[name="csrf-token"]').content
-const csrfToken = '5'
+import * as Cookies from 'js-cookie'
+import fetch from 'isomorphic-fetch'
 
 class TransportState {
   @observable pending = []
@@ -12,9 +10,11 @@ class TransportState {
 
     const isRequestToOrigin = endpoint.match(/^\//)
     if (isRequestToOrigin) {
-      options.headers = options.headers || new Headers()
-      options.headers.set('X-CSRF-TOKEN', csrfToken)
-      options.headers.set('X-Requested-With', 'XMLHttpRequest')
+      options.headers = {
+        ...options.headers,
+        'X-CSRF-TOKEN': Cookies.get('csrf-token'),
+        'X-Requested-With': 'XMLHttpRequest'
+      }
       options.credentials = 'same-origin'
     }
 
@@ -36,6 +36,16 @@ class TransportState {
     return this.common(endpoint, options)
   }
 
+  @action patch (endpoint, options = {}) {
+    options.method = 'PATCH'
+    return this.common(endpoint, options)
+  }
+
+  @action put (endpoint, options = {}) {
+    options.method = 'PUT'
+    return this.common(endpoint, options)
+  }
+
   @computed get isSendingTravelRequest () {
     return this.pending.some(el => el.match(/^\/travelrequests/))
   }
@@ -46,3 +56,5 @@ export default singleton
 
 export const get = (...args) => singleton.get(...args)
 export const post = (...args) => singleton.post(...args)
+export const patch = (...args) => singleton.patch(...args)
+export const put = (...args) => singleton.put(...args)

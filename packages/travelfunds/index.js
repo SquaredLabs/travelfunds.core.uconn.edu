@@ -13,6 +13,7 @@ const Router = require('koa-router')
 const session = require('koa-session')
 const static = require('koa-static')
 const Cas = require('koa2-cas')
+const csrf = require('koa-csrf-header')
 const crypto = require('crypto')
 const api = require('travelfunds-api')
 const db = require('travelfunds-db')
@@ -57,8 +58,15 @@ router.use(async (ctx, next) => {
   return await next()
 })
 
-router.use('/admin/(.*)?', cas.bounce)
+router.use('/api/(.*)?', csrf({
+  setToken: (token, ctx) => {
+    ctx.session.csrfToken = token
+    // Deliver the CSRF token downstream
+    ctx.cookies.set('csrf-token', token, { httpOnly: false, overwrite: true })
+  }
+}))
 router.use('/api/(.*)?', cas.block)
+router.use('/admin/(.*)?', cas.bounce)
 
 router.use(permissionGuard())
 router.use(api.routes(), api.allowedMethods())

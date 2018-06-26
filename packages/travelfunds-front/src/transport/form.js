@@ -1,6 +1,5 @@
 import { post } from 'stores/TransportState'
 import { format } from 'date-fns'
-const { Headers } = window
 
 export function submit (payload) {
   const contact = {
@@ -27,9 +26,7 @@ export function submit (payload) {
   }
 
   return post('/api/trips', {
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    }),
+    headers: { 'Content-Type': 'application/json' },
     credentials: 'same-origin',
     body: JSON.stringify(body)
   })

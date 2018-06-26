@@ -1,13 +1,13 @@
 import React from 'react'
 import { observable, action, computed } from 'mobx'
 import { observer } from 'mobx-react'
-import fetch from 'isomorphic-fetch'
 import { format } from 'date-fns'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import TablePagination from '@material-ui/core/TablePagination'
 import Icon from '@material-ui/core/Icon'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { getAll, getHTML } from 'transport/email'
 
 import styles from './styles.scss'
 
@@ -20,21 +20,20 @@ class EmailLog extends React.Component {
 
   @action async fetchEmails () {
     this.fetching = true
-    const res = await fetch('/api/emails', { credentials: 'include' })
-    const json = await res.json()
+    try {
+      var json = await getAll()
+    } finally {
+      this.fetching = false
+    }
     this.emails = json
       .map(x => ({ ...x, html: null }))
       .sort((a, b) => a.id < b.id ? 1 : -1)
-    this.fetching = false
   }
 
   @action async fetchEmail (id) {
     const email = this.emails.find(x => x.id === id)
     if (email.html) return
-
-    const res = await fetch(`/api/emails/${id}/html`, { credentials: 'include' })
-    const text = await res.text()
-    email.html = text
+    email.html = await getHTML(id)
   }
 
   @computed get visibleEmails () {

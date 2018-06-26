@@ -1,7 +1,6 @@
 import React from 'react'
 import { action, computed, observable } from 'mobx'
 import { observer } from 'mobx-react'
-import fetch from 'isomorphic-fetch'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
 
@@ -19,6 +18,8 @@ import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 import LinearProgress from '@material-ui/core/LinearProgress'
+
+import { getAll } from 'transport/trip'
 
 import styles from './styles.scss'
 
@@ -70,10 +71,11 @@ class TravelRequests extends React.Component {
 
   @action async fetchTrips () {
     this.fetching = true
-    const res = await fetch('/api/trips', { credentials: 'include' })
-    const json = await res.json()
-    this.trips = json
-    this.fetching = false
+    try {
+      this.trips = await getAll()
+    } finally {
+      this.fetching = false
+    }
   }
 
   componentDidMount () {

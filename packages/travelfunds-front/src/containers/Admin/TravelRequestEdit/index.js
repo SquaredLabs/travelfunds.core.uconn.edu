@@ -1,7 +1,6 @@
 import React from 'react'
 import { action, observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
-import fetch from 'isomorphic-fetch'
 import { Link } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -13,6 +12,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormLabel from '@material-ui/core/FormLabel'
 import TripInformation from './TripInformation'
 import GrantedFundsTable from 'components/GrantedFundsTable'
+import {
+  getSingle,
+  getFairShareLeft,
+  getBudgets,
+  update,
+  postGrants,
+  sendEmailUpdate
+} from 'transport/trip'
 
 import styles from './styles.scss'
 
@@ -29,54 +36,43 @@ export default class TravelRequestEdit extends React.Component {
   @observable response = ''
 
   async fetchTrip () {
-    const res = await fetch(`/api/trips/${this.props.match.params.id}`, {
-      credentials: 'include'
-    })
-    this.trip = await res.json()
+    this.trip = await getSingle(this.props.match.params.id)
     this.response = this.trip.response || ''
     this.status = this.trip.status
   }
 
   async fetchBudgets () {
-    const res = await fetch(`/api/trips/${this.props.match.params.id}/budgets`, {
-      credentials: 'include'
-    })
-    this.budgets = await res.json()
+    this.budgets = await getBudgets(this.props.match.params.id)
   }
 
   async fetchFairShareLeft () {
-    const res = await fetch(`/api/trips/${this.props.match.params.id}/fairshareleft`, {
-      credentials: 'include'
-    })
-    this.fairShareLeft = await res.text()
+    this.fairShareLeft = await getFairShareLeft(this.props.match.params.id)
   }
 
   async componentDidMount () {
     this.fetching = true
-    await Promise.all([
-      this.fetchTrip(),
-      this.fetchBudgets(),
-      this.fetchFairShareLeft()
-    ])
-    this.fetching = false
+    try {
+      await Promise.all([
+        this.fetchTrip(),
+        this.fetchBudgets(),
+        this.fetchFairShareLeft()
+      ])
+    } finally {
+      this.fetching = false
+    }
   }
 
   postGrants () {
-    return fetch(`/api/trips/${this.props.match.params.id}/grants`, {
-      method: 'put',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(this.grants.map(grant =>
+    return postGrants(
+      this.props.match.params.id,
+      this.grants.map(grant =>
         ({ ...grant, amount: grant.amount.toString() })))
-    })
   }
 
   postTripUpdates () {
-    return fetch(`/api/trips/${this.props.match.params.id}`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: this.status, response: this.response })
+    return update(this.props.match.params.id, {
+      status: this.status,
+      response: this.response
     })
   }
 
@@ -100,10 +96,7 @@ export default class TravelRequestEdit extends React.Component {
 
   @action async saveAndSendEmail () {
     await this.save()
-    await fetch(`/api/trips/${this.props.match.params.id}/send-email-update`, {
-      method: 'POST',
-      credentials: 'include'
-    })
+    await sendEmailUpdate(this.props.match.params.id)
     this.props.history.push('/admin/trips')
   }
 
