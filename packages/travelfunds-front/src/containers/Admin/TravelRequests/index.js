@@ -1,5 +1,5 @@
 import React from 'react'
-import { action, computed, observable, reaction } from 'mobx'
+import { action, computed, observable, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
@@ -24,31 +24,36 @@ import FilterPane from './FilterPane'
 
 import styles from './styles.scss'
 
-const defaultObservableValues = {
-  rowsPerPage: 25,
-  searchText: '',
-  sortColumn: 'ID',
-  sortDirection: 'desc',
-  filters: {
-    'Status': [],
-    'Fiscal Year': []
-  }
-}
-
-const initialObservableValues = (window.localStorage && JSON.parse(window.localStorage.getItem('travel-requests-storage')))
-  ? JSON.parse(window.localStorage.getItem('travel-requests-storage'))
-  : defaultObservableValues
-
 @observer
 class TravelRequests extends React.Component {
   @observable fetching = false
   @observable trips = []
   @observable page = 0
-  @observable rowsPerPage = initialObservableValues.rowsPerPage || defaultObservableValues.rowsPerPage
-  @observable sortDirection = initialObservableValues.sortDirection || defaultObservableValues.sortDirection
-  @observable sortColumn = initialObservableValues.sortColumn || defaultObservableValues.sortColumn
-  @observable searchText = initialObservableValues.searchText || defaultObservableValues.searchText
-  @observable filters = initialObservableValues.filters || defaultObservableValues.filters
+
+  // localStorage backed values
+  @observable ls = {
+    rowsPerPage: 25,
+    searchText: '',
+    sortDirection: 'desc',
+    sortColumn: 'ID',
+    filters: {
+      'Status': [],
+      'Fiscal Year': []
+    }
+  }
+
+  @action loadObservablesFromLocalStorage () {
+    if (!window.localStorage) {
+      return
+    }
+
+    const item = window.localStorage.getItem('travel-requests-storage')
+    const hydratedValues = JSON.parse(item) || {}
+
+    for (const key of Object.keys(hydratedValues)) {
+      this.ls[key] = hydratedValues[key]
+    }
+  }
 
   columns = [
     {
@@ -102,33 +107,34 @@ class TravelRequests extends React.Component {
   }
 
   handleSort = (ev, column) => {
-    if (this.sortColumn === column.label) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+    if (this.ls.sortColumn === column.label) {
+      this.ls.sortDirection =
+        this.ls.sortDirection === 'asc' ? 'desc' : 'asc'
     }
-    this.sortColumn = column.label
+    this.ls.sortColumn = column.label
   }
 
   @computed get sortedTrips () {
-    const column = this.columns.find(x => x.label === this.sortColumn)
+    const column = this.columns.find(x => x.label === this.ls.sortColumn)
     return this.trips.sort((a, b) => {
       const aProp = column.getSortProperty(a)
       const bProp = column.getSortProperty(b)
 
       if (aProp === bProp) return 0
-      if (aProp < bProp) return this.sortDirection === 'asc' ? -1 : 1
-      if (aProp > bProp) return this.sortDirection === 'asc' ? 1 : -1
+      if (aProp < bProp) return this.ls.sortDirection === 'asc' ? -1 : 1
+      if (aProp > bProp) return this.ls.sortDirection === 'asc' ? 1 : -1
     })
   }
 
   @computed get filteredTrips () {
-    const searchText = this.searchText.trim().toLowerCase()
+    const searchText = this.ls.searchText.trim().toLowerCase()
 
     return this.sortedTrips
       .filter(trip =>
         this.columns
           .map(column => !column.filterable ||
-            (this.filters[column.label].length > 0
-              ? this.filters[column.label].indexOf(column.value(trip)) >= 0
+            (this.ls.filters[column.label].length > 0
+              ? this.ls.filters[column.label].indexOf(column.value(trip)) >= 0
               : true))
           .every(x => x))
       .filter(x => {
@@ -140,8 +146,8 @@ class TravelRequests extends React.Component {
 
   @computed get tripsOnCurrentPage () {
     return this.filteredTrips.slice(
-      this.page * this.rowsPerPage,
-      (this.page + 1) * this.rowsPerPage
+      this.page * this.ls.rowsPerPage,
+      (this.page + 1) * this.ls.rowsPerPage
     )
   }
 
@@ -154,36 +160,35 @@ class TravelRequests extends React.Component {
       }), {})
   }
 
+  constructor (props) {
+    super(props)
+    this.loadObservablesFromLocalStorage()
+  }
+
   componentWillMount () {
     if (window.localStorage) {
-      reaction(
-        () => Object.keys(defaultObservableValues).map(key => this[key]),
-        () => window.localStorage.setItem(
+      autorun(() => {
+        window.localStorage.setItem(
           'travel-requests-storage',
-          JSON.stringify(Object
-            .keys(defaultObservableValues)
-            .reduce((acc, key) => ({ ...acc, [key]: this[key] }), {}))),
-        {
-          fireImmediately: true,
-          delay: 500
-        }
-      )
+          JSON.stringify(this.ls)
+        )
+      }, { delay: 200 })
     }
   }
 
   render () {
     return <Paper>
       <TripToolbar
-        searchText={this.searchText}
-        onSearchChange={ev => { this.searchText = ev.target.value }}
-        filters={this.filters}
+        searchText={this.ls.searchText}
+        onSearchChange={ev => { this.ls.searchText = ev.target.value }}
+        filters={this.ls.filters}
         filterOptions={this.filterOptions}
-        onFilterChange={filters => { this.filters = filters }}
+        onFilterChange={filters => { this.ls.filters = filters }}
       />
       <Table>
         <Head
-          sortDirection={this.sortDirection}
-          sortColumn={this.sortColumn}
+          sortDirection={this.ls.sortDirection}
+          sortColumn={this.ls.sortColumn}
           columns={this.columns}
           onSort={this.handleSort}
         />
@@ -197,10 +202,10 @@ class TravelRequests extends React.Component {
         component='div'
         count={this.filteredTrips.length}
         page={this.page}
-        rowsPerPage={this.rowsPerPage}
+        rowsPerPage={this.ls.rowsPerPage}
         rowsPerPageOptions={[10, 25, 50]}
         onChangePage={(_, page) => { this.page = page }}
-        onChangeRowsPerPage={ev => { this.rowsPerPage = ev.target.value }}
+        onChangeRowsPerPage={ev => { this.ls.rowsPerPage = ev.target.value }}
       />
     </Paper>
   }
