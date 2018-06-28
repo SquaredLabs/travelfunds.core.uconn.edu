@@ -26,18 +26,21 @@
         <mj-table font-size="18px" line-height="24px">
           <tr>
             <td></td>
-            <td>AAUP</td>
-            <td>OVPR</td>
+            {{#budgets}}
+              <td>{{name}}</td>
+            {{/budgets}}
           </tr>
           <tr style="border-bottom: 1px solid black;">
             <td style="padding-bottom: 12px;">KFS Number</td>
-            <td style="padding-bottom: 12px;">{{budgets.AAUP.kfsNumber}}</td>
-            <td style="padding-bottom: 12px;">{{budgets.OVPR.kfsNumber}}</td>
+            {{#budgets}}
+              <td style="padding-bottom: 12px;">{{kfsNumber}}</td>
+            {{/budgets}}
           </tr>
           <tr>
             <td style="padding-top: 12px;">Award Amount</td>
-            <td style="padding-top: 12px;">{{grants.AAUP}}</td>
-            <td style="padding-top: 12px;">{{grants.OVPR}}</td>
+            {{#budgets}}
+              <td style="padding-top: 12px;">{{granted}}</td>
+            {{/budgets}}
           </tr>
         </mj-table>
 

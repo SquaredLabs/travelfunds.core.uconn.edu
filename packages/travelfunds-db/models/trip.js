@@ -123,6 +123,7 @@ module.exports = (sequelize, DataTypes) => {
       SELECT
       	"Budgets".id,
         "Budgets".name,
+        "Budgets"."kfsNumber",
         SUM(COALESCE("Grants".amount, 0)) as granted
       FROM "Trips"
       JOIN "Costs" ON "Costs"."TripId" = "Trips".id

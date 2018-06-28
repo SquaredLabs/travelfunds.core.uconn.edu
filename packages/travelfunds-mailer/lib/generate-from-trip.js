@@ -22,12 +22,11 @@ const getMustachifiedCosts = trip =>
       [el.expenseCategory.replace(/ /g, '')]: formatDollars(el.amount)
     }), {})
 
-const getMustachifiedGrants = async trip => {
-  // TODO: This function assumes budgets have unique names. This function and
-  // the MJML template should be updated to avoid this assumption.
+const getMustachifiedBudgets = async trip => {
   const budgets = await trip.getGrantTotalsByBudget()
-  return budgets.reduce((acc, el) =>
-      ({ ...acc, [el.name]: formatDollars(el.granted) }), {})
+  return budgets
+    .filter(x => x.granted !== '0.00')
+    .map(x => ({ ...x, granted: formatDollars(x.granted) }), {})
 }
 
 const generate = async trip =>
@@ -41,9 +40,7 @@ const generate = async trip =>
       .map(x => format(x, 'MMMM Do YYYY'))
       .join(' – '),
     costs: getMustachifiedCosts(trip),
-    grants: await getMustachifiedGrants(trip),
-    budgets: (await trip.getBudgets())
-      .reduce((acc, el) => ({ ...acc, [el.name]: el }), {})
+    budgets: await getMustachifiedBudgets(trip)
   })
 
 module.exports = generate
