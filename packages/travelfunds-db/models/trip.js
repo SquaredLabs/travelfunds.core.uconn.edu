@@ -84,10 +84,30 @@ module.exports = (sequelize, DataTypes) => {
     }
   })
 
-  Trip.prototype.getBudgets = function () {
-    return sequelize.models.Budget.findAll({
+  Trip.prototype.getBudgets = async function () {
+    const fullTrip = await this.withAllRelations()
+
+    // This should only happen in situations where there's data corruption,
+    // but a trip may have grants from a budget that's not in its fiscal year.
+    // In these situations, we want to include so misallocated funds can be
+    // corrected.
+    //
+    // Ex: When a trip is moved to a different fiscal year due to rule changes.
+    const budgetsFromExistingGrants = fullTrip.Costs
+      .map(x => x.Grants)
+      .reduce((acc, el) => [...acc, ...el], [])
+      .filter(grant => grant.amount !== '0.00')
+      .map(x => x.Budget)
+
+    const budgetsFromFiscalYear = await sequelize.models.Budget.findAll({
       where: { fiscalYear: this.fiscalYear }
     })
+
+    const budgets = [...budgetsFromExistingGrants, ...budgetsFromFiscalYear]
+    const uniqueBudgets = Object.values(budgets
+      .reduce((acc, el) => ({ ...acc, [el.id]: el }), []))
+
+    return uniqueBudgets
   }
 
   Trip.prototype.getFairShareLeft = async function () {
