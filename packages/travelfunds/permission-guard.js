@@ -1,6 +1,6 @@
 const whitelist = [
   { method: 'post', path: '/api/trips' },
-  { method: 'get', path: /^\/api\/faculty\/.*\/fair-share-left$/ }
+  { method: 'get', path: /^\/api\/faculty\/.*\/fair-share-left\/?$/ }
 ]
 
 module.exports = () => async (ctx, next) => {
