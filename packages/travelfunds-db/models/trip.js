@@ -1,4 +1,5 @@
 const config = require('../config')
+const getFiscalYearForDuration = require('../utils/get-fiscal-year-for-duration')
 
 module.exports = (sequelize, DataTypes) => {
   const Trip = sequelize.define('Trip', {
@@ -72,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Object.defineProperty(Trip.prototype, 'fiscalYear', {
     enumerable: true,
-    get: function () { return config.fiscalYearForDate(this.duration[0]) }
+    get: function () { return getFiscalYearForDuration(this.duration) }
   })
 
   Object.defineProperty(Trip.prototype, 'isForSenior', {
@@ -132,7 +133,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Trip.getFairShareLeftWithNetIdAndFY = async function (netid, fiscalYear) {
-    fiscalYear = fiscalYear || config.fiscalYearForDate(new Date())
+    fiscalYear = fiscalYear || getFiscalYearForDuration([new Date(), new Date()])
     const query = /* @sql */`
       SELECT :fairShareAmount - SUM(COALESCE("Grants".amount, 0)) as amount
       FROM "Trips"
