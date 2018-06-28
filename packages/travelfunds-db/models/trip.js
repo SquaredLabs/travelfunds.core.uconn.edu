@@ -43,7 +43,25 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     // Administration
-    response: DataTypes.TEXT
+    response: DataTypes.TEXT,
+
+    fullId: {
+      type: new DataTypes.VIRTUAL(DataTypes.STRING, ['id', 'fiscalYear']),
+      get: function () {
+        return 'FY' + this.get('fiscalYear') % 100 + '-' + this.get('id')
+      }
+    },
+    fiscalYear: {
+      type: new DataTypes.VIRTUAL(DataTypes.INTEGER, ['duration']),
+      get: function () { return getFiscalYearForDuration(this.get('duration')) }
+    },
+    isForSenior: {
+      type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['yearOfTerminalDegree']),
+      get: function () {
+        const boundary = new Date().getFullYear() - config.yearsUntilSenior
+        return this.get('yearOfTerminalDegree') <= boundary
+      }
+    }
   }, {
     validate: {
       yearOfTerminalDegreePresent () {
@@ -65,24 +83,6 @@ module.exports = (sequelize, DataTypes) => {
 
   Trip.associate = models =>
     Trip.hasMany(models.Cost)
-
-  Object.defineProperty(Trip.prototype, 'fullId', {
-    enumerable: true,
-    get: function () { return 'FY' + this.fiscalYear % 100 + '-' + this.id }
-  })
-
-  Object.defineProperty(Trip.prototype, 'fiscalYear', {
-    enumerable: true,
-    get: function () { return getFiscalYearForDuration(this.duration) }
-  })
-
-  Object.defineProperty(Trip.prototype, 'isForSenior', {
-    enumerable: true,
-    get: function () {
-      const boundary = new Date().getFullYear() - config.yearsUntilSenior
-      return this.yearOfTerminalDegree <= boundary
-    }
-  })
 
   Trip.prototype.getBudgets = async function () {
     const fullTrip = await this.withAllRelations()
