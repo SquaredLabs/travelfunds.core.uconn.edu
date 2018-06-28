@@ -5,6 +5,7 @@
   <mj-column>
     <mj-text
       font-size="32px"
+      line-height="32px"
       color="#fff">
       Travel Funds
     </mj-text>
