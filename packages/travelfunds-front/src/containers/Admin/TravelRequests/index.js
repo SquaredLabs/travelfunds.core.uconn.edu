@@ -79,9 +79,9 @@ class TravelRequests extends React.Component {
       getSortProperty: trip => `${trip.firstName} ${trip.lastName}`.toLowerCase()
     },
     {
-      label: 'Event Start',
-      value: trip => format(trip.duration[0], 'MMM Do YYYY'),
-      getSortProperty: trip => trip.duration[0]
+      label: 'Submission',
+      value: trip => format(trip.createdAt, 'MMM Do, YYYY h:mma'),
+      getSortProperty: trip => trip.createdAt
     },
     {
       label: 'Actions',
