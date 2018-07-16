@@ -3,8 +3,8 @@
   "scripts": {
     "start": "cd packages/travelfunds && npm run start",
     "build": "lerna run build",
-    "dev": "NODE_ENV=development DEBUG=koa* nodemon packages/travelfunds -i packages/travelfunds-front",
-    "webpack-dev": "cd packages/travelfunds-front && npm start",
+    "dev:backend": "NODE_ENV=development DEBUG=koa* nodemon packages/travelfunds -i packages/travelfunds-front",
+    "dev:frontend": "cd packages/travelfunds-front && npm start",
     "test": "jest --projects packages/travelfunds-api --projects packages/travelfunds-db",
     "lint": "standard"
   },

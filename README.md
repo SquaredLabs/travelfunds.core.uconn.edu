@@ -10,6 +10,6 @@ $ npx lerna bootstrap
 ## Development
 
 ```sh
-npm run dev
-npm run webpack-dev
+npm run dev:backend
+npm run dev:frontend
 ```
