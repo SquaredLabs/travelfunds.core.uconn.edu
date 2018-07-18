@@ -197,7 +197,7 @@ module.exports = (sequelize, DataTypes) => {
           upper("Trips".duration) as "Travel Start Date",
           lower("Trips".duration) as "Travel End Date",
           "Trips"."createdAt" as "Submitted",
-          "Trips"."updatedAt" as "Last Modified",
+          max("Grants"."updatedAt") as "Award Date",
           "Trips".duration as "duration",
           "Trips"."yearOfTerminalDegree" as "yearOfTerminalDegree",
           sum("Costs".amount) as "Requested",
