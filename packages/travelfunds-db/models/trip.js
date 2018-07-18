@@ -1,3 +1,4 @@
+const { omit } = require('lodash')
 const config = require('../config')
 const getFiscalYearForDuration = require('../utils/get-fiscal-year-for-duration')
 
@@ -175,6 +176,55 @@ module.exports = (sequelize, DataTypes) => {
       type: sequelize.QueryTypes.SELECT
     })
     return res[0].amount
+  }
+
+  Trip.fullExport = async function () {
+    // We have to build a dynamic query since the number of returned columns
+    // depends on how many budgets we have.
+    const budgets = await sequelize.models.Budget.findAll({
+      attributes: ['id', 'name', 'fiscalYear']
+    })
+    const exportStatement = /* @sql */`
+      SELECT
+          "Trips".id as "ID",
+          "Trips".status as "Status",
+          "Trips"."firstName" as "First Name",
+          "Trips"."lastName" as "Last Name",
+          "Trips".netid as "NetID",
+          "Trips".department as "Department",
+          "Trips".duration as "duration",
+          sum("Costs".amount) as "Requested",
+          sum("Grants".amount) as "Granted"
+          ${budgets
+            .map(() => `,
+              sum(
+                CASE WHEN "Grants"."BudgetId" = ?
+                THEN "Grants".amount
+                ELSE 0
+                END
+              ) as "?"`)
+            .join('')}
+      FROM "Trips"
+      JOIN "Costs" ON "Costs"."TripId" = "Trips".id
+      JOIN "Grants" ON "Grants"."CostId" = "Costs".id
+      GROUP BY "Trips".id
+      ORDER BY "Trips".id
+    `
+
+    const res = await sequelize.query(exportStatement, {
+      model: Trip,
+      replacements: budgets
+        .map(x => [x.id, `${x.fiscalYear} ${x.name}`])
+        .reduce((acc, el) => [...acc, ...el], [])
+    })
+
+    // Trip fiscal years are determined from a runtime function and purposefully
+    // not included in the database. This means we'll have to populate them
+    // post-query.
+    return res.map(trip => ({
+      ...omit(trip.dataValues, ['duration']),
+      'Fiscal Year': trip.fiscalYear
+    }))
   }
 
   return Trip

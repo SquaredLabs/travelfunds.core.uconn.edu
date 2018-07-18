@@ -239,6 +239,9 @@ class TripToolbar extends React.Component {
           onClick={() => { this.showFilterPane = true }}>
           <Icon>filter_list</Icon>
         </IconButton>
+        <IconButton component='a' href='/api/trips/export'>
+          <Icon>arrow_downward</Icon>
+        </IconButton>
       </div>
       <FilterPane
         open={this.showFilterPane}

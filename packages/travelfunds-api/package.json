@@ -3,6 +3,7 @@
   "name": "travelfunds-api",
   "version": "1.0.0",
   "dependencies": {
+    "json2csv": "^4.1.6",
     "koa-body": "^2.5.0",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.10",

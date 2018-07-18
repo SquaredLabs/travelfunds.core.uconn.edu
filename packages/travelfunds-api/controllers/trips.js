@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const body = require('koa-body')
 const { pick } = require('lodash')
+const json2csv = require('json2csv').parse
 const mailer = require('travelfunds-mailer')
 const catchValidationError = require('../middleware/catch-validation-error')
 
@@ -33,6 +34,13 @@ router.get('/', async ctx => {
     ...trip.dataValues,
     fiscalYear: trip.fiscalYear
   }))
+})
+
+router.get('/export', async ctx => {
+  const res = await ctx.db.Trip.fullExport()
+  ctx.attachment(`Travel Requests - ${new Date()}.csv`)
+  ctx.type = 'text/csv'
+  ctx.body = json2csv(res)
 })
 
 router.get('/:id([0-9]+)', async ctx => {

@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "dependencies": {
     "date-fns": "^1.29.0",
+    "lodash": "^4.17.10",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.37.7",
