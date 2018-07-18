@@ -19,7 +19,7 @@ router.get('/', async ctx => {
   })
 })
 
-router.get('/:email/html', async ctx => {
+router.get('/:email([0-9]+)/html', async ctx => {
   ctx.body = ctx.email.html
 })
 

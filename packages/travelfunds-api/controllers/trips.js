@@ -35,7 +35,7 @@ router.get('/', async ctx => {
   }))
 })
 
-router.get('/:id', async ctx => {
+router.get('/:id([0-9]+)', async ctx => {
   const trip = await ctx.db.Trip.findById(ctx.params.id, {
     include: [{ model: ctx.db.Cost, include: [ctx.db.Grant] }]
   })
@@ -101,7 +101,7 @@ router.post('/', multipart, catchValidationError(), async ctx => {
   trip.withAllRelations().then(mailer.send)
 })
 
-router.get('/:trip/budgets', async ctx => {
+router.get('/:trip([0-9]+)/budgets', async ctx => {
   const budgets = await ctx.trip.getBudgets()
   ctx.body = await Promise.all(budgets.map(async budget =>
     ({
@@ -111,11 +111,11 @@ router.get('/:trip/budgets', async ctx => {
     })))
 })
 
-router.get('/:trip/fairshareleft', async ctx => {
+router.get('/:trip([0-9]+)/fairshareleft', async ctx => {
   ctx.body = await ctx.trip.getFairShareLeft()
 })
 
-router.put('/:id/grants', multipart, async ctx => {
+router.put('/:id([0-9]+)/grants', multipart, async ctx => {
   const trip = await ctx.db.Trip.findById(ctx.params.id, {
     include: [{ model: ctx.db.Cost }]
   })
@@ -131,12 +131,12 @@ router.put('/:id/grants', multipart, async ctx => {
   ctx.status = 201
 })
 
-router.patch('/:trip', multipart, async ctx => {
+router.patch('/:trip([0-9]+)', multipart, async ctx => {
   await ctx.trip.update(ctx.request.body)
   ctx.status = 204
 })
 
-router.post('/:tripWithAllRelations/send-email-update', async ctx => {
+router.post('/:tripWithAllRelations([0-9]+)/send-email-update', async ctx => {
   await mailer.send(ctx.trip)
   ctx.status = 200
 })
