@@ -191,8 +191,15 @@ module.exports = (sequelize, DataTypes) => {
           "Trips"."firstName" as "First Name",
           "Trips"."lastName" as "Last Name",
           "Trips".netid as "NetID",
+          "Trips".title as "Title",
           "Trips".department as "Department",
+          "Trips"."participationLevel" as "Participation Level",
+          upper("Trips".duration) as "Travel Start Date",
+          lower("Trips".duration) as "Travel End Date",
+          "Trips"."createdAt" as "Submitted",
+          "Trips"."updatedAt" as "Last Modified",
           "Trips".duration as "duration",
+          "Trips"."yearOfTerminalDegree" as "yearOfTerminalDegree",
           sum("Costs".amount) as "Requested",
           sum("Grants".amount) as "Granted"
           ${budgets
@@ -222,8 +229,11 @@ module.exports = (sequelize, DataTypes) => {
     // not included in the database. This means we'll have to populate them
     // post-query.
     return res.map(trip => ({
-      ...omit(trip.dataValues, ['duration']),
-      'Fiscal Year': trip.fiscalYear
+      ID: trip.id,
+      'Fiscal Year': trip.fiscalYear,
+      Status: trip.dataValues.Status,
+      'Standing': trip.isForSenior ? 'Senior' : 'Junior',
+      ...omit(trip.dataValues, ['id', 'duration', 'yearOfTerminalDegree'])
     }))
   }
 
