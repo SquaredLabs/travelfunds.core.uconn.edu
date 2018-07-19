@@ -8,6 +8,7 @@ import UiState from 'stores/UiState'
 import FormState from 'stores/FormState'
 import ValidationState from 'stores/ValidationState'
 import TransportState from 'stores/TransportState'
+import TripStore from 'stores/TripStore'
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
@@ -39,7 +40,13 @@ const muiTheme = createMuiTheme({
   }
 })
 
-const stores = { UiState, FormState, ValidationState, TransportState }
+const stores = {
+  UiState,
+  FormState,
+  ValidationState,
+  TransportState,
+  TripStore
+}
 
 const App = () =>
   <Provider {...stores}>

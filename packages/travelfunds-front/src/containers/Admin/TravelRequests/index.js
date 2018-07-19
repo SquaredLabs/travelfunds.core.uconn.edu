@@ -1,6 +1,6 @@
 import React from 'react'
-import { action, computed, observable, autorun } from 'mobx'
-import { observer } from 'mobx-react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
 
@@ -19,69 +19,42 @@ import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
-import { getAll } from 'transport/trip'
 import FilterPane from './FilterPane'
 
 import styles from './styles.scss'
 
-@observer
+@inject('TripStore') @observer
 class TravelRequests extends React.Component {
-  @observable fetching = false
-  @observable trips = []
-  @observable page = 0
-
-  // localStorage backed values
-  @observable ls = {
-    rowsPerPage: 25,
-    searchText: '',
-    sortDirection: 'desc',
-    sortColumn: 'ID',
-    filters: {
-      'Status': [],
-      'Fiscal Year': []
-    }
-  }
-
-  @action loadObservablesFromLocalStorage () {
-    if (!window.localStorage) {
-      return
-    }
-
-    const item = window.localStorage.getItem('travel-requests-storage')
-    const hydratedValues = JSON.parse(item) || {}
-
-    for (const key of Object.keys(hydratedValues)) {
-      this.ls[key] = hydratedValues[key]
-    }
-  }
-
   columns = [
     {
       label: 'ID',
+      property: 'id',
       value: trip => trip.id,
-      getSortProperty: trip => trip.id
+      sortable: true
     },
     {
       label: 'Fiscal Year',
+      property: 'fiscalYear',
       value: trip => trip.fiscalYear,
-      getSortProperty: trip => trip.fiscalYear,
-      filterable: true
+      sortable: true
     },
     {
       label: 'Status',
+      property: 'status',
       value: trip => trip.status,
-      getSortProperty: trip => trip.status,
-      filterable: true
+      sortable: true
     },
     {
       label: 'Traveler',
+      property: 'firstName',
       value: trip => `${trip.firstName} ${trip.lastName}`,
-      getSortProperty: trip => `${trip.firstName} ${trip.lastName}`.toLowerCase()
+      sortable: true
     },
     {
       label: 'Submission',
+      property: 'createdAt',
       value: trip => format(trip.createdAt, 'MMM Do, YYYY h:mma'),
-      getSortProperty: trip => trip.createdAt
+      sortable: true
     },
     {
       label: 'Actions',
@@ -93,136 +66,50 @@ class TravelRequests extends React.Component {
     }
   ]
 
-  @action async fetchTrips () {
-    this.fetching = true
-    try {
-      this.trips = await getAll()
-    } finally {
-      this.fetching = false
-    }
-  }
-
   componentDidMount () {
-    this.fetchTrips()
+    this.props.TripStore.fetchTrips()
   }
 
   handleSort = (ev, column) => {
-    if (this.ls.sortColumn === column.label) {
-      this.ls.sortDirection =
-        this.ls.sortDirection === 'asc' ? 'desc' : 'asc'
+    const { TripStore } = this.props
+
+    if (TripStore.sortProperty === column.property) {
+      TripStore.sortDirection = TripStore.sortDirection === 'asc'
+        ? 'desc'
+        : 'asc'
     }
-    this.ls.sortColumn = column.label
-  }
-
-  @computed get sortedTrips () {
-    const column = this.columns.find(x => x.label === this.ls.sortColumn)
-    return this.trips.sort((a, b) => {
-      const aProp = column.getSortProperty(a)
-      const bProp = column.getSortProperty(b)
-
-      if (aProp === bProp) return 0
-      if (aProp < bProp) return this.ls.sortDirection === 'asc' ? -1 : 1
-      if (aProp > bProp) return this.ls.sortDirection === 'asc' ? 1 : -1
-    })
-  }
-
-  @computed get filteredTrips () {
-    const searchText = this.ls.searchText.trim().toLowerCase()
-
-    return this.sortedTrips
-      .filter(trip =>
-        this.columns
-          .map(column => !column.filterable ||
-            (this.ls.filters[column.label].length > 0
-              ? this.ls.filters[column.label].indexOf(column.value(trip)) >= 0
-              : true))
-          .every(x => x))
-      .filter(x => {
-        const name = `${x.firstName.toLowerCase()} ${x.lastName.toLowerCase()}`
-
-        return name.indexOf(searchText) >= 0 || x.id === parseInt(searchText)
-      })
-  }
-
-  @computed get tripsOnCurrentPage () {
-    return this.filteredTrips.slice(
-      this.page * this.ls.rowsPerPage,
-      (this.page + 1) * this.ls.rowsPerPage
-    )
-  }
-
-  @computed get filterOptions () {
-    return this.columns
-      .filter(x => x.filterable)
-      .reduce((acc, column) => ({
-        ...acc,
-        [column.label]: [...new Set(this.trips.map(column.value))]
-      }), {})
-  }
-
-  constructor (props) {
-    super(props)
-    this.loadObservablesFromLocalStorage()
-  }
-
-  componentWillMount () {
-    if (window.localStorage) {
-      autorun(() => {
-        window.localStorage.setItem(
-          'travel-requests-storage',
-          JSON.stringify(this.ls)
-        )
-      }, { delay: 200 })
-    }
+    TripStore.sortProperty = column.property
   }
 
   render () {
+    const { TripStore } = this.props
     return <Paper>
-      <TripToolbar
-        searchText={this.ls.searchText}
-        onSearchChange={ev => { this.ls.searchText = ev.target.value }}
-        filters={this.ls.filters}
-        filterOptions={this.filterOptions}
-        onFilterChange={filters => { this.ls.filters = filters }}
-      />
+      <TripToolbar columns={this.columns} />
       <Table>
         <Head
-          sortDirection={this.ls.sortDirection}
-          sortColumn={this.ls.sortColumn}
+          sortDirection={TripStore.sortDirection}
+          sortProperty={TripStore.sortProperty}
           columns={this.columns}
           onSort={this.handleSort}
         />
         <Body
-          trips={this.tripsOnCurrentPage}
+          loading={TripStore.fetching}
+          trips={TripStore.tripsOnCurrentPage}
           columns={this.columns}
         />
       </Table>
-      { this.fetching && <LinearProgress /> }
-      <TablePagination
-        component='div'
-        count={this.filteredTrips.length}
-        page={this.page}
-        rowsPerPage={this.ls.rowsPerPage}
-        rowsPerPageOptions={[10, 25, 50]}
-        onChangePage={(_, page) => { this.page = page }}
-        onChangeRowsPerPage={ev => { this.ls.rowsPerPage = ev.target.value }}
-      />
+      <TripPagination />
     </Paper>
   }
 }
 
-@observer
+@inject('TripStore') @observer
 class TripToolbar extends React.Component {
   @observable showFilterPane = false
 
   render () {
-    const {
-      searchText,
-      onSearchChange,
-      filters,
-      filterOptions,
-      onFilterChange
-    } = this.props
+    const { TripStore, columns } = this.props
+
     return <Toolbar>
       <Typography variant='title' id='tableTitle'>
         Travel Requests
@@ -232,8 +119,8 @@ class TripToolbar extends React.Component {
           className={styles.searchField}
           label='Search by ID or faculty name'
           fullWidth
-          value={searchText}
-          onChange={onSearchChange}
+          value={TripStore.searchText}
+          onChange={ev => { TripStore.searchText = ev.target.value }}
         />
         <IconButton
           onClick={() => { this.showFilterPane = true }}>
@@ -246,24 +133,26 @@ class TripToolbar extends React.Component {
       <FilterPane
         open={this.showFilterPane}
         onClose={() => { this.showFilterPane = false }}
-        filters={filters}
-        filterOptions={filterOptions}
-        onFilterChange={onFilterChange}
+        propertyNameDisplay={property =>
+          columns.find(x => x.property === property).label}
+        filters={TripStore.filters}
+        filterOptions={TripStore.filterOptions}
+        onFilterChange={filters => { TripStore.filters = filters }}
       />
     </Toolbar>
   }
 }
 
-const Head = observer(({ sortDirection, sortColumn, columns, onSort }) =>
-  <TableHead >
+const Head = observer(({ sortDirection, sortProperty, columns, onSort }) =>
+  <TableHead>
     <TableRow>
       {columns.map(column =>
         <TableCell key={column.label}>
-          {column.getSortProperty
+          {column.sortable
             ? (
               <TableSortLabel
                 direction={sortDirection}
-                active={sortColumn === column.label}
+                active={sortProperty === column.property}
                 onClick={ev => onSort(ev, column)}
                 children={column.label}
               />
@@ -275,8 +164,14 @@ const Head = observer(({ sortDirection, sortColumn, columns, onSort }) =>
   </TableHead>
 )
 
-const Body = observer(({ trips, columns }) =>
+const Body = observer(({ loading, trips, columns }) =>
   <TableBody>
+    { loading &&
+      <TableRow className={styles.progressRow}>
+        <TableCell colSpan={columns.length}>
+          <LinearProgress />
+        </TableCell>
+      </TableRow> }
     {trips.map(trip =>
       <TableRow
         key={trip.id}
@@ -291,5 +186,21 @@ const Body = observer(({ trips, columns }) =>
       </TableRow>)}
   </TableBody>
 )
+
+@inject('TripStore') @observer
+class TripPagination extends React.Component {
+  render () {
+    const { TripStore } = this.props
+    return <TablePagination
+      component='div'
+      count={TripStore.filteredTrips.length}
+      page={TripStore.page}
+      rowsPerPage={TripStore.rowsPerPage}
+      rowsPerPageOptions={[10, 25, 50]}
+      onChangePage={(_, page) => { TripStore.page = page }}
+      onChangeRowsPerPage={ev => { TripStore.rowsPerPage = ev.target.value }}
+    />
+  }
+}
 
 export default TravelRequests

@@ -10,25 +10,33 @@ import ListItemText from '@material-ui/core/ListItemText'
 
 import styles from './styles.scss'
 
-export default ({ filters, filterOptions, onFilterChange, ...rest }) =>
+export default ({
+  propertyNameDisplay,
+  filters,
+  filterOptions,
+  onFilterChange,
+  ...rest
+}) =>
   <Drawer anchor='right' {...rest}>
     <div className={styles.filterPane}>
-      {Object.keys(filters).map(label =>
-        <FormControl key={label}>
-          <InputLabel htmlFor={label}>{label}</InputLabel>
+      {Object.keys(filters).map(id =>
+        <FormControl key={id}>
+          <InputLabel htmlFor={id}>
+            {propertyNameDisplay ? propertyNameDisplay(id) : id}
+          </InputLabel>
           <Select
             multiple
-            value={[...filters[label]]}
+            value={[...filters[id]]}
             onChange={ev => onFilterChange({
               ...filters,
-              [label]: ev.target.value
+              [id]: ev.target.value
             })}
-            input={<Input id={label} />}
+            input={<Input id={id} />}
             renderValue={selected => selected.join(', ')}
           >
-            {Object.values(filterOptions[label]).sort().map(option => (
+            {Object.values(filterOptions[id]).sort().map(option => (
               <MenuItem key={option} value={option}>
-                <Checkbox checked={filters[label].indexOf(option) !== -1} />
+                <Checkbox checked={filters[id].indexOf(option) !== -1} />
                 <ListItemText primary={option} />
               </MenuItem>
             ))}
