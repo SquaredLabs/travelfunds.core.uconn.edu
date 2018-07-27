@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     submitterNetId: { type: DataTypes.STRING, allowNull: false },
 
     // Event
-    duration: { type: DataTypes.RANGE(DataTypes.DATEONLY), allowNull: false },
+    startDate: { type: DataTypes.DATEONLY, allowNull: false },
+    endDate: { type: DataTypes.DATEONLY, allowNull: false },
     eventTitle: { type: DataTypes.STRING, allowNull: false },
     destination: { type: DataTypes.STRING, allowNull: false },
     participationLevel: {
@@ -53,8 +54,13 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     fiscalYear: {
-      type: new DataTypes.VIRTUAL(DataTypes.INTEGER, ['duration']),
-      get: function () { return getFiscalYearForDuration(this.get('duration')) }
+      type: new DataTypes.VIRTUAL(DataTypes.INTEGER, ['startDate', 'endDate']),
+      get: function () {
+        return getFiscalYearForDuration([
+          this.get('startDate')
+          this.get('endDate')
+        ])
+      }
     },
     isForSenior: {
       type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['yearOfTerminalDegree']),
@@ -194,11 +200,10 @@ module.exports = (sequelize, DataTypes) => {
           "Trips".title as "Title",
           "Trips".department as "Department",
           "Trips"."participationLevel" as "Participation Level",
-          upper("Trips".duration) as "Travel Start Date",
-          lower("Trips".duration) as "Travel End Date",
+          "Trips"."startDate" as "Travel Start Date",
+          "Trips"."endDate" as "Travel End Date",
           "Trips"."createdAt" as "Submitted",
           max("Grants"."updatedAt") as "Award Date",
-          "Trips".duration as "duration",
           "Trips"."yearOfTerminalDegree" as "yearOfTerminalDegree",
           sum("Costs".amount) as "Requested",
           sum("Grants".amount) as "Granted"
@@ -233,7 +238,7 @@ module.exports = (sequelize, DataTypes) => {
       'Fiscal Year': trip.fiscalYear,
       Status: trip.dataValues.Status,
       'Standing': trip.isForSenior ? 'Senior' : 'Junior',
-      ...omit(trip.dataValues, ['id', 'duration', 'yearOfTerminalDegree'])
+      ...omit(trip.dataValues, ['id', 'yearOfTerminalDegree'])
     }))
   }
 

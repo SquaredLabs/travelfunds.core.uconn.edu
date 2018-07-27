@@ -34,8 +34,8 @@ export default ({ trip }) =>
     <dl>
       <dt>Period</dt>
       <dd>
-        {format(trip.duration[0], 'MMMM Do, YYYY')} –
-        {format(trip.duration[1], 'MMMM Do, YYYY')}
+        {format(trip.startDate, 'MMMM Do, YYYY')} –
+        {format(trip.endDate, 'MMMM Do, YYYY')}
       </dd>
       <dt>Destination</dt><dd>{trip.destination}</dd>
       <dt>Event Title</dt><dd>{trip.eventTitle}</dd>

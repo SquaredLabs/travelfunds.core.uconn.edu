@@ -59,6 +59,8 @@ router.get('/:id([0-9]+)', async ctx => {
 router.post('/', multipart, catchValidationError(), async ctx => {
   const requestFields = ctx.request.body.fields || ctx.request.body
   const assignableTripFields = [
+    'startDate',
+    'endDate',
     'eventTitle',
     'destination',
     'participationLevel',
@@ -74,9 +76,6 @@ router.post('/', multipart, catchValidationError(), async ctx => {
   ]
   const createTripFields = {
     ...pick(requestFields, assignableTripFields),
-    duration: requestFields.startDate && requestFields.endDate
-      ? [ requestFields.startDate, requestFields.endDate ]
-      : undefined,
     submitterNetId: ctx.session.netid
   }
 
