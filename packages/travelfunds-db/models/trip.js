@@ -57,8 +57,8 @@ module.exports = (sequelize, DataTypes) => {
       type: new DataTypes.VIRTUAL(DataTypes.INTEGER, ['startDate', 'endDate']),
       get: function () {
         return getFiscalYearForDuration([
-          this.get('startDate'),
-          this.get('endDate')
+          new Date(this.get('startDate')),
+          new Date(this.get('endDate'))
         ])
       }
     },
