@@ -204,6 +204,10 @@ module.exports = (sequelize, DataTypes) => {
           "Trips"."endDate" as "Travel End Date",
           "Trips"."createdAt" as "Submitted",
           max("Grants"."updatedAt") as "Award Date",
+          ${ /* We need startDate and endDate without renaming to
+              * calculate ficalYear. */ '' }
+          "Trips"."startDate" as "startDate",
+          "Trips"."endDate" as "endDate",
           "Trips"."yearOfTerminalDegree" as "yearOfTerminalDegree",
           sum("Costs".amount) as "Requested",
           sum("Grants".amount) as "Granted"
@@ -238,7 +242,12 @@ module.exports = (sequelize, DataTypes) => {
       'Fiscal Year': trip.fiscalYear,
       Status: trip.dataValues.Status,
       'Standing': trip.isForSenior ? 'Senior' : 'Junior',
-      ...omit(trip.dataValues, ['id', 'yearOfTerminalDegree'])
+      ...omit(trip.dataValues, [
+        'id',
+        'yearOfTerminalDegree',
+        'startDate',
+        'endDate'
+      ])
     }))
   }
 
