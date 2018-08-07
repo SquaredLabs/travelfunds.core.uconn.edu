@@ -1,4 +1,5 @@
 const { omit } = require('lodash')
+const { parse } = require('date-fns')
 const config = require('../config')
 const getFiscalYearForDuration = require('../utils/get-fiscal-year-for-duration')
 
@@ -57,8 +58,8 @@ module.exports = (sequelize, DataTypes) => {
       type: new DataTypes.VIRTUAL(DataTypes.INTEGER, ['startDate', 'endDate']),
       get: function () {
         return getFiscalYearForDuration([
-          new Date(this.get('startDate')),
-          new Date(this.get('endDate'))
+          parse(this.get('startDate')),
+          parse(this.get('endDate'))
         ])
       }
     },

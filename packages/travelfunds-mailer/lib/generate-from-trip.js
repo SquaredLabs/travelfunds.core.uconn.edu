@@ -36,7 +36,7 @@ const generate = async trip =>
     subject: getSubjectFromTrip(trip),
     createdAt: format(trip.createdAt, 'MMMM Do YYYY, h:mm a'),
     updatedAt: format(trip.updatedAt, 'MMMM Do YYYY, h:mm a'),
-    duration: [new Date(trip.startDate), new Date(trip.endDate)]
+    duration: [trip.startDate, trip.endDate]
       .map(x => format(x, 'MMMM Do YYYY'))
       .join(' – '),
     costs: getMustachifiedCosts(trip),

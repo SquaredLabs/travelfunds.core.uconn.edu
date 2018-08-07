@@ -71,3 +71,16 @@ test('ensure Trip.submitterNetId is not mass assignable', async () => {
   expect(await db.Trip.findById(id))
     .not.toHaveProperty('submitterNetId', 'mal11042')
 })
+
+test('ensure Trip dates are as submitted', async () => {
+  const response = await fetch('/trips', {
+    method: 'POST',
+    body: createForm(validTrip)
+  })
+
+  const location = response.headers.get('Location')
+  const id = location.match(/\/([0-9]+)$/)[1]
+  const trip = await db.Trip.findById(id)
+  expect(trip).toHaveProperty('startDate', validTrip.startDate)
+  expect(trip).toHaveProperty('endDate', validTrip.endDate)
+})
