@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import styles from './styles.scss'
 
 export default ({
+  filterableProperties,
   propertyNameDisplay,
   filters,
   filterOptions,
@@ -19,7 +20,7 @@ export default ({
 }) =>
   <Drawer anchor='right' {...rest}>
     <div className={styles.filterPane}>
-      {Object.keys(filters).map(id =>
+      {filterableProperties.map(id =>
         <FormControl key={id}>
           <InputLabel htmlFor={id}>
             {propertyNameDisplay ? propertyNameDisplay(id) : id}

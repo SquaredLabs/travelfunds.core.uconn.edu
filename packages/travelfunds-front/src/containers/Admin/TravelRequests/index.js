@@ -135,6 +135,7 @@ class TripToolbar extends React.Component {
         onClose={() => { this.showFilterPane = false }}
         propertyNameDisplay={property =>
           columns.find(x => x.property === property).label}
+        filterableProperties={TripStore.filterable}
         filters={TripStore.filters}
         filterOptions={TripStore.filterOptions}
         onFilterChange={filters => { TripStore.filters = filters }}
