@@ -1,4 +1,5 @@
 import { observable, action, computed, autorun } from 'mobx'
+import { get } from 'lodash'
 import { getAll } from 'transport/trip'
 
 class TripStore {
@@ -34,8 +35,17 @@ class TripStore {
     const item = window.localStorage.getItem('travel-requests-storage')
     const hydratedValues = JSON.parse(item) || {}
 
-    for (const key of Object.keys(hydratedValues)) {
+    const simpleValues = Object.keys(hydratedValues)
+      .filter(x => x !== 'filters')
+
+    for (const key of simpleValues) {
       this[key] = hydratedValues[key]
+    }
+
+    // Only hydrate allowed values for filters from local storage.
+    for (const key of Object.keys(this.filters)) {
+      const existing = get(hydratedValues, ['filters', key], [])
+      this.filters[key] = Array.isArray(existing) ? existing : []
     }
   }
 
