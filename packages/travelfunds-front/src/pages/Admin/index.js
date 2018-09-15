@@ -4,6 +4,7 @@ import AdminLayout from 'containers/AdminLayout'
 import TravelRequests from 'containers/Admin/TravelRequests'
 import TravelRequestEdit from 'containers/Admin/TravelRequestEdit'
 import EmailLog from 'containers/Admin/EmailLog'
+import Budgets from 'containers/Admin/Budgets'
 
 import DevTools from 'mobx-react-devtools'
 const inDevelopment = process.env.NODE_ENV !== 'production'
@@ -18,6 +19,7 @@ export default class extends React.Component {
           <Route exact path='/admin/trips' component={TravelRequests} />
           <Route path='/admin/trips/:id' component={TravelRequestEdit} />
           <Route exact path='/admin/emails' component={EmailLog} />
+          <Route exact path='/admin/budgets' component={Budgets} />
         </Switch>
       </AdminLayout>
     </div>
