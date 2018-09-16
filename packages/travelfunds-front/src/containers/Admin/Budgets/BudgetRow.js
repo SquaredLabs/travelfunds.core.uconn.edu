@@ -19,7 +19,6 @@ export default class BudgetRow extends React.Component {
         <TextField
           className={styles.textField}
           label='KFS Number'
-          numeric
           value={budget.kfsNumber}
           onChange={ev => { budget.kfsNumber = ev.target.value }}
         />
