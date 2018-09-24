@@ -205,6 +205,7 @@ module.exports = (sequelize, DataTypes) => {
           "Trips"."endDate" as "Travel End Date",
           "Trips"."createdAt" as "Submitted",
           max("Grants"."updatedAt") as "Award Date",
+          "Trips"."contactEmail" as "Contact Email",
           ${ /* We need startDate and endDate without renaming to
               * calculate ficalYear. */ '' }
           "Trips"."startDate" as "startDate",
