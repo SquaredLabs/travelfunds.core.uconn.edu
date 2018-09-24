@@ -13,7 +13,7 @@ export default {
 
   welcome: [
     'Welcome to the Faculty Travel Request Form. Applications will be processed on a first-come, first served basis.',
-    'To begin, please enter an email for an administrative contact. The contact will also receive updates to the faculty\'s trip status.'
+    'To begin, please enter an email for the administrative contact in your department who is responsible for processing travel reimbursements. Admin contacts named here will be copied on award letters, allowing your department to process reimbursements more easily.'
   ],
 
   finished: 'Thanks for submitting a request for travel funding. A confirmation email will be sent to both the contact and the traveling faculty now. A followup email will be sent with the funding status once the request has been reviewed.',
@@ -23,6 +23,7 @@ export default {
       'This sidebar will show more information about the field you\'re editing.',
       'If you still have any questions that are not answered by the guidelines, please contact Phyllis Horvith at <a href="mailto:phyllis.horvith@uconn.edu">phyllis.horvith@uconn.edu</a>'
     ],
+    'contact.email': 'Admin contacts named here will be copied on award letters, allowing your department to process reimbursements more easily.',
     'traveler.yearOfTerminalDegree': 'Following the most recent AAUP contract, the year of terminal degree is used to establish whether the traveler qualifies as "junior" or early career faculty for the purposes of this program. Junior faculty are defined as those within 7 years of their terminal degree. See guidelines for more detail',
     'travelDetails.startDate': [
       'When will you be leaving?',

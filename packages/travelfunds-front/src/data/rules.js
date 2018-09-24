@@ -34,7 +34,7 @@ export const rules = {
   },
 
   contact: {
-    email: 'email'
+    email: 'required|email'
   },
 
   travelDetails: {
