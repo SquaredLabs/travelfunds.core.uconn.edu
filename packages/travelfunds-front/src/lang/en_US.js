@@ -8,7 +8,19 @@ export default {
 
   loginPage: [
     'Welcome to the Faculty Travel Funding Request Form! Faculty travel funding is available for members of the AAUP bargaining unit at Storrs, Law School, and regional campuses only. UConn Health faculty are not eligible. Please see eligibility section of the <a target="_blank" rel="noopener noreferrer" href="http://research.uconn.edu/funding/faculty-travel/">guidelines</a>.',
+    `Receiving an AAUP/OVPR Travel Award <strong>does not infer that such travel has been approved by the University</strong>, only that the awardee has travel funding available to reimburse expenses from approved travel. Before traveling or making travel arrangements:
+    <ul>
+      <li>All Faculty must obtain approval from their department or unit head, per the AAUP contract.</li>
+      <li>Faculty traveling internationally must obtain approval from Global Affairs.</li>
+      <li>Faculty traveling to embargoed regions (currently Cuba, Iran, Syria, North Korea, and Crimea) must seek approval from OVPR Export Control.</li>
+    </ul>`,
     'Login with your NetID to begin.'
+  ],
+
+  loginPageWarnings: [
+    'All Faculty must obtain approval from their department or unit head, per the AAUP contract.',
+    'Faculty traveling internationally must obtain approval from Global Affairs.',
+    'Faculty traveling to embargoed regions (currently Cuba, Iran, Syria, North Korea, and Crimea) must seek approval from OVPR Export Control.'
   ],
 
   welcome: [
