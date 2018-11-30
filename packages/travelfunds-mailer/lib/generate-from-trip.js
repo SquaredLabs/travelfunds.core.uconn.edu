@@ -12,8 +12,13 @@ const formatDollars = amount =>
     currency: 'USD'
   })
 
-const getSubjectFromTrip = trip =>
-  `${trip.fullId} Travel Funds Request ${trip.status}: ${trip.firstName} ${trip.lastName}`
+const getSubjectFromTrip = trip => {
+  // Use a nicer title :)
+  const status = trip.status === 'Denied'
+    ? 'Not Funded'
+    : trip.status
+  return `${trip.fullId} Travel Funds Request ${status}: ${trip.firstName} ${trip.lastName}`
+}
 
 const getMustachifiedCosts = trip =>
   trip.Costs.reduce((acc, el) =>
