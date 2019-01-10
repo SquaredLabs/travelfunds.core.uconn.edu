@@ -6,7 +6,7 @@
     <mj-section>
       <mj-column>
         <mj-text>
-          Your travel request has not been funded due to unavailability of funds or ineligibility of request.
+          Request Status: Not Funded due to unavailability of funds or ineligibility of request (see request notes below for more detail).
         </mj-text>
       </mj-column>
     </mj-section>
