@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
           LEFT JOIN "Trips" ON "Trips".id = "Costs"."TripId"
       WHERE
           "Budgets".id = :budgetId and
-          "Trips"."yearOfTerminalDegree" <= (extract(year FROM CURRENT_DATE)::int - :yearsUntilSenior)
+          "Trips"."yearOfTerminalDegree" <= (extract(year FROM "Trips"."startDate")::int - :yearsUntilSenior)
       GROUP BY "Budgets".id
 
       UNION

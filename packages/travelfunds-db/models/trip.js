@@ -66,7 +66,8 @@ module.exports = (sequelize, DataTypes) => {
     isForSenior: {
       type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['yearOfTerminalDegree']),
       get: function () {
-        const boundary = new Date().getFullYear() - config.yearsUntilSenior
+        const startDateYear = parse(this.get('startDate')).getFullYear()
+        const boundary = startDateYear - config.yearsUntilSenior
         return this.get('yearOfTerminalDegree') <= boundary
       }
     }
