@@ -16,6 +16,10 @@ const minFraction = (...fractions) =>
   fractions.reduce((acc, x) =>
     acc.compare(x) <= 0 ? acc : x)
 
+const maxFraction = (...fractions) =>
+  fractions.reduce((acc, x) =>
+    acc.compare(x) > 0 ? acc : x)
+
 // Only use this in render. Don't store JavaScript floating point numbers
 // or risk precision loss.
 const displayFraction = fraction =>
@@ -126,7 +130,7 @@ export default class GrantedFundsTable extends React.Component {
           budget.balance,
           this.fairShareLeft,
           ...this.trip.isForSenior
-            ? [budget.seniorFundsLeft]
+            ? [maxFraction(new Fraction(0), budget.seniorFundsLeft)]
             : []
         )
 
