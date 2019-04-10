@@ -9,7 +9,7 @@
     "lint": "standard"
   },
   "devDependencies": {
-    "jest": "^22.4.4",
+    "jest": "^24.7.1",
     "lerna": "^2.11.0",
     "nodemon": "^1.17.5",
     "pg": "^7.4.3",
