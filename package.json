@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "jest": "^24.7.1",
-    "lerna": "^2.11.0",
+    "lerna": "^3.13.3",
     "nodemon": "^1.17.5",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
