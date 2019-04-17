@@ -1,5 +1,7 @@
 # Travel Funds
 
+[![Build Status](https://drone.core.uconn.edu/api/badges/SquaredLabs/travelfunds.core.uconn.edu/status.svg)](https://drone.core.uconn.edu/SquaredLabs/travelfunds.core.uconn.edu)
+
 ## Setup
 
 ```sh
