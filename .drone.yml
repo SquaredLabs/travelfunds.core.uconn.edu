@@ -24,6 +24,11 @@ steps:
       DATABASE_USER: postgres
       DATABASE_HOST: database
 
+  - name: build
+    image: node:11
+    commands:
+      - npm run build
+
 services:
   - name: database
     image: postgres:11.2-alpine
