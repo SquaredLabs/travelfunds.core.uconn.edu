@@ -5,9 +5,7 @@ const common = {
   'username': process.env.DATABASE_USER,
   'password': process.env.DATABASE_PASS,
   // Only log on warnings and errors
-  'logging': false,
-  // https://github.com/sequelize/sequelize/issues/8417
-  'operatorsAliases': false
+  'logging': false
 }
 
 module.exports = {
