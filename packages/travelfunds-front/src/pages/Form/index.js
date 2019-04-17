@@ -13,8 +13,9 @@ import styles from '../../styles/form.scss'
 import DevTools from 'mobx-react-devtools'
 const inDevelopment = process.env.NODE_ENV !== 'production'
 
+export default
 @inject('UiState') @observer
-export default class extends React.Component {
+class extends React.Component {
   render () {
     const { UiState: { rootPage: Page } } = this.props
 

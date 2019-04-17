@@ -7,8 +7,9 @@ import Typography from '@material-ui/core/Typography'
 
 import styles from './styles.scss'
 
+export default
 @observer
-export default class BudgetRow extends React.Component {
+class BudgetRow extends React.Component {
   render () {
     const { budget } = this.props
     return <section className={styles.budgetRow}>

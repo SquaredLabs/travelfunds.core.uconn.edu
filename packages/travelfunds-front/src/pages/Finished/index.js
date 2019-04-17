@@ -6,8 +6,9 @@ import Icon from '@material-ui/core/Icon'
 import lang from 'lang/en_US'
 import styles from './styles.scss'
 
+export default
 @inject('FormState') @observer
-export default class extends React.Component {
+class extends React.Component {
   render () {
     return <div className={styles.container}>
       <h1 className={styles.heading}>Request Submitted</h1>

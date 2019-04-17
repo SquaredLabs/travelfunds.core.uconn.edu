@@ -16,8 +16,9 @@ import lang from 'lang/en_US.js'
  * This component provides reasonable defaults for those.
  */
 
+export default
 @inject('FormState', 'ValidationState') @observer
-export default class extends React.Component {
+class extends React.Component {
   updateSidebar () {
     const { FormState, label, field } = this.props
     const tooltip = lang.tooltips[field]

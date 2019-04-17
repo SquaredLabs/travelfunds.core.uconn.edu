@@ -25,8 +25,9 @@ const maxFraction = (...fractions) =>
 const displayFraction = fraction =>
   fraction.valueOf().toFixed(2)
 
+export default
 @observer
-export default class GrantedFundsTable extends React.Component {
+class GrantedFundsTable extends React.Component {
   @observable disabled = this.props.trip.status === 'Disbursed'
 
   @observable trip = {

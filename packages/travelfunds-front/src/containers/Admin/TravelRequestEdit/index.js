@@ -23,8 +23,9 @@ import {
 
 import styles from './styles.scss'
 
+export default
 @inject('UiState') @observer
-export default class TravelRequestEdit extends React.Component {
+class TravelRequestEdit extends React.Component {
   trip = null
   budgets = null
   fairShareLeft = null

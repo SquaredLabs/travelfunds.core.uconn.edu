@@ -4,8 +4,9 @@ import currencyFormatter from 'currency-formatter'
 
 import styles from './styles.scss'
 
+export default
 @inject('FormState') @observer
-export default class extends React.Component {
+class extends React.Component {
   render () {
     const { FormState } = this.props
 

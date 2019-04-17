@@ -11,8 +11,9 @@ function formatError (error) {
   return error.replace(/(\.)([^$])/g, ' $2')
 }
 
+export default
 @inject('FormState') @observer
-export default class extends React.Component {
+class extends React.Component {
   render () {
     const { FormState: { backendErrors } } = this.props
 

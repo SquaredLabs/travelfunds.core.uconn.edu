@@ -11,8 +11,9 @@ import BudgetRow from './BudgetRow'
 
 import styles from './styles.scss'
 
+export default
 @observer
-export default class BudgetGroup extends React.Component {
+class BudgetGroup extends React.Component {
   render () {
     const { budgets, year, onSave } = this.props
     return <Card className={styles.budgetGroup}>

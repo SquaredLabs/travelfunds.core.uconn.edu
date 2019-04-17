@@ -7,8 +7,9 @@ import DollarInput from 'components/DollarInput'
 
 import styles from './styles.scss'
 
+export default
 @inject('FormState', 'ValidationState') @observer
-export default class extends React.Component {
+class extends React.Component {
   render () {
     return <div className={styles.container}>
       <SmartInput

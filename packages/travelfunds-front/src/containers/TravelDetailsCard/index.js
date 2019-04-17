@@ -12,8 +12,9 @@ import { participationLevels, primaryMethodsOfTravel } from 'config'
 
 import styles from './styles.scss'
 
+export default
 @inject('FormState', 'ValidationState') @observer
-export default class extends React.Component {
+class extends React.Component {
   render () {
     const { FormState } = this.props
     return <div className={styles.container}>

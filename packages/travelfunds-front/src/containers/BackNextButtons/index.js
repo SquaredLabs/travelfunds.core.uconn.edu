@@ -86,8 +86,9 @@ class SubmitButton extends React.Component {
   }
 }
 
+export default
 @inject('FormState') @observer
-export default class extends React.Component {
+class BackNextButtons extends React.Component {
   render () {
     const { FormState } = this.props
     return <div className={styles.container}>

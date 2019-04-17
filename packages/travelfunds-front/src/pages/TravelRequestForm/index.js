@@ -70,8 +70,9 @@ class FormSteps extends React.Component {
   }
 }
 
+export default
 @inject('FormState') @observer
-export default class extends React.Component {
+class extends React.Component {
   renderStepperContent (stepIndex) {
     const Component = formSteps[stepIndex].component
     return <Component />

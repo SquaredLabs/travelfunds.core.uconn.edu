@@ -16,8 +16,9 @@ import { titles, departments } from 'config'
 
 import styles from './styles.scss'
 
+export default
 @inject('FormState', 'ValidationState') @observer
-export default class extends React.Component {
+class extends React.Component {
   @action selectTraveler (suggestion) {
     const { FormState } = this.props
     FormState.traveler.netid = suggestion.netid
