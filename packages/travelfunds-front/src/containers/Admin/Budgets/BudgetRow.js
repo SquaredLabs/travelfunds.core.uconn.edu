@@ -10,9 +10,9 @@ import styles from './styles.scss'
 @observer
 export default class BudgetRow extends React.Component {
   render () {
-    const { budget, onChange } = this.props
+    const { budget } = this.props
     return <section className={styles.budgetRow}>
-      <Typography gutterBottom variant="subheading" component="h2">
+      <Typography gutterBottom variant='subheading' component='h2'>
         {budget.name}
       </Typography>
       <div>
@@ -39,18 +39,18 @@ export default class BudgetRow extends React.Component {
         <FormControlLabel
           control={<Checkbox
             checked={budget.usableByLawProfessors}
-            value="usableByLawProfessors"
-            onChange={(ev, checked) => budget.usableByLawProfessors = checked}
-          /> }
-          label="Usable by Law Professors"
+            value='usableByLawProfessors'
+            onChange={(ev, checked) => { budget.usableByLawProfessors = checked }}
+          />}
+          label='Usable by Law Professors'
         />
         <FormControlLabel
           control={<Checkbox
             checked={budget.usableForAttendanceOnly}
-            value="usableForAttendanceOnly"
-            onChange={(ev, checked) => budget.usableForAttendanceOnly = checked}
-          /> }
-          label="Usable for Attendance Only"
+            value='usableForAttendanceOnly'
+            onChange={(ev, checked) => { budget.usableForAttendanceOnly = checked }}
+          />}
+          label='Usable for Attendance Only'
         />
       </div>
     </section>

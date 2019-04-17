@@ -1,5 +1,4 @@
 require('travelfunds-env')
-const db = require('travelfunds-db')
 
 const mailer = require('./lib/mailer')
 

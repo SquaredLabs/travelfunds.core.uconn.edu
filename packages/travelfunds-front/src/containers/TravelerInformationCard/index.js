@@ -27,7 +27,6 @@ export default class extends React.Component {
 
   render () {
     const { FormState, ValidationState } = this.props
-    const { traveler: { errors, beginValidating } } = ValidationState
 
     const validNetID = !ValidationState.traveler.errors.netid && FormState.traveler.netid !== ''
 

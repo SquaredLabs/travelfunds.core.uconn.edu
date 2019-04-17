@@ -6,7 +6,7 @@
     "dev:backend": "NODE_ENV=development DEBUG=koa* nodemon packages/travelfunds -i packages/travelfunds-front",
     "dev:frontend": "cd packages/travelfunds-front && npm start",
     "test": "jest --projects packages/travelfunds-api --projects packages/travelfunds-db",
-    "lint": "standard"
+    "lint": "standard && (cd packages/travelfunds-front && npm run lint)"
   },
   "devDependencies": {
     "jest": "^24.7.1",
@@ -17,5 +17,10 @@
     "sequelize": "^5.6.1",
     "sequelize-cli": "^5.4.0",
     "standard": "^12.0.1"
+  },
+  "standard": {
+    "ignore": [
+      "/packages/travelfunds-front"
+    ]
   }
 }

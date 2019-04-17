@@ -1,4 +1,4 @@
-import { observable, action, computed, autorun } from 'mobx'
+import { observable, action } from 'mobx'
 import { getAll, update } from 'transport/budget'
 
 class Budgets {

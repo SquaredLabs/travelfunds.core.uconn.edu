@@ -17,11 +17,11 @@ export default class BudgetGroup extends React.Component {
     const { budgets, year, onSave } = this.props
     return <Card className={styles.budgetGroup}>
       <CardContent>
-        <Typography gutterBottom variant="headline" component="h1">
+        <Typography gutterBottom variant='headline' component='h1'>
           {year}
         </Typography>
         {budgets.map(budget =>
-          <BudgetRow key={budget.id} budget={budget} /> )}
+          <BudgetRow key={budget.id} budget={budget} />)}
       </CardContent>
       <CardActions className={styles.budgetGroupActions}>
         <Button

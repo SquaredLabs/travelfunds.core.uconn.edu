@@ -1,8 +1,4 @@
-const { promisify } = require('util')
-const nodemailer = require('nodemailer')
 const { format } = require('date-fns')
-const { flatten, mapValues } = require('lodash')
-const db = require('travelfunds-db')
 const render = require('./render-template')
 
 const formatDollars = amount =>

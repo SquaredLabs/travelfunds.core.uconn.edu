@@ -130,7 +130,7 @@ module.exports = (sequelize, DataTypes) => {
   Trip.prototype.getGrantTotalsByBudget = async function () {
     const query = `
       SELECT
-      	"Budgets".id,
+        "Budgets".id,
         "Budgets".name,
         "Budgets"."kfsNumber",
         SUM(COALESCE("Grants".amount, 0)) as granted
@@ -208,21 +208,19 @@ module.exports = (sequelize, DataTypes) => {
           max("Grants"."updatedAt") as "Award Date",
           "Trips"."contactEmail" as "Contact Email",
           ${ /* We need startDate and endDate without renaming to
-              * calculate ficalYear. */ '' }
+              * calculate ficalYear. */ ''}
           "Trips"."startDate" as "startDate",
           "Trips"."endDate" as "endDate",
           "Trips"."yearOfTerminalDegree" as "yearOfTerminalDegree",
           sum("Costs".amount) as "Requested",
           sum("Grants".amount) as "Granted"
-          ${budgets
-            .map(() => `,
-              sum(
+          ${budgets.map(() => `,
+            sum(
                 CASE WHEN "Grants"."BudgetId" = ?
                 THEN "Grants".amount
                 ELSE 0
                 END
-              ) as "?"`)
-            .join('')}
+            ) as "?"`).join('')}
       FROM "Trips"
       JOIN "Costs" ON "Costs"."TripId" = "Trips".id
       JOIN "Grants" ON "Grants"."CostId" = "Costs".id

@@ -1,5 +1,3 @@
-const config = require('../config')
-
 module.exports = (sequelize, DataTypes) => {
   const Email = sequelize.define('Email', {
     from: DataTypes.STRING,

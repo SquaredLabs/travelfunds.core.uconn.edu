@@ -8,12 +8,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     amount: {
-      type: DataTypes.DECIMAL(10,2),
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0
     },
     seniorAllocationLimit: {
-      type: DataTypes.DECIMAL(3,2),
+      type: DataTypes.DECIMAL(3, 2),
       allowNull: false,
       defaultValue: config.defaultSeniorAllocationLimit
     },
@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       UNION
       -- Use union to provide a default value.
       SELECT
-      	CAST(FLOOR("Budgets".amount * "Budgets"."seniorAllocationLimit" * 100) / 100 AS DECIMAL(10,2))
+          CAST(FLOOR("Budgets".amount * "Budgets"."seniorAllocationLimit" * 100) / 100 AS DECIMAL(10,2))
       FROM "Budgets"
       WHERE "Budgets".id = :budgetId
     `

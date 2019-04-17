@@ -60,8 +60,8 @@ module.exports = {
         { transaction }
       )
 
-      await queryInterface.removeColumn('Trips', 'startDate', { transaction }),
+      await queryInterface.removeColumn('Trips', 'startDate', { transaction })
       await queryInterface.removeColumn('Trips', 'endDate', { transaction })
     })
   }
-};
+}

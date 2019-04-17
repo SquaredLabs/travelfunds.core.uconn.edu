@@ -1,4 +1,4 @@
-import { observable, computed, action, reaction, runInAction } from 'mobx'
+import { observable, action, reaction, runInAction } from 'mobx'
 
 import UiState from 'stores/UiState'
 import { getSuggestions, getFairShareLeft } from 'transport/faculty'

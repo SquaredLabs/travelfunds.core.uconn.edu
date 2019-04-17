@@ -1,7 +1,7 @@
 import React from 'react'
 import { observable, action } from 'mobx'
 import { observer } from 'mobx-react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import cn from 'classnames'
 
 import { withStyles } from '@material-ui/core/styles'

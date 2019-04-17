@@ -18,7 +18,7 @@ module.exports = () => async (ctx, next) => {
   })
 
   if (inWhitelist || isAdministrator) {
-    return await next()
+    return next()
   }
 
   ctx.status = 401

@@ -11,7 +11,7 @@ const path = require('path')
 const Koa = require('koa')
 const Router = require('koa-router')
 const session = require('koa-session')
-const static = require('koa-static')
+const staticServe = require('koa-static')
 const Cas = require('koa2-cas')
 const csrf = require('koa-csrf-header')
 const crypto = require('crypto')
@@ -33,7 +33,7 @@ const cas = new Cas({
   renew: true,
   session_name: 'netid',
   is_dev_mode: process.env.NODE_ENV === 'development',
-  dev_mode_user: process.env.CAS_DEV_USER,
+  dev_mode_user: process.env.CAS_DEV_USER
 })
 
 const router = new Router()
@@ -55,7 +55,7 @@ router.use(async (ctx, next) => {
   if (!ctx.session.netid && ctx.cookies.get('user')) {
     ctx.cookies.set('user', null)
   }
-  return await next()
+  return next()
 })
 
 router.use('/api/(.*)?', csrf({
@@ -79,7 +79,7 @@ router.get('/admin/:resource?/:id?', ctx => {
   ctx.type = 'text/html; charset=utf-8'
 })
 
-app.use(static(front.buildPath))
+app.use(staticServe(front.buildPath))
 app.use(session({ maxAge: 86400000 * 7 }, app))
 app.use(router.routes(), router.allowedMethods())
 
