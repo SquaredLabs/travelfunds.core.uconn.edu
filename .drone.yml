@@ -1,0 +1,12 @@
+pipeline:
+
+  frontend:
+    image: node:11
+    commands:
+      - npm install
+      - npx lerna bootstrap
+
+  lint:
+    image: node:11
+    commands:
+      - npm run lint
