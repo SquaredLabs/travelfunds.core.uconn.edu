@@ -1,12 +1,11 @@
 {
   "presets": [
-    "env",
-    "stage-1",
-    "react"
+    ["@babel/preset-env", { "useBuiltIns": "usage", "corejs": 2 }],
+    "@babel/preset-react"
   ],
   "plugins": [
-    "transform-decorators-legacy",
-    "transform-object-rest-spread",
-    "transform-class-properties"
+    // MobX requires legacy decorators as of 2019-04-17.
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ]
 }

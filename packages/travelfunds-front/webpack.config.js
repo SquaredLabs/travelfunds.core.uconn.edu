@@ -14,7 +14,6 @@ module.exports = {
     ? 'eval-source-map'
     : 'source-map',
   entry: [
-    'babel-polyfill',
     `./${frontendRoot}/index.js`
   ],
   output: {
