@@ -4,7 +4,7 @@ const router = new Router()
 router.prefix('/emails')
 
 router.param('email', async (id, ctx, next) => {
-  const email = await ctx.db.Email.findById(id)
+  const email = await ctx.db.Email.findByPk(id)
   if (email === null) {
     ctx.status = 404
     return

@@ -124,7 +124,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Trip.prototype.withAllRelations = function () {
-    return Trip.findByIdWithAllRelations(this.id)
+    return Trip.findByPkWithAllRelations(this.id)
   }
 
   Trip.prototype.getGrantTotalsByBudget = async function () {
@@ -150,8 +150,8 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
 
-  Trip.findByIdWithAllRelations = function (id) {
-    return Trip.findById(id, {
+  Trip.findByPkWithAllRelations = function (id) {
+    return Trip.findByPk(id, {
       include: {
         model: sequelize.models.Cost,
         include: {

@@ -5,9 +5,9 @@
   "dependencies": {
     "date-fns": "^1.29.0",
     "lodash": "^4.17.10",
-    "pg": "^7.4.3",
+    "pg": "^7.10.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.37.7",
+    "sequelize": "^5.6.1",
     "travelfunds-env": "^1.0.0"
   },
   "devDependencies": {

@@ -11,7 +11,7 @@ router.prefix('/trips')
 const multipart = body({ multipart: true })
 
 router.param('trip', async (id, ctx, next) => {
-  ctx.trip = await ctx.db.Trip.findById(id)
+  ctx.trip = await ctx.db.Trip.findByPk(id)
   if (!ctx.trip) {
     ctx.status = 404
     return
@@ -20,7 +20,7 @@ router.param('trip', async (id, ctx, next) => {
 })
 
 router.param('tripWithAllRelations', async (id, ctx, next) => {
-  ctx.trip = await ctx.db.Trip.findByIdWithAllRelations(id)
+  ctx.trip = await ctx.db.Trip.findByPkWithAllRelations(id)
   if (!ctx.trip) {
     ctx.status = 404
     return
@@ -44,7 +44,7 @@ router.get('/export', async ctx => {
 })
 
 router.get('/:id([0-9]+)', async ctx => {
-  const trip = await ctx.db.Trip.findById(ctx.params.id, {
+  const trip = await ctx.db.Trip.findByPk(ctx.params.id, {
     include: [{ model: ctx.db.Cost, include: [ctx.db.Grant] }]
   })
   if (trip === null) return
@@ -123,7 +123,7 @@ router.get('/:trip([0-9]+)/fairshareleft', async ctx => {
 })
 
 router.put('/:id([0-9]+)/grants', multipart, async ctx => {
-  const trip = await ctx.db.Trip.findById(ctx.params.id, {
+  const trip = await ctx.db.Trip.findByPk(ctx.params.id, {
     include: [{ model: ctx.db.Cost }]
   })
 
