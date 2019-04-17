@@ -16,8 +16,6 @@ const appHook = app => {
 }
 const fetch = makeFetch(routerToServer(trips, appHook))
 
-afterAll(() => db.sequelize.close())
-
 test('accept a valid trip request as multipart/form-data', async () => {
   const tripsBefore = await db.Trip.count()
   const body = createForm(validTrip)

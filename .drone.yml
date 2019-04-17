@@ -1,12 +1,33 @@
-pipeline:
+kind: pipeline
+name: default
 
-  frontend:
+steps:
+  - name: install
     image: node:11
     commands:
       - npm install
       - npx lerna bootstrap
 
-  lint:
+  - name: lint
     image: node:11
     commands:
       - npm run lint
+
+  - name: test
+    image: node:11
+    commands:
+      # For whatever reason, our tests hang/freeze on an open resource in Docker
+      # but not on macOS. Using forceExit to workaround this until we determine
+      # the underlying cause.
+      - npm run test -- --forceExit
+    environment:
+      DATABASE_USER: postgres
+      DATABASE_HOST: database
+
+services:
+  - name: database
+    image: postgres:11.2-alpine
+    ports:
+    - 5432
+    environment:
+      POSTGRES_DB: travelfunds-test
