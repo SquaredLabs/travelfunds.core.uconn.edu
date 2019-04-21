@@ -3,7 +3,7 @@ import { get } from 'lodash'
 import { getAll } from 'transport/trip'
 
 class TripStore {
-  filterable = ['status', 'fiscalYear']
+  filterable = ['status', 'FundingPeriod.fiscalYear']
 
   @observable fetching = false
   @observable trips = []
@@ -60,8 +60,8 @@ class TripStore {
 
   @computed get sortedTrips () {
     return this.trips.sort((a, b) => {
-      let aVal = a[this.sortProperty]
-      let bVal = b[this.sortProperty]
+      let aVal = get(a, this.sortProperty)
+      let bVal = get(b, this.sortProperty)
       if (typeof aVal === 'string') aVal = aVal.toLowerCase()
       if (typeof bVal === 'string') bVal = bVal.toLowerCase()
 
@@ -76,7 +76,7 @@ class TripStore {
       this.filterable
         .map(property =>
           (this.filters[property].length > 0
-            ? this.filters[property].indexOf(trip[property]) >= 0
+            ? this.filters[property].indexOf(get(trip, property)) >= 0
             : true))
         .every(x => x)
 
@@ -102,7 +102,8 @@ class TripStore {
     return this.filterable
       .reduce((acc, property) => ({
         ...acc,
-        [property]: [...new Set(this.trips.map(x => x[property]))]
+        [property]: [...new Set(this.trips.map(x => get(x, property)))]
+          .filter(x => x)
       }), {})
   }
 

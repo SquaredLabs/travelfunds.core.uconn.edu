@@ -29,11 +29,9 @@ router.param('tripWithAllRelations', async (id, ctx, next) => {
 })
 
 router.get('/', async ctx => {
-  const trips = await ctx.db.Trip.findAll()
-  ctx.body = trips.map(trip => ({
-    ...trip.dataValues,
-    fiscalYear: trip.fiscalYear
-  }))
+  ctx.body = await ctx.db.Trip.findAll({
+    include: ctx.db.FundingPeriod
+  })
 })
 
 router.get('/export', async ctx => {
@@ -45,13 +43,14 @@ router.get('/export', async ctx => {
 
 router.get('/:id([0-9]+)', async ctx => {
   const trip = await ctx.db.Trip.findByPk(ctx.params.id, {
-    include: [{ model: ctx.db.Cost, include: [ctx.db.Grant] }]
+    include: [
+      { model: ctx.db.Cost, include: [ctx.db.Grant] },
+      { model: ctx.db.FundingPeriod }
+    ]
   })
   if (trip === null) return
   ctx.body = {
     ...trip.dataValues,
-    fullId: trip.fullId,
-    fiscalYear: trip.fiscalYear,
     isForSenior: trip.isForSenior
   }
 })

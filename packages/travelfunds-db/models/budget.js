@@ -3,10 +3,6 @@ const config = require('../config')
 module.exports = (sequelize, DataTypes) => {
   const Budget = sequelize.define('Budget', {
     name: { type: DataTypes.STRING, allowNull: false },
-    fiscalYear: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     amount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
@@ -30,8 +26,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   })
 
-  Budget.associate = models =>
+  Budget.associate = models => {
     Budget.hasMany(models.Grant, { foreignKey: { allowNull: false } })
+    Budget.belongsTo(models.FundingPeriod, {
+      foreignKey: {
+        allowNull: false,
+        onDelete: 'cascade'
+      }
+    })
+  }
 
   Budget.prototype.getBalance = async function () {
     const query = /* @sql */`
@@ -46,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
       type: sequelize.QueryTypes.SELECT
     })
     return res[0].balance
+  }
+
+  Budget.prototype.getFiscalYear = async function () {
+    const fundingPeriod = await this.getFundingPeriod()
+    return fundingPeriod.fiscalYear
   }
 
   Budget.prototype.getSeniorFundsLeft = async function () {

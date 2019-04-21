@@ -5,7 +5,7 @@ import fetch from 'isomorphic-fetch'
 class TransportState {
   @observable pending = []
 
-  @action common (endpoint, options = {}) {
+  @action async common (endpoint, options = {}) {
     this.pending.push(endpoint)
 
     const isRequestToOrigin = endpoint.match(/^\//)
@@ -18,10 +18,12 @@ class TransportState {
       options.credentials = 'same-origin'
     }
 
-    const response = fetch(endpoint, options)
-    response.then(() => {
-      this.pending.pop(endpoint)
-    })
+    const response = await fetch(endpoint, options)
+    this.pending.pop(endpoint)
+
+    if (response.status < 200 || response.status >= 300) {
+      throw new Error(await response.text())
+    }
 
     return response
   }

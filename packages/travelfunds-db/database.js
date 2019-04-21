@@ -9,6 +9,9 @@ const common = {
 }
 
 module.exports = {
+  local: {
+    ...common
+  },
   production: {
     ...common
   },

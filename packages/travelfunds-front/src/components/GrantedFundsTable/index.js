@@ -93,7 +93,7 @@ class GrantedFundsTable extends React.Component {
   tableHeaders = [
     'Category',
     'Requested',
-    ...this.budgets.map(budget => `${budget.name} ${budget.fiscalYear}`),
+    ...this.budgets.map(budget => `${budget.name} ${budget.FundingPeriod.name}`),
     'Granted'
   ]
 

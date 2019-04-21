@@ -2,14 +2,21 @@
   text-align: center;
 }
 
-.budgetGroup {
+.FundingPeriodCard {
   display: inline-block;
   margin: auto;
   text-align: left;
 }
 
-.budgetGroup + .budgetGroup {
+.FundingPeriodCard + .FundingPeriodCard {
   margin-top: 1.5em;
+}
+
+.fundingPeriodFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.5em;
+  margin: 1.5em 0;
 }
 
 .budgetGroupActions {

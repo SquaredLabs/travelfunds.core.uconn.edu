@@ -10,7 +10,7 @@ import ValidationState from 'stores/ValidationState'
 import TransportState from 'stores/TransportState'
 import TripStore from 'stores/TripStore'
 import EmailLogStore from 'stores/EmailLogStore'
-import BudgetStore from 'stores/BudgetStore'
+import FundingPeriodStore from 'stores/FundingPeriodStore'
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
@@ -49,7 +49,7 @@ const stores = {
   TransportState,
   TripStore,
   EmailLogStore,
-  BudgetStore
+  FundingPeriodStore
 }
 
 const App = () =>

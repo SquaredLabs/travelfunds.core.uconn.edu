@@ -2,6 +2,7 @@ import React from 'react'
 import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import { format } from 'date-fns'
+import { get } from 'lodash'
 import { Link } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper'
@@ -34,8 +35,8 @@ class TravelRequests extends React.Component {
     },
     {
       label: 'Fiscal Year',
-      property: 'fiscalYear',
-      value: trip => trip.fiscalYear,
+      property: 'FundingPeriod.fiscalYear',
+      value: trip => get(trip, 'FundingPeriod.fiscalYear', ''),
       sortable: true
     },
     {

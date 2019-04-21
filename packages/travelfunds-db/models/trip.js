@@ -48,21 +48,6 @@ module.exports = (sequelize, DataTypes) => {
     // Administration
     response: DataTypes.TEXT,
 
-    fullId: {
-      type: new DataTypes.VIRTUAL(DataTypes.STRING, ['id', 'fiscalYear']),
-      get: function () {
-        return 'FY' + this.get('fiscalYear') % 100 + '-' + this.get('id')
-      }
-    },
-    fiscalYear: {
-      type: new DataTypes.VIRTUAL(DataTypes.INTEGER, ['startDate', 'endDate']),
-      get: function () {
-        return getFiscalYearForDuration([
-          parse(this.get('startDate')),
-          parse(this.get('endDate'))
-        ])
-      }
-    },
     isForSenior: {
       type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['yearOfTerminalDegree']),
       get: function () {
@@ -90,29 +75,36 @@ module.exports = (sequelize, DataTypes) => {
     }
   })
 
-  Trip.associate = models =>
+  Trip.associate = models => {
     Trip.hasMany(models.Cost)
+    Trip.belongsTo(models.FundingPeriod)
+  }
+
+  Trip.prototype.getFiscalYear = async function () {
+    const fundingPeriod = await this.getFundingPeriod()
+    return fundingPeriod && fundingPeriod.fiscalYear
+  }
 
   Trip.prototype.getBudgets = async function () {
     const fullTrip = await this.withAllRelations()
 
-    // This should only happen in situations where there's data corruption,
-    // but a trip may have grants from a budget that's not in its fiscal year.
-    // In these situations, we want to include so misallocated funds can be
-    // corrected.
+    // When a trip is moved to a different funding period (which has different
+    // budgets, it retains the grants from the previous budgets. In these
+    // situations, we want to include those grants so misallocated funds can be
+    // corrected/cleared.
     //
-    // Ex: When a trip is moved to a different fiscal year due to rule changes.
+    // On the administrative interface, you simply see extra columns from
+    // different budget years.
     const budgetsFromExistingGrants = fullTrip.Costs
       .map(x => x.Grants)
       .reduce((acc, el) => [...acc, ...el], [])
       .filter(grant => grant.amount !== '0.00')
       .map(x => x.Budget)
 
-    const budgetsFromFiscalYear = await sequelize.models.Budget.findAll({
-      where: { fiscalYear: this.fiscalYear }
-    })
+    const budgetsFromFundingPeriod = fullTrip.FundingPeriod &&
+      fullTrip.FundingPeriod.Budgets
 
-    const budgets = [...budgetsFromExistingGrants, ...budgetsFromFiscalYear]
+    const budgets = [...budgetsFromExistingGrants, ...budgetsFromFundingPeriod]
     const uniqueBudgets = Object.values(budgets
       .reduce((acc, el) => ({ ...acc, [el.id]: el }), []))
 
@@ -120,7 +112,8 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Trip.prototype.getFairShareLeft = async function () {
-    return Trip.getFairShareLeftWithNetIdAndFY(this.netid, this.fiscalYear)
+    const fiscalYear = await this.getFiscalYear()
+    return Trip.getFairShareLeftWithNetIdAndFY(this.netid, fiscalYear)
   }
 
   Trip.prototype.withAllRelations = function () {
@@ -152,13 +145,25 @@ module.exports = (sequelize, DataTypes) => {
 
   Trip.findByPkWithAllRelations = function (id) {
     return Trip.findByPk(id, {
-      include: {
-        model: sequelize.models.Cost,
-        include: {
-          model: sequelize.models.Grant,
-          include: sequelize.models.Budget
+      include: [
+        {
+          model: sequelize.models.Cost,
+          include: {
+            model: sequelize.models.Grant,
+            include: {
+              model: sequelize.models.Budget,
+              include: { model: sequelize.models.FundingPeriod }
+            }
+          }
+        },
+        {
+          model: sequelize.models.FundingPeriod,
+          include: {
+            model: sequelize.models.Budget,
+            include: { model: sequelize.models.FundingPeriod }
+          }
         }
-      }
+      ]
     })
   }
 
@@ -170,9 +175,10 @@ module.exports = (sequelize, DataTypes) => {
       JOIN "Costs" on "Costs"."TripId" = "Trips".id
       JOIN "Grants" on "Grants"."CostId" = "Costs".id
       JOIN "Budgets" on "Budgets".id = "Grants"."BudgetId"
+      JOIN "FundingPeriods" on "FundingPeriods".id = "Budgets"."FundingPeriodId"
       WHERE
         "Trips".netid = :netid AND
-        "Budgets"."fiscalYear" = :fiscalYear
+        "FundingPeriods"."fiscalYear" = :fiscalYear
       UNION SELECT :fairShareAmount
     `
     const res = await sequelize.query(query, {
@@ -190,11 +196,16 @@ module.exports = (sequelize, DataTypes) => {
     // We have to build a dynamic query since the number of returned columns
     // depends on how many budgets we have.
     const budgets = await sequelize.models.Budget.findAll({
-      attributes: ['id', 'name', 'fiscalYear']
+      attributes: ['id', 'name'],
+      include: {
+        model: sequelize.models.FundingPeriod,
+        attributes: ['fiscalYear', 'name']
+      }
     })
     const exportStatement = /* @sql */`
       SELECT
           "Trips".id as "ID",
+          "FundingPeriods"."fiscalYear" as "Fiscal Year",
           "Trips".status as "Status",
           "Trips"."firstName" as "First Name",
           "Trips"."lastName" as "Last Name",
@@ -207,10 +218,6 @@ module.exports = (sequelize, DataTypes) => {
           "Trips"."createdAt" as "Submitted",
           max("Grants"."updatedAt") as "Award Date",
           "Trips"."contactEmail" as "Contact Email",
-          ${ /* We need startDate and endDate without renaming to
-              * calculate ficalYear. */ ''}
-          "Trips"."startDate" as "startDate",
-          "Trips"."endDate" as "endDate",
           "Trips"."yearOfTerminalDegree" as "yearOfTerminalDegree",
           sum("Costs".amount) as "Requested",
           sum("Grants".amount) as "Granted"
@@ -224,30 +231,26 @@ module.exports = (sequelize, DataTypes) => {
       FROM "Trips"
       JOIN "Costs" ON "Costs"."TripId" = "Trips".id
       JOIN "Grants" ON "Grants"."CostId" = "Costs".id
-      GROUP BY "Trips".id
+      LEFT JOIN "FundingPeriods" ON "FundingPeriods".id = "Trips"."FundingPeriodId"
+      GROUP BY
+        "Trips".id,
+        "FundingPeriods"."fiscalYear"
       ORDER BY "Trips".id
     `
 
     const res = await sequelize.query(exportStatement, {
       model: Trip,
       replacements: budgets
-        .map(x => [x.id, `${x.fiscalYear} ${x.name}`])
+        .map(x => [x.id, `${x.name} ${x.FundingPeriod.name}`])
         .reduce((acc, el) => [...acc, ...el], [])
     })
 
-    // Trip fiscal years are determined from a runtime function and purposefully
-    // not included in the database. This means we'll have to populate them
-    // post-query.
     return res.map(trip => ({
       ID: trip.id,
-      'Fiscal Year': trip.fiscalYear,
-      Status: trip.dataValues.Status,
       'Standing': trip.isForSenior ? 'Senior' : 'Junior',
       ...omit(trip.dataValues, [
         'id',
-        'yearOfTerminalDegree',
-        'startDate',
-        'endDate'
+        'yearOfTerminalDegree'
       ])
     }))
   }
