@@ -15,3 +15,5 @@ $ npx lerna bootstrap
 npm run dev:backend
 npm run dev:frontend
 ```
+
+Setting up MailHog is highly recommended for local email delivery testing: https://github.com/mailhog/MailHog
