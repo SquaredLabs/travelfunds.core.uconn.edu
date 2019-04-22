@@ -23,6 +23,8 @@ steps:
     environment:
       DATABASE_USER: postgres
       DATABASE_HOST: database
+      SMTP_HOST: mail
+      SMTP_PORT: 1025
 
 services:
   - name: database
@@ -31,3 +33,8 @@ services:
     - 5432
     environment:
       POSTGRES_DB: travelfunds-test
+
+  - name: mail
+    image: mailhog/mailhog:latest
+    ports:
+      - 1025
