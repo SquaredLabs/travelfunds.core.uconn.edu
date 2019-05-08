@@ -1,9 +1,15 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
+import { Switch, Route } from 'react-router-dom'
+
+import Login from 'pages/Login'
+import TravelRequestForm from 'pages/TravelRequestForm'
+import Finished from 'pages/Finished'
 
 import UConnBanner from 'components/UConnBanner'
 import TallAppBar from 'components/TallAppBar'
 import Footer from 'components/Footer'
+import FundingPeriodSelection from '../FundingPeriodSelection'
 
 import 'styles/global.scss'
 import styles from '../../styles/form.scss'
@@ -17,14 +23,20 @@ export default
 @inject('UiState') @observer
 class extends React.Component {
   render () {
-    const { UiState: { rootPage: Page } } = this.props
+    const { UiState } = this.props
+
+    const rootPage = UiState.authenticated ? FundingPeriodSelection : Login
 
     return <div className={styles.root}>
       { inDevelopment && <DevTools /> }
       <UConnBanner />
       <TallAppBar title='Faculty Travel Funding' showMenuIconButton={false} />
       <main className={styles.main}>
-        <Page />
+        <Switch>
+          <Route path='/' exact component={rootPage} />
+          <Route path='/funding-periods/:id' exact component={TravelRequestForm} />
+          <Route path='/funding-periods/:id/finished' component={Finished} />
+        </Switch>
       </main>
       <Footer />
     </div>

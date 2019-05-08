@@ -18,7 +18,7 @@ import blue from '@material-ui/core/colors/blue'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 
-import Form from './pages/Form'
+import Faculty from './pages/Faculty'
 import Admin from './pages/Admin'
 
 import ReactGA from 'react-ga'
@@ -58,8 +58,8 @@ const App = () =>
       <MuiThemeProvider theme={muiTheme}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Switch>
-            <Route exact path='/' component={Form} />
-            <Route path='/' component={Admin} />
+            <Route path='/admin' component={Admin} />
+            <Route path='/' component={Faculty} />
           </Switch>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>

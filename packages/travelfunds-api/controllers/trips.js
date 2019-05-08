@@ -3,7 +3,6 @@ const body = require('koa-body')
 const { pick } = require('lodash')
 const json2csv = require('json2csv').parse
 const mailer = require('travelfunds-mailer')
-const catchValidationError = require('../middleware/catch-validation-error')
 
 const router = new Router()
 router.prefix('/trips')
@@ -53,58 +52,6 @@ router.get('/:id([0-9]+)', async ctx => {
     ...trip.dataValues,
     isForSenior: trip.isForSenior
   }
-})
-
-router.post('/', multipart, catchValidationError(), async ctx => {
-  const requestFields = ctx.request.body.fields || ctx.request.body
-  const assignableTripFields = [
-    'startDate',
-    'endDate',
-    'eventTitle',
-    'destination',
-    'participationLevel',
-    'primaryMethodOfTravel',
-    'netid',
-    'firstName',
-    'lastName',
-    'email',
-    'department',
-    'title',
-    'yearOfTerminalDegree',
-    'contactEmail'
-  ]
-  const createTripFields = {
-    ...pick(requestFields, assignableTripFields),
-    submitterNetId: ctx.session.netid
-  }
-
-  const costFormTableFieldPairs = [
-    ['primaryTransport', 'Primary Transport'],
-    ['secondaryTransport', 'Secondary Transport'],
-    ['mileage', 'Mileage'],
-    ['registration', 'Registration'],
-    ['mealsAndLodging', 'Meals & Lodging']
-  ]
-
-  const trip = await ctx.db.sequelize.transaction(async transaction => {
-    const trip = await ctx.db.Trip.create(createTripFields, { transaction })
-    const createCostFields = costFormTableFieldPairs
-      .map(([formField, tableField]) => ({
-        expenseCategory: tableField,
-        amount: requestFields[formField],
-        TripId: trip.id
-      }))
-    await Promise.all(createCostFields.map(fields =>
-      ctx.db.Cost.create(fields, { transaction })))
-    return trip
-  })
-
-  ctx.status = 201
-  ctx.set({ Location: `/api/trips/${trip.id}` })
-
-  // This is an async function, but we're not going to wait for it to finish
-  // before returning an HTTP response.
-  trip.withAllRelations().then(mailer.send)
 })
 
 router.get('/:trip([0-9]+)/budgets', async ctx => {

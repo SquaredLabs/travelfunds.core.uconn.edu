@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const trips = require('./trips')
+const fundingPeriods = require('./funding-periods')
 const { makeFetch } = require('supertest-fetch')
 const { omit } = require('lodash')
 const db = require('travelfunds-db')
@@ -14,12 +14,28 @@ const appHook = app => {
   app.context.session = { netid: 'hap11113' }
   return app
 }
-const fetch = makeFetch(routerToServer(trips, appHook))
+const fetch = makeFetch(routerToServer(fundingPeriods, appHook))
+
+beforeAll(async () => {
+  await db.sequelize.sync({ force: true })
+  await db.FundingPeriod.create({
+    name: '2018',
+    fiscalYear: 2018,
+    open: [
+      { value: '2017-05-01', inclusive: true },
+      { value: '2018-07-01', inclusive: false }
+    ],
+    period: [
+      { value: '2017-05-01', inclusive: true },
+      { value: '2018-07-01', inclusive: false }
+    ]
+  })
+})
 
 test('accept a valid trip request as multipart/form-data', async () => {
   const tripsBefore = await db.Trip.count()
   const body = createForm(validTrip)
-  await expect(fetch('/trips', { method: 'POST', body }))
+  await expect(fetch('/funding-periods/1/trips', { method: 'POST', body }))
     .resolves.toHaveProperty('status', 201)
 
   const tripsAfter = await db.Trip.count()
@@ -28,7 +44,7 @@ test('accept a valid trip request as multipart/form-data', async () => {
 
 test('accept a valid trip request as application/json', async () => {
   const tripsBefore = await db.Trip.count()
-  await expect(fetch('/trips', {
+  await expect(fetch('/funding-periods/1/trips', {
     method: 'POST',
     body: JSON.stringify(validTrip),
     headers: { 'Content-Type': 'application/json' }
@@ -46,7 +62,10 @@ test('reject a trip request that\'s missing a required field', async () => {
   const invalids = Object.keys(validTrip)
     .map(key => omit(validTrip, key))
   const responses = await Promise.all(invalids.map(trip =>
-    fetch('/trips', { method: 'POST', body: createForm(trip) })
+    fetch('/funding-periods/1/trips', {
+      method: 'POST',
+      body: createForm(trip)
+    })
   ))
   for (const response of responses) {
     expect(response).toHaveProperty('status', 400)
@@ -58,7 +77,7 @@ test('reject a trip request that\'s missing a required field', async () => {
 
 test('ensure Trip.submitterNetId is not mass assignable', async () => {
   const trip = { ...validTrip, submitterNetId: 'mal11042' }
-  const response = await fetch('/trips', {
+  const response = await fetch('/funding-periods/1/trips', {
     method: 'POST',
     body: createForm(trip)
   })
@@ -71,7 +90,7 @@ test('ensure Trip.submitterNetId is not mass assignable', async () => {
 })
 
 test('ensure Trip dates are as submitted', async () => {
-  const response = await fetch('/trips', {
+  const response = await fetch('/funding-periods/1/trips', {
     method: 'POST',
     body: createForm(validTrip)
   })

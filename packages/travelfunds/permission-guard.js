@@ -1,5 +1,6 @@
 const whitelist = [
   { method: 'post', path: '/api/trips' },
+  { method: 'get', path: '/api/funding-periods/active' },
   { method: 'get', path: /^\/api\/faculty\/.*\/fair-share-left\/?$/ }
 ]
 
