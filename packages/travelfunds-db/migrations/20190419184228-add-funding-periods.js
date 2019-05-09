@@ -32,10 +32,12 @@ exports.up = async (queryInterface, Sequelize) => {
         comment: 'The date range travel requests fall into.'
       },
       createdAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        allowNull: false
       },
       updatedAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        allowNull: false
       }
     }, {
       transaction
