@@ -35,15 +35,20 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
 
+  const getBalanceQuery = /* @sql */`
+    SELECT
+      "BudgetAllocations".amount - SUM(COALESCE("Grants".amount, 0)) as balance
+    FROM
+      "BudgetAllocations"
+      LEFT JOIN "Grants" ON "BudgetAllocations".id = "Grants"."BudgetAllocationId"
+    WHERE
+      "BudgetAllocations".id = :budgetAllocationId
+    GROUP BY
+      "BudgetAllocations".id
+  `
+
   BudgetAllocation.prototype.getBalance = async function () {
-    const query = /* @sql */`
-      SELECT "BudgetAllocations".amount - SUM(COALESCE("Grants".amount, 0)) as balance
-      FROM "BudgetAllocations"
-      LEFT JOIN "Grants" on "BudgetAllocations".id = "Grants"."BudgetAllocationId"
-      WHERE "BudgetAllocations".id = :budgetAllocationId
-      GROUP BY "BudgetAllocations".id
-    `
-    const res = await sequelize.query(query, {
+    const res = await sequelize.query(getBalanceQuery, {
       replacements: { budgetAllocationId: this.id },
       type: sequelize.QueryTypes.SELECT
     })
@@ -90,8 +95,10 @@ module.exports = (sequelize, DataTypes) => {
           (extract(year FROM "Trips"."startDate")::int - :yearsUntilSenior)
     `
     const query = /* @sql */`
-      SELECT
-        (${getSeniorAllocationAmountSubquery}) - (${getSeniorGrantsTotal}) AS amount
+      SELECT LEAST(
+        (${getSeniorAllocationAmountSubquery}) - (${getSeniorGrantsTotal}),
+        (${getBalanceQuery})
+      ) as amount
     `
     const res = await sequelize.query(query, {
       replacements: {

@@ -277,15 +277,9 @@ class TableFooter extends React.Component {
       <tr>
         <td>Funds Left for Seniors</td>
         <td />
-        {/* It may seem weird on the funding controller's end to see more
-            senior funds left than the remaining balance, so we'll take the
-            minimum to account for this. */}
         {budgetAllocations.map(budgetAllocation =>
           <td key={budgetAllocation.id}>
-            ${displayFraction(minFraction(
-              budgetAllocation.seniorFundsLeft,
-              budgetAllocation.balance
-            ))}
+            ${displayFraction(budgetAllocation.seniorFundsLeft)}
           </td>)}
         <td />
       </tr>
