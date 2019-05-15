@@ -16,7 +16,7 @@ const assignableFundingPeriodFields = [
 
 router.get('/', async ctx => {
   ctx.body = await ctx.db.FundingPeriod.findAll({
-    include: ctx.db.Budget,
+    include: [ctx.db.Budget, ctx.db.BudgetAllocation],
     order: [[{ model: ctx.db.Budget }, 'id', 'asc']]
   })
 })
@@ -83,7 +83,7 @@ router.post('/:id([0-9]+)/trips', body({ multipart: true }), catchValidationErro
 
   // This is an async function, but we're not going to wait for it to finish
   // before returning an HTTP response.
-  trip.withAllRelations().then(mailer.send)
+  trip.then(mailer.send)
 })
 
 module.exports = router

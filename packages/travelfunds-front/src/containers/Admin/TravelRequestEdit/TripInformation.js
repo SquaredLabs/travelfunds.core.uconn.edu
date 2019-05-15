@@ -6,7 +6,7 @@ import styles from './styles.scss'
 
 export default ({ trip }) =>
   <Paper className={styles.tripInformation}>
-    <h1>Travel Request {trip.fullId}</h1>
+    <h1>Travel Request {trip.id}</h1>
     <Divider />
     <h2>Traveler</h2>
     <dl>

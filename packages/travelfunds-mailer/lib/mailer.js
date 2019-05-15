@@ -9,6 +9,10 @@ const createSend = transportOptions => {
   const shouldSendMail = transportOptions.host
 
   const send = async trip => {
+    trip = await db.Trip.findByPk(trip.id, {
+      include: db.Cost
+    })
+
     const html = await generate(trip)
     const titleMatches = /<title>(.*)<\/title>/.exec(html)
     if (titleMatches === null) {

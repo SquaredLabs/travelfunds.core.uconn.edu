@@ -25,12 +25,6 @@ class BudgetRow extends React.Component {
         />
         <TextField
           className={styles.textField}
-          label='Amount'
-          value={budget.amount}
-          onChange={ev => { budget.amount = ev.target.value }}
-        />
-        <TextField
-          className={styles.textField}
           label='Senior Allocation Limit'
           value={budget.seniorAllocationLimit}
           onChange={ev => { budget.seniorAllocationLimit = ev.target.value }}

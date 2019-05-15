@@ -18,15 +18,6 @@ router.param('trip', async (id, ctx, next) => {
   return next()
 })
 
-router.param('tripWithAllRelations', async (id, ctx, next) => {
-  ctx.trip = await ctx.db.Trip.findByPkWithAllRelations(id)
-  if (!ctx.trip) {
-    ctx.status = 404
-    return
-  }
-  return next()
-})
-
 router.get('/', async ctx => {
   ctx.body = await ctx.db.Trip.findAll({
     include: ctx.db.FundingPeriod
@@ -54,13 +45,13 @@ router.get('/:id([0-9]+)', async ctx => {
   }
 })
 
-router.get('/:trip([0-9]+)/budgets', async ctx => {
-  const budgets = await ctx.trip.getBudgets()
-  ctx.body = await Promise.all(budgets.map(async budget =>
-    ({
-      ...budget.dataValues,
-      balance: await budget.getBalance(),
-      seniorFundsLeft: await budget.getSeniorFundsLeft()
+router.get('/:trip([0-9]+)/budget-allocations', async ctx => {
+  const budgetAllocations = await ctx.trip.getBudgetAllocations()
+  ctx.body = await Promise.all(
+    budgetAllocations.map(async budgetAllocation => ({
+      ...budgetAllocation.dataValues,
+      balance: await budgetAllocation.getBalance(),
+      seniorFundsLeft: await budgetAllocation.getSeniorFundsLeft()
     })))
 })
 
@@ -78,8 +69,11 @@ router.put('/:id([0-9]+)/grants', multipart, async ctx => {
 
   await Promise.all(ctx.request.body
     .filter(grant => grant.amount > 0)
-    .map(grant =>
-      ctx.db.Grant.upsert(pick(grant, ['amount', 'BudgetId', 'CostId']))))
+    .map(grant => ctx.db.Grant.upsert(pick(grant, [
+      'amount',
+      'BudgetAllocationId',
+      'CostId'
+    ]))))
 
   ctx.status = 201
 })
@@ -89,7 +83,7 @@ router.patch('/:trip([0-9]+)', multipart, async ctx => {
   ctx.status = 204
 })
 
-router.post('/:tripWithAllRelations([0-9]+)/send-email-update', async ctx => {
+router.post('/:trip([0-9]+)/send-email-update', async ctx => {
   await mailer.send(ctx.trip)
   ctx.status = 200
 })

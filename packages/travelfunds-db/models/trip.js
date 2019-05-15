@@ -1,3 +1,4 @@
+const Op = require('sequelize').Op
 const { omit } = require('lodash')
 const { parse } = require('date-fns')
 const config = require('../config')
@@ -85,9 +86,7 @@ module.exports = (sequelize, DataTypes) => {
     return fundingPeriod && fundingPeriod.fiscalYear
   }
 
-  Trip.prototype.getBudgets = async function () {
-    const fullTrip = await this.withAllRelations()
-
+  Trip.prototype.getBudgetAllocations = async function () {
     // When a trip is moved to a different funding period (which has different
     // budgets, it retains the grants from the previous budgets. In these
     // situations, we want to include those grants so misallocated funds can be
@@ -95,20 +94,48 @@ module.exports = (sequelize, DataTypes) => {
     //
     // On the administrative interface, you simply see extra columns from
     // different budget years.
-    const budgetsFromExistingGrants = fullTrip.Costs
-      .map(x => x.Grants)
-      .reduce((acc, el) => [...acc, ...el], [])
-      .filter(grant => grant.amount !== '0.00')
-      .map(x => x.Budget)
+    const fromExistingGrantsProm = sequelize.models.BudgetAllocation
+      .findAll({
+        include: [
+          { model: sequelize.models.Budget },
+          {
+            model: sequelize.models.Grant,
+            attributes: [],
+            required: true,
+            where: { amount: { [Op.gt]: 0 } },
+            include: {
+              attributes: [],
+              model: sequelize.models.Cost,
+              required: true,
+              include: {
+                attributes: [],
+                model: sequelize.models.Trip,
+                required: true,
+                where: { id: this.id }
+              }
+            }
+          }
+        ]
+      })
 
-    const budgetsFromFundingPeriod = fullTrip.FundingPeriod &&
-      fullTrip.FundingPeriod.Budgets
+    const fromFundingPeriodProm = sequelize.models.BudgetAllocation
+      .findAll({
+        include: sequelize.models.Budget,
+        where: { FundingPeriodId: this.FundingPeriodId }
+      })
 
-    const budgets = [...budgetsFromExistingGrants, ...budgetsFromFundingPeriod]
-    const uniqueBudgets = Object.values(budgets
+    const [fromExistingGrants, fromFundingPeriod] = await Promise.all([
+      fromExistingGrantsProm,
+      fromFundingPeriodProm
+    ])
+
+    const budgetAllocations = [...fromExistingGrants, ...fromFundingPeriod]
+    const uniqueBudgetAllocations = Object.values(budgetAllocations
       .reduce((acc, el) => ({ ...acc, [el.id]: el }), []))
 
-    return uniqueBudgets
+    uniqueBudgetAllocations.sort((a, b) => a.id < b.id ? -1 : 1)
+
+    return uniqueBudgetAllocations
   }
 
   Trip.prototype.getFairShareLeft = async function () {
@@ -116,21 +143,20 @@ module.exports = (sequelize, DataTypes) => {
     return Trip.getFairShareLeftWithNetIdAndFY(this.netid, fiscalYear)
   }
 
-  Trip.prototype.withAllRelations = function () {
-    return Trip.findByPkWithAllRelations(this.id)
-  }
-
   Trip.prototype.getGrantTotalsByBudget = async function () {
-    const query = `
+    const query = /* @sql */`
       SELECT
         "Budgets".id,
         "Budgets".name,
         "Budgets"."kfsNumber",
-        SUM(COALESCE("Grants".amount, 0)) as granted
-      FROM "Trips"
-      JOIN "Costs" ON "Costs"."TripId" = "Trips".id
-      JOIN "Grants" ON "Grants"."CostId" = "Costs".id
-      JOIN "Budgets" ON "Budgets".id = "Grants"."BudgetId"
+        SUM(COALESCE("Grants".amount, 0)) AS granted
+      FROM
+        "Trips"
+        JOIN "Costs" ON "Costs"."TripId" = "Trips".id
+        JOIN "Grants" ON "Grants"."CostId" = "Costs".id
+        JOIN "BudgetAllocations"
+          ON "BudgetAllocations".id = "Grants"."BudgetAllocationId"
+        JOIN "Budgets" ON "Budgets".id = "BudgetAllocations"."BudgetId"
       WHERE
         "Trips".id = :id
       GROUP BY
@@ -143,30 +169,6 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
 
-  Trip.findByPkWithAllRelations = function (id) {
-    return Trip.findByPk(id, {
-      include: [
-        {
-          model: sequelize.models.Cost,
-          include: {
-            model: sequelize.models.Grant,
-            include: {
-              model: sequelize.models.Budget,
-              include: { model: sequelize.models.FundingPeriod }
-            }
-          }
-        },
-        {
-          model: sequelize.models.FundingPeriod,
-          include: {
-            model: sequelize.models.Budget,
-            include: { model: sequelize.models.FundingPeriod }
-          }
-        }
-      ]
-    })
-  }
-
   Trip.getFairShareLeftWithNetIdAndFY = async function (netid, fiscalYear) {
     fiscalYear = fiscalYear || getFiscalYearForDuration([new Date(), new Date()])
     const query = /* @sql */`
@@ -174,11 +176,11 @@ module.exports = (sequelize, DataTypes) => {
       FROM "Trips"
       JOIN "Costs" on "Costs"."TripId" = "Trips".id
       JOIN "Grants" on "Grants"."CostId" = "Costs".id
-      JOIN "Budgets" on "Budgets".id = "Grants"."BudgetId"
-      JOIN "FundingPeriods" on "FundingPeriods".id = "Budgets"."FundingPeriodId"
+      JOIN "BudgetAllocations" on "BudgetAllocations".id = "Grants"."BudgetAllocationId"
+      JOIN "Budgets" on "Budgets".id = "BudgetAllocations"."BudgetId"
       WHERE
         "Trips".netid = :netid AND
-        "FundingPeriods"."fiscalYear" = :fiscalYear
+        "Budgets"."fiscalYear" = :fiscalYear
       UNION SELECT :fairShareAmount
     `
     const res = await sequelize.query(query, {

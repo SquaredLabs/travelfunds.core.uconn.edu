@@ -13,7 +13,7 @@ const getSubjectFromTrip = trip => {
   const status = trip.status === 'Denied'
     ? 'Not Funded'
     : trip.status
-  return `${trip.fullId} Travel Funds Request ${status}: ${trip.firstName} ${trip.lastName}`
+  return `${trip.id} Travel Funds Request ${status}: ${trip.firstName} ${trip.lastName}`
 }
 
 const getMustachifiedCosts = trip =>
@@ -33,7 +33,6 @@ const getMustachifiedBudgets = async trip => {
 const generate = async trip =>
   render(trip.status.toLowerCase(), {
     ...trip.dataValues,
-    fullId: trip.fullId,
     subject: getSubjectFromTrip(trip),
     createdAt: format(trip.createdAt, 'MMMM Do YYYY, h:mm a'),
     updatedAt: format(trip.updatedAt, 'MMMM Do YYYY, h:mm a'),

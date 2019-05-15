@@ -87,7 +87,7 @@ const styles = theme => ({
 const links = [
   { icon: 'card_travel', text: 'Travel Requests', href: '/admin/trips' },
   { icon: 'email', text: 'Email Log', href: '/admin/emails' },
-  { icon: 'event', text: 'Funding Periods', href: '/admin/funding-periods' }
+  { icon: 'event', text: 'Budgets', href: '/admin/budgets' }
 ]
 
 @observer

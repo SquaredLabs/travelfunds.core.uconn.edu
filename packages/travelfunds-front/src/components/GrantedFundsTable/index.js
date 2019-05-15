@@ -32,40 +32,44 @@ class GrantedFundsTable extends React.Component {
 
   @observable trip = {
     ...this.props.trip,
-    Costs: this.props.trip.Costs.map(cost => ({
-      ...cost,
-      amount: new Fraction(cost.amount)
-    }))
+    Costs: this.props.trip.Costs
+      .map(cost => ({
+        ...cost,
+        amount: new Fraction(cost.amount)
+      }))
+      .sort((a, b) => a.id < b.id ? -1 : 1)
   }
 
-  @computed get budgets () {
-    return this.props.budgets.map(budget => {
+  @computed get budgetAllocations () {
+    return this.props.budgetAllocations.map(budgetAllocation => {
       const getGrantedTotal = costs => costs
         .map(cost => cost.Grants)
         .reduce((acc, el) => [...acc, ...el])
-        .filter(x => x.BudgetId === budget.id)
+        .filter(x => x.BudgetAllocationId === budgetAllocation.id)
         .map(x =>
           x.amount instanceof Fraction
             ? x.amount
             : new Fraction(x.amount))
         .reduce((acc, x) => acc.add(x), new Fraction(0))
 
-      // mapFundingBudgetToBalance from the backend includes grants from this
-      // travel request. Add them here to avoid double counting later.
       const onLoadGranted = getGrantedTotal(this.props.trip.Costs)
       const granted = getGrantedTotal(this.trip.Costs)
-      const balance = new Fraction(budget.balance)
+
+      // If this travel request has non-zero grants, then budget balances from
+      // the API include these grants. Add them here to avoid double counting
+      // later.
+      const balance = new Fraction(budgetAllocation.balance)
         .add(onLoadGranted)
         .sub(granted)
 
       const seniorFundsLeft = this.trip.isForSenior
-        ? new Fraction(budget.seniorFundsLeft)
+        ? new Fraction(budgetAllocation.seniorFundsLeft)
           .add(onLoadGranted)
           .sub(granted)
-        : new Fraction(budget.seniorFundsLeft)
+        : new Fraction(budgetAllocation.seniorFundsLeft)
 
-      return { ...budget, balance, seniorFundsLeft }
-    }).sort((a, b) => a.id < b.id ? -1 : 1)
+      return { ...budgetAllocation, balance, seniorFundsLeft }
+    }).sort((a, b) => a.BudgetId < b.BudgetId ? -1 : 1)
   }
 
   @computed get fairShareLeft () {
@@ -80,32 +84,37 @@ class GrantedFundsTable extends React.Component {
       .sub(getGrantedTotal(this.trip.Costs))
   }
 
-  @computed get usableBudgets () {
+  @computed get usableBudgetAllocations () {
     // TODO: Ask for a better way to distinguish law professors
     const isLawProfessor = this.trip.department.startsWith('Law')
     const attendanceOnly = this.trip.participationLevel === 'Attendance Only'
 
-    return this.budgets
-      .filter(budget => !(!budget.usableByLawProfessors && isLawProfessor))
-      .filter(budget => !(!budget.usableForAttendanceOnly && attendanceOnly))
+    return this.budgetAllocations
+      .filter(budgetAllocation =>
+        !(!budgetAllocation.Budget.usableByLawProfessors && isLawProfessor))
+      .filter(budgetAllocation =>
+        !(!budgetAllocation.Budget.usableForAttendanceOnly && attendanceOnly))
   }
 
   tableHeaders = [
     'Category',
     'Requested',
-    ...this.budgets.map(budget => `${budget.name} ${budget.FundingPeriod.name}`),
+    ...this.budgetAllocations
+      .map(budgetAllocation => budgetAllocation.Budget)
+      .map(budget => `${budget.name} ${budget.fiscalYear}`),
     'Granted'
   ]
 
-  @action onGrantedFundChange (costId, budgetId, value) {
+  @action onGrantedFundChange (costId, budgetAllocationId, value) {
     const cost = this.trip.Costs.find(cost => cost.id === costId)
-    const existingGrant = cost.Grants.find(grant => grant.BudgetId === budgetId)
+    const existingGrant = cost.Grants.find(grant =>
+      grant.BudgetAllocationId === budgetAllocationId)
     if (existingGrant) {
       existingGrant.amount = new Fraction(value)
     } else {
       cost.Grants.push({
         amount: new Fraction(value),
-        BudgetId: budgetId,
+        BudgetAllocationId: budgetAllocationId,
         CostId: costId
       })
     }
@@ -123,19 +132,23 @@ class GrantedFundsTable extends React.Component {
     this.clearGrantedFunds()
 
     for (const cost of this.trip.Costs) {
-      for (const budget of this.usableBudgets) {
+      for (const budgetAllocation of this.usableBudgetAllocations) {
         const awarded = sumObjectValues(cost.Grants.map(x => x.amount))
 
         const amount = minFraction(
           cost.amount.sub(awarded),
-          budget.balance,
+          budgetAllocation.balance,
           this.fairShareLeft,
           ...this.trip.isForSenior
-            ? [maxFraction(new Fraction(0), budget.seniorFundsLeft)]
+            ? [maxFraction(new Fraction(0), budgetAllocation.seniorFundsLeft)]
             : []
         )
 
-        cost.Grants.push({ amount, CostId: cost.id, BudgetId: budget.id })
+        cost.Grants.push({
+          amount,
+          CostId: cost.id,
+          BudgetAllocationId: budgetAllocation.id
+        })
       }
     }
   }
@@ -180,13 +193,13 @@ class GrantedFundsTable extends React.Component {
           <ExpenseCategoryRows
             onGrantedFundChange={(...args) => this.onGrantedFundChange(...args)}
             trip={this.trip}
-            budgets={this.budgets}
+            budgetAllocations={this.budgetAllocations}
             disabled={this.disabled}
           />
         </tbody>
         <TableFooter
           trip={this.trip}
-          budgets={[...this.budgets]}
+          budgetAllocations={[...this.budgetAllocations]}
           fairShareLeft={this.fairShareLeft}
         />
       </table>
@@ -196,16 +209,17 @@ class GrantedFundsTable extends React.Component {
 
 @observer
 class ExpenseCategoryRows extends React.Component {
-  inputField (cost, budget) {
+  inputField (cost, budgetAllocation) {
     const existingGrant = cost.Grants
-      .find(granted => granted.BudgetId === budget.id)
+      .find(granted => granted.BudgetAllocationId === budgetAllocation.id)
 
-    return <td key={budget.id}>
+    return <td key={budgetAllocation.id}>
       <DollarInput
         readOnly={this.props.disabled}
         name={cost.id}
         value={existingGrant ? existingGrant.amount : new Fraction(0)}
-        onChange={value => this.props.onGrantedFundChange(cost.id, budget.id, value)}
+        onChange={value =>
+          this.props.onGrantedFundChange(cost.id, budgetAllocation.id, value)}
       />
     </td>
   }
@@ -222,7 +236,8 @@ class ExpenseCategoryRows extends React.Component {
       <tr key={cost.expenseCategory}>
         <td>{cost.expenseCategory}</td>
         <td>${displayFraction(cost.amount)}</td>
-        {props.budgets.map(budget => this.inputField(cost, budget))}
+        {props.budgetAllocations.map(budgetAllocation =>
+          this.inputField(cost, budgetAllocation))}
         <td>${displayFraction(this.totalForRequest(cost))}</td>
       </tr>)
   }
@@ -231,7 +246,7 @@ class ExpenseCategoryRows extends React.Component {
 @observer
 class TableFooter extends React.Component {
   render () {
-    const { trip, budgets, fairShareLeft } = this.props
+    const { trip, budgetAllocations, fairShareLeft } = this.props
     return <tfoot>
       <tr>
         <td>Total</td>
@@ -239,10 +254,10 @@ class TableFooter extends React.Component {
           ${displayFraction(trip.Costs.reduce((acc, cost) =>
             acc.add(cost.amount), new Fraction(0)))}
         </td>
-        {budgets.map(budget =>
-          <td key={budget.id}>
+        {budgetAllocations.map(budgetAllocation =>
+          <td key={budgetAllocation.id}>
             ${displayFraction(flatten(trip.Costs.map(cost => [...cost.Grants]))
-              .filter(grant => grant.BudgetId === budget.id)
+              .filter(grant => grant.BudgetAllocationId === budgetAllocation.id)
               .reduce((acc, grant) => acc.add(grant.amount), new Fraction(0)))}
           </td>)}
         <td>
@@ -253,9 +268,9 @@ class TableFooter extends React.Component {
       <tr>
         <td>Budget Balances</td>
         <td />
-        {budgets.map(budget =>
-          <td key={budget.id}>
-            ${displayFraction(budget.balance)}
+        {budgetAllocations.map(budgetAllocation =>
+          <td key={budgetAllocation.id}>
+            ${displayFraction(budgetAllocation.balance)}
           </td>)}
         <td />
       </tr>
@@ -265,11 +280,11 @@ class TableFooter extends React.Component {
         {/* It may seem weird on the funding controller's end to see more
             senior funds left than the remaining balance, so we'll take the
             minimum to account for this. */}
-        {budgets.map(budget =>
-          <td key={budget.id}>
+        {budgetAllocations.map(budgetAllocation =>
+          <td key={budgetAllocation.id}>
             ${displayFraction(minFraction(
-              budget.seniorFundsLeft,
-              budget.balance
+              budgetAllocation.seniorFundsLeft,
+              budgetAllocation.balance
             ))}
           </td>)}
         <td />

@@ -12,8 +12,8 @@ export const getFairShareLeft = id =>
   get(`/api/trips/${id}/fairshareleft`)
     .then(x => x.text())
 
-export const getBudgets = id =>
-  get(`/api/trips/${id}/budgets`)
+export const getBudgetAllocations = id =>
+  get(`/api/trips/${id}/budget-allocations`)
     .then(x => x.json())
 
 export const update = (id, body) =>

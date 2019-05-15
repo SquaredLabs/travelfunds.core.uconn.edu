@@ -1,5 +1,5 @@
 <mj-text>
-  Form ID: {{fullId}}<br />
+  Form ID: {{id}}<br />
   Submitted: {{createdAt}}<br />
   Faculty Name: {{firstName}} {{lastName}}<br />
   Faculty Title: {{title}}<br />

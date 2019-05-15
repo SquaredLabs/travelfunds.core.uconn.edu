@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: { allowNull: false, unique: 'trip' },
       onDelete: 'CASCADE'
     })
-    Grant.belongsTo(models.Budget, {
+    Grant.belongsTo(models.BudgetAllocation, {
       foreignKey: { allowNull: false, unique: 'trip' },
       onDelete: 'CASCADE'
     })

@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   FundingPeriod.associate = models => {
-    FundingPeriod.hasMany(models.Budget, {
+    FundingPeriod.hasMany(models.BudgetAllocation, {
       foreignKey: {
         allowNull: false,
         onUpdate: 'cascade',
@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         onDelete: 'set null'
       }
+    })
+    FundingPeriod.hasMany(models.Budget, {
+      foreignKey: 'fiscalYear',
+      sourceKey: 'fiscalYear'
     })
   }
 

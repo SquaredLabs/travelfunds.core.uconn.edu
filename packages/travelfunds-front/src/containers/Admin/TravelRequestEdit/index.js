@@ -15,7 +15,7 @@ import GrantedFundsTable from 'components/GrantedFundsTable'
 import {
   getSingle,
   getFairShareLeft,
-  getBudgets,
+  getBudgetAllocations,
   update,
   postGrants,
   sendEmailUpdate
@@ -27,7 +27,7 @@ export default
 @inject('UiState') @observer
 class TravelRequestEdit extends React.Component {
   trip = null
-  budgets = null
+  budgetAllocations = null
   fairShareLeft = null
 
   grants = []
@@ -42,8 +42,8 @@ class TravelRequestEdit extends React.Component {
     this.status = this.trip.status
   }
 
-  async fetchBudgets () {
-    this.budgets = await getBudgets(this.props.match.params.id)
+  async fetchBudgetAllocations () {
+    this.budgetAllocations = await getBudgetAllocations(this.props.match.params.id)
   }
 
   async fetchFairShareLeft () {
@@ -55,7 +55,7 @@ class TravelRequestEdit extends React.Component {
     try {
       await Promise.all([
         this.fetchTrip(),
-        this.fetchBudgets(),
+        this.fetchBudgetAllocations(),
         this.fetchFairShareLeft()
       ])
     } finally {
@@ -105,9 +105,9 @@ class TravelRequestEdit extends React.Component {
     return <div className={styles.container}>
       { this.trip &&
         <TripInformation trip={this.trip} /> }
-      { !this.fetching && this.trip && this.budgets &&
+      { !this.fetching && this.trip && this.budgetAllocations &&
         <GrantedFundsTable
-          budgets={this.budgets}
+          budgetAllocations={this.budgetAllocations}
           trip={this.trip}
           fairShareLeft={this.fairShareLeft}
           onGrantsChange={grants => { this.grants = grants }}
@@ -138,7 +138,7 @@ class TravelRequestEdit extends React.Component {
                 />) }
           </RadioGroup>
         </FormControl> }
-      { !this.fetching && this.trip && this.budgets &&
+      { !this.fetching && this.trip && this.budgetAllocations &&
         <div className={styles.actions}>
           <Button
             variant='raised'
