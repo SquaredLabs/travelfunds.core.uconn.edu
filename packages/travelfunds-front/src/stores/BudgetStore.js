@@ -1,10 +1,10 @@
 import { observable, action, computed } from 'mobx'
 import { groupBy } from 'lodash'
-import { getAll, update } from 'transport/funding-period'
+import { getAll, update } from 'transport/budget'
 
-class FundingPeriodStore {
+class BudgetStore {
   @observable fetching = false
-  @observable fundingPeriods = []
+  @observable budgets = []
 
   @action async fetch () {
     this.fetching = true
@@ -13,17 +13,17 @@ class FundingPeriodStore {
     } finally {
       this.fetching = false
     }
-    this.fundingPeriods = json
+    this.budgets = json
       .sort((a, b) => a.id < b.id ? 1 : -1)
   }
 
   @action async update (id) {
-    const fundingPeriod = this.fundingPeriods.find(x => x.id === id)
-    await update(fundingPeriod)
+    const budget = this.budgets.find(x => x.id === id)
+    await update(budget)
   }
 
   @computed get fiscalYearMap () {
-    return groupBy(this.fundingPeriods, 'fiscalYear')
+    return groupBy(this.budgets, 'fiscalYear')
   }
 
   byYear (year) {
@@ -31,5 +31,5 @@ class FundingPeriodStore {
   }
 }
 
-const singleton = new FundingPeriodStore()
+const singleton = new BudgetStore()
 export default singleton

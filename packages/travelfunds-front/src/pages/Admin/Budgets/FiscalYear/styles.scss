@@ -1,0 +1,36 @@
+.heading {
+  margin: 1.5em 0 !important;
+}
+
+.BudgetsCard {
+  display: inline-block;
+}
+
+.FundingPeriodCards {
+  margin: 0.5em -0.5em;
+}
+
+.FundingPeriodCard {
+  display: inline-block;
+  margin: 0.5em;
+}
+
+.fundingPeriodFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.5em;
+  margin: 1.5em 0;
+}
+
+.budgetGroupActions {
+  padding-top: 0 !important;
+  padding-bottom: 1.25em !important;
+}
+
+.budgetRow + .budgetRow {
+  margin-top: 1.5em;
+}
+
+.budgetRow .textField + .textField {
+  margin-left: 1em !important;
+}

@@ -1,45 +1,32 @@
 import React from 'react'
-import { action } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import FundingPeriodCard from './FundingPeriodCard'
+import { observable } from 'mobx'
+import { observer } from 'mobx-react'
+import ButtonBase from '@material-ui/core/ButtonBase'
+import Paper from '@material-ui/core/Paper'
+import { Link } from 'react-router-dom'
+import { getAll } from 'transport/fiscal-year'
 
 import styles from './styles.scss'
 
-@inject('FundingPeriodStore', 'UiState') @observer
-class FundingPeriods extends React.Component {
-  componentDidMount () {
-    this.props.FundingPeriodStore.fetch()
-  }
+export default
+@observer
+class Budgets extends React.Component {
+  @observable fiscalYears = []
 
-  @action async save (fundingPeriod) {
-    const { FundingPeriodStore, UiState } = this.props
-    try {
-      await FundingPeriodStore.update(fundingPeriod.id)
-      await FundingPeriodStore.fetch()
-    } catch (err) {
-      UiState.addSnackbarMessage(
-        'Failed to update funding period. Please try again later.',
-        'failure'
-      )
-      console.error(err)
-      return
-    }
-    UiState.addSnackbarMessage('Successfully updated funding period', 'success')
+  async componentDidMount () {
+    this.fiscalYears = await getAll()
   }
 
   render () {
-    const { FundingPeriodStore } = this.props
-
     return <div className={styles.container}>
-      {FundingPeriodStore.fundingPeriods
-        .map(fundingPeriod =>
-          <FundingPeriodCard
-            key={fundingPeriod.id}
-            fundingPeriod={fundingPeriod}
-            onSave={() => this.save(fundingPeriod)}
-          />)}
+      {this.fiscalYears.map(year =>
+        <ButtonBase focusRipple key={year} className={styles.fiscalYearButton}>
+          <Link to={`/admin/budgets/${year}`}>
+            <Paper className={styles.fiscalYearPaper}>
+              <span className={styles.year}>{year}</span>
+            </Paper>
+          </Link>
+        </ButtonBase>)}
     </div>
   }
 }
-
-export default FundingPeriods

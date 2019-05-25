@@ -7,11 +7,8 @@ import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import DatePicker from 'material-ui-pickers/DatePicker'
-import Divider from '@material-ui/core/Divider'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-
-import BudgetRow from './BudgetRow'
 
 import styles from './styles.scss'
 
@@ -78,11 +75,6 @@ class FundingPeriodCard extends React.Component {
             format='MMMM Do, YYYY'
           />
         </div>
-      </CardContent>
-      <Divider />
-      <CardContent>
-        {fundingPeriod.Budgets.map(budget =>
-          <BudgetRow key={budget.id} budget={budget} />)}
       </CardContent>
       <CardActions className={styles.budgetGroupActions}>
         <Button

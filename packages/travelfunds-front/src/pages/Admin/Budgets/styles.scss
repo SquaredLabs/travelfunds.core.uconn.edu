@@ -1,33 +1,21 @@
 .container {
-  text-align: center;
+  padding: 1em;
 }
 
-.FundingPeriodCard {
-  display: inline-block;
-  margin: auto;
-  text-align: left;
+.fiscalYearButton {
+  display: inline-block !important;
+  margin: 2em !important;
 }
 
-.FundingPeriodCard + .FundingPeriodCard {
-  margin-top: 1.5em;
+.fiscalYearButton .fiscalYearPaper {
+  padding: 2em;
 }
 
-.fundingPeriodFields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1.5em;
-  margin: 1.5em 0;
+.fiscalYearButton .year {
+  font-size: 2em;
 }
 
-.budgetGroupActions {
-  padding-top: 0 !important;
-  padding-bottom: 1.25em !important;
-}
-
-.budgetRow {
-  margin: 1.5em 0;
-}
-
-.budgetRow .textField + .textField {
-  margin-left: 1em !important;
+.fiscalYearButton a {
+  color: inherit;
+  text-decoration: none;
 }
