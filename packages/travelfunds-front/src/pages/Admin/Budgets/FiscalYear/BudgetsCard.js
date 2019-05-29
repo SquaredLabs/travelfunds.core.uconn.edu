@@ -20,7 +20,7 @@ function BudgetsCard (props) {
       <Button
         color='primary'
         size='small'
-        variant='raised'
+        variant='contained'
         onClick={props.onSave}>
         Save
       </Button>

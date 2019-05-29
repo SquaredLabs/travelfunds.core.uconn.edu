@@ -141,14 +141,14 @@ class TravelRequestEdit extends React.Component {
       { !this.fetching && this.trip && this.budgetAllocations &&
         <div className={styles.actions}>
           <Button
-            variant='raised'
+            variant='contained'
             color='primary'
             onClick={() => this.saveAndSendEmail()}>
             Save & Send Email
             <Icon className={styles.iconRight}>send</Icon>
           </Button>
           <Button
-            variant='raised'
+            variant='contained'
             onClick={() => this.save()}>
             Save
             <Icon className={styles.iconRight}>save</Icon>
@@ -156,7 +156,7 @@ class TravelRequestEdit extends React.Component {
           <Button
             component={Link}
             to='/admin/trips'
-            variant='raised'
+            variant='contained'
             color='secondary'
             size='large'>
             Back

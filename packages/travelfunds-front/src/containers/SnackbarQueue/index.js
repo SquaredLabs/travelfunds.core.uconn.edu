@@ -14,8 +14,8 @@ const styles = theme => ({
     marginRight: '0.5em'
   },
   close: {
-    width: theme.spacing.unit * 4,
-    height: theme.spacing.unit * 4
+    width: theme.spacing(4),
+    height: theme.spacing(4)
   }
 })
 

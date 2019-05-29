@@ -16,8 +16,8 @@ import BudgetStore from 'stores/BudgetStore'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
-import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 
 import Faculty from './pages/Faculty'
 import Admin from './pages/Admin'

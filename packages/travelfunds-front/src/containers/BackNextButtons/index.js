@@ -41,7 +41,7 @@ class NextButton extends React.Component {
   render () {
     return <Button
       className={styles.button}
-      variant='raised'
+      variant='contained'
       onClick={() => this.onClick()}
       color='primary'
       disabled={this.disabled()}
@@ -77,7 +77,7 @@ class SubmitButton extends React.Component {
   render () {
     return <Button
       className={styles.button}
-      variant='raised'
+      variant='contained'
       onClick={() => this.onClick()}
       color='secondary'
       disabled={this.disabled()}

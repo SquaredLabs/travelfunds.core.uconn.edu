@@ -14,7 +14,7 @@ class extends React.Component {
       {lang.loginPage.map((msg, i) => <p key={i} dangerouslySetInnerHTML={{ __html: msg }} />)}
       <Button
         className={styles.button}
-        variant='raised'
+        variant='contained'
         href='/login'
         color='primary'
         children='Login'

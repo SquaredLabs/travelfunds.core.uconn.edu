@@ -1,7 +1,7 @@
 import React from 'react'
 import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { get } from 'lodash'
 import { Link } from 'react-router-dom'
 
@@ -54,14 +54,16 @@ class TravelRequests extends React.Component {
     {
       label: 'Submission',
       property: 'createdAt',
-      value: trip => format(trip.createdAt, 'MMM Do, YYYY h:mma'),
+      value: trip => format(parseISO(trip.createdAt), 'MMM do, yyyy h:mma'),
       sortable: true
     },
     {
       label: 'Actions',
       value: trip =>
-        <IconButton component={props =>
-          <Link to={`/admin/trips/${trip.id}`} {...props} />}>
+        <IconButton
+          size='small'
+          component={React.forwardRef((props, ref) =>
+            <Link to={`/admin/trips/${trip.id}`} ref={ref} {...props} />)}>
           <Icon>edit</Icon>
         </IconButton>
     }
@@ -112,7 +114,7 @@ class TripToolbar extends React.Component {
     const { TripStore, columns } = this.props
 
     return <Toolbar>
-      <Typography variant='title' id='tableTitle'>
+      <Typography variant='h6' id='tableTitle'>
         Travel Requests
       </Typography>
       <div className={styles.toolbarActions}>

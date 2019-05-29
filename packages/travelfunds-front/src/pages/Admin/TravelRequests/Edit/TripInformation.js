@@ -1,7 +1,7 @@
 import React from 'react'
 import Paper from '@material-ui/core/Paper'
 import Divider from '@material-ui/core/Divider'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import styles from './styles.scss'
 
 export default ({ trip }) =>
@@ -34,8 +34,8 @@ export default ({ trip }) =>
     <dl>
       <dt>Period</dt>
       <dd>
-        {format(trip.startDate, 'MMMM Do, YYYY')} –
-        {format(trip.endDate, 'MMMM Do, YYYY')}
+        {format(parseISO(trip.startDate), 'MMMM do, yyyy')} –
+        {format(parseISO(trip.endDate), 'MMMM do, yyyy')}
       </dd>
       <dt>Destination</dt><dd>{trip.destination}</dd>
       <dt>Event Title</dt><dd>{trip.eventTitle}</dd>

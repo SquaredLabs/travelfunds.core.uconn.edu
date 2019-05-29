@@ -1,7 +1,7 @@
 import React from 'react'
 import { action, observable } from 'mobx'
 import { observer } from 'mobx-react'
-import { format, toDate } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { Link } from 'react-router-dom'
 import { getActive } from '../../transport/funding-period'
 
@@ -26,8 +26,8 @@ class extends React.Component {
 
 class FundingPeriodRow extends React.Component {
   formatBoundaryDate (value) {
-    const date = toDate(value)
-    return format(date, 'MMMM Do, YYYY')
+    const date = parseISO(value)
+    return format(date, 'MMMM do, yyyy')
   }
 
   render () {

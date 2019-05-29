@@ -13,7 +13,7 @@ class BudgetRow extends React.Component {
   render () {
     const { budget } = this.props
     return <section className={styles.budgetRow}>
-      <Typography gutterBottom variant='subheading'>
+      <Typography gutterBottom variant='h6' component='h3'>
         {budget.name}
       </Typography>
       <div>

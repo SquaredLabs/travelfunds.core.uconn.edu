@@ -18,4 +18,4 @@ class TallAppBar extends React.PureComponent {
   }
 }
 
-export default withTheme()(TallAppBar)
+export default withTheme(TallAppBar)

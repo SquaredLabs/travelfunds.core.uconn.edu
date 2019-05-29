@@ -1,6 +1,6 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import TablePagination from '@material-ui/core/TablePagination'
@@ -64,7 +64,7 @@ class EmailExpansionPanel extends React.Component {
           <Icon>link</Icon>
         </IconButton>
         <span className={styles.emailDate}>
-          {format(email.createdAt, 'MMM Do, YYYY - h:mma')}
+          {format(parseISO(email.createdAt), 'MMM do, yyyy - h:mma')}
         </span>
       </ExpansionPanelSummary>
       <div

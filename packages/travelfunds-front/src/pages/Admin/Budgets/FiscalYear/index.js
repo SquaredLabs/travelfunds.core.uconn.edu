@@ -69,7 +69,8 @@ class FiscalYear extends React.Component {
     return <div className={styles.container}>
       <Typography
         className={styles.heading}
-        variant='headline'>
+        variant='h4'
+        component='h1'>
         Fiscal Year {year}
       </Typography>
       <BudgetsCard

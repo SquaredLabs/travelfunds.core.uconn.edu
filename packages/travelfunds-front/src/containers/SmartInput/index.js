@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 
 import TextField from '@material-ui/core/TextField'
 import MaterialAutosuggest from 'components/MaterialAutosuggest'
-import DatePicker from 'material-ui-pickers/DatePicker'
+import { DatePicker } from '@material-ui/pickers'
 
 import lang from 'lang/en_US.js'
 

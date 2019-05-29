@@ -56,7 +56,7 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    width: theme.spacing.unit * 9
+    width: theme.spacing(9)
   },
   toolbar: theme.mixins.toolbar,
   title: {
@@ -65,15 +65,17 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   listItem: {
     padding: 0
   },
   listItemText: {
-    paddingLeft: '8px'
+    margin: '0',
+    paddingLeft: '0'
   },
   link: {
+    color: 'inherit',
     display: 'flex',
     textDecoration: 'none',
     padding: '12px 24px',
@@ -116,11 +118,11 @@ class AdminLayout extends React.Component {
             className={classes.menuButton}>
             <Icon>menu</Icon>
           </IconButton>
-          <Typography color='inherit' variant='title' className={classes.title}>
+          <Typography color='inherit' variant='h6' className={classes.title}>
             Travel Funds Admin
           </Typography>
-          <Button color='inherit' component={props =>
-            <a href='/logout' {...props} />}>
+          <Button color='inherit' component={React.forwardRef((props, ref) =>
+            <a href='/logout' ref={ref} {...props} />)}>
             Logout
           </Button>
         </Toolbar>

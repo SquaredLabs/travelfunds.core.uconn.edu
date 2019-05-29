@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 
 import Select from 'components/FormControlSelect'
 import MenuItem from '@material-ui/core/MenuItem'
-import DatePicker from 'material-ui-pickers/DatePicker'
+import { DatePicker } from '@material-ui/pickers'
 
 import SmartInput from 'containers/SmartInput'
 import BackNextButtons from 'containers/BackNextButtons'
@@ -24,8 +24,8 @@ class extends React.Component {
         field='travelDetails.startDate'
         InputLabelProps={{ shrink: true }}
         autoOk
-        format='MMMM Do, YYYY'
-        placeholder={format(new Date(), 'MMMM Do, YYYY')}
+        format='MMMM do, yyyy'
+        placeholder={format(new Date(), 'MMMM do, yyyy')}
       />
       <SmartInput
         component={DatePicker}
@@ -33,9 +33,9 @@ class extends React.Component {
         field='travelDetails.endDate'
         InputLabelProps={{ shrink: true }}
         autoOk
-        format='MMMM Do, YYYY'
+        format='MMMM do, yyyy'
         minDate={FormState.travelDetails.startDate}
-        placeholder={format(new Date(), 'MMMM Do, YYYY')}
+        placeholder={format(new Date(), 'MMMM do, yyyy')}
       />
       <SmartInput label='Event Title' field='travelDetails.eventTitle' />
       <SmartInput label='Destination' field='travelDetails.destination' />
