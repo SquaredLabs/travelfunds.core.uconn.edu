@@ -49,7 +49,7 @@ class TransportState {
   }
 
   @computed get isSendingTravelRequest () {
-    return this.pending.some(el => el.match(/^\/travelrequests/))
+    return this.pending.some(el => el.match(/^\/api\/trips/))
   }
 }
 

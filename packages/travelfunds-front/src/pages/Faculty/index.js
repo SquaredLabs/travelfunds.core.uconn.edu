@@ -1,6 +1,5 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import { Switch, Route } from 'react-router-dom'
 
 import Login from 'pages/Login'
 import TravelRequestForm from 'pages/TravelRequestForm'
@@ -9,7 +8,6 @@ import Finished from 'pages/Finished'
 import UConnBanner from 'components/UConnBanner'
 import TallAppBar from 'components/TallAppBar'
 import Footer from 'components/Footer'
-import FundingPeriodSelection from '../FundingPeriodSelection'
 
 import 'styles/global.scss'
 import styles from '../../styles/form.scss'
@@ -20,23 +18,29 @@ import DevTools from 'mobx-react-devtools'
 const inDevelopment = process.env.NODE_ENV !== 'production'
 
 export default
-@inject('UiState') @observer
+@inject('UiState', 'FormState') @observer
 class extends React.Component {
+  rootPage () {
+    const { UiState, FormState } = this.props
+    if (UiState.authenticated && !FormState.submittedSuccessfully) {
+      return TravelRequestForm
+    }
+    if (UiState.authenticated && FormState.submittedSuccessfully) {
+      return Finished
+    }
+    if (!UiState.authenticated) {
+      return Login
+    }
+  }
+
   render () {
-    const { UiState } = this.props
-
-    const rootPage = UiState.authenticated ? FundingPeriodSelection : Login
-
+    const RootPage = this.rootPage()
     return <div className={styles.root}>
       { inDevelopment && <DevTools /> }
       <UConnBanner />
       <TallAppBar title='Faculty Travel Funding' showMenuIconButton={false} />
       <main className={styles.main}>
-        <Switch>
-          <Route path='/' exact component={rootPage} />
-          <Route path='/funding-periods/:id' exact component={TravelRequestForm} />
-          <Route path='/funding-periods/:id/finished' component={Finished} />
-        </Switch>
+        <RootPage />
       </main>
       <Footer />
     </div>

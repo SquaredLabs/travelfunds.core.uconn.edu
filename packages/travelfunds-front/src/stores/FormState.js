@@ -1,6 +1,5 @@
 import { observable, action, reaction, runInAction } from 'mobx'
 
-import UiState from 'stores/UiState'
 import { getSuggestions, getFairShareLeft } from 'transport/faculty'
 import { submit } from 'transport/form'
 import FacultySuggestion from 'models/FacultySuggestion'
@@ -8,6 +7,7 @@ import lang from 'lang/en_US'
 
 class FormState {
   @observable currentFormIndex = 0
+  @observable submittedSuccessfully = false
 
   @observable.shallow traveler = {
     netid: '',
@@ -99,7 +99,7 @@ class FormState {
     })
 
     if (res.status === 201) {
-      UiState.redirectToFinishedPage()
+      this.submittedSuccessfully = true
       return
     }
 

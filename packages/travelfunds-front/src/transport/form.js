@@ -8,8 +8,8 @@ export function submit (payload) {
 
   const travelDetails = {
     ...payload.travelDetails,
-    startDate: format(payload.travelDetails.startDate, 'YYYY-MM-DD'),
-    endDate: format(payload.travelDetails.endDate, 'YYYY-MM-DD')
+    startDate: format(payload.travelDetails.startDate, 'yyyy-MM-dd'),
+    endDate: format(payload.travelDetails.endDate, 'yyyy-MM-dd')
   }
 
   const travelCosts = Object.keys(payload.travelCosts)
