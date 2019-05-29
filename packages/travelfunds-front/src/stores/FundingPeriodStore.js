@@ -14,7 +14,7 @@ class FundingPeriodStore {
       this.fetching = false
     }
     this.fundingPeriods = json
-      .sort((a, b) => a.id < b.id ? 1 : -1)
+      .sort((a, b) => a.period[0].value < b.period[0].value ? -1 : 1)
   }
 
   @action async update (id) {
