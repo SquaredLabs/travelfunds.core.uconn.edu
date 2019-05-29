@@ -12,6 +12,7 @@
 
 .FundingPeriodCard {
   display: inline-block;
+  vertical-align: top;
   margin: 0.5em;
 }
 
@@ -33,4 +34,9 @@
 
 .budgetRow .textField + .textField {
   margin-left: 1em !important;
+}
+
+.budgetAllocationInput {
+  display: block !important;
+  margin: 2em 0 !important;
 }

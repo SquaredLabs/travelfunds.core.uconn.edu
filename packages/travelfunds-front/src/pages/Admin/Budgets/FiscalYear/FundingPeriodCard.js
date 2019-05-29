@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { DatePicker } from '@material-ui/pickers'
@@ -79,6 +80,21 @@ class FundingPeriodCard extends React.Component {
             format='MMMM do, yyyy'
           />
         </div>
+        {fundingPeriod.BudgetAllocations.map(budgetAllocation =>
+          <TextField
+            key={budgetAllocation.id}
+            className={styles.budgetAllocationInput}
+            label={budgetAllocation.Budget.name}
+            variant='outlined'
+            type='number'
+            placeholder='0'
+            value={budgetAllocation.amount}
+            onChange={ev => { budgetAllocation.amount = ev.target.value }}
+            InputProps={{
+              startAdornment: <InputAdornment position='start'>$</InputAdornment>
+            }}
+          />
+        )}
       </CardContent>
       <CardActions className={styles.budgetGroupActions}>
         <Button

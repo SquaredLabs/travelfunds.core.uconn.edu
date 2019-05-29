@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx'
 import { groupBy } from 'lodash'
-import { getAll, update } from 'transport/funding-period'
+import { getAll, update as updateFundingPeriod } from 'transport/funding-period'
+import { update as updateBudgetAllocation } from 'transport/budget-allocation'
 
 class FundingPeriodStore {
   @observable fetching = false
@@ -19,7 +20,10 @@ class FundingPeriodStore {
 
   @action async update (id) {
     const fundingPeriod = this.fundingPeriods.find(x => x.id === id)
-    await update(fundingPeriod)
+    await Promise.all([
+      updateFundingPeriod(fundingPeriod),
+      ...fundingPeriod.BudgetAllocations.map(updateBudgetAllocation)
+    ])
   }
 
   @computed get fiscalYearMap () {

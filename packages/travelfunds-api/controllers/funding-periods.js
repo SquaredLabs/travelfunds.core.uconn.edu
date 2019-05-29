@@ -16,8 +16,11 @@ const assignableFundingPeriodFields = [
 
 router.get('/', async ctx => {
   ctx.body = await ctx.db.FundingPeriod.findAll({
-    include: [ctx.db.Budget, ctx.db.BudgetAllocation],
-    order: [[{ model: ctx.db.Budget }, 'id', 'asc']]
+    include: {
+      model: ctx.db.BudgetAllocation,
+      include: ctx.db.Budget
+    },
+    order: [['period', 'asc']]
   })
 })
 

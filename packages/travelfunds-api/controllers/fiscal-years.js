@@ -17,4 +17,16 @@ router.get('/', async ctx => {
     .reverse()
 })
 
+router.get('/:fiscalYear([0-9]+)', async ctx => {
+  const { fiscalYear } = ctx.params
+  const [ budgets, fundingPeriods ] = await Promise.all([
+    ctx.db.Budget.findAll({ where: { fiscalYear } }),
+    ctx.db.FundingPeriod.findAll({
+      where: { fiscalYear },
+      include: ctx.db.BudgetAllocation
+    })
+  ])
+  ctx.body = { budgets, fundingPeriods }
+})
+
 module.exports = router
