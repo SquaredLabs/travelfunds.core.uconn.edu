@@ -34,10 +34,6 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'set null'
       }
     })
-    FundingPeriod.hasMany(models.Budget, {
-      foreignKey: 'fiscalYear',
-      sourceKey: 'fiscalYear'
-    })
   }
 
   return FundingPeriod
