@@ -43,6 +43,14 @@ exports.up = async (queryInterface, Sequelize) => {
       transaction
     })
 
+    // Sequelize doesn't support Postgres EXCLUDE constraints at the moment, but
+    // we can add one manually with a raw query.
+    await db.sequelize.query(/* @sql */`
+      ALTER TABLE "FundingPeriods"
+      ADD CONSTRAINT unique_period
+      EXCLUDE USING gist (period WITH &&)
+    `, { transaction })
+
     const res = await queryInterface.bulkInsert('FundingPeriods', [
       {
         name: '2018',

@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.RANGE(DataTypes.DATEONLY),
       allowNull: false,
       comment: 'The date range travel requests fall into.'
+      // This column is supposed to have a Postgres EXCLUDE constraint to
+      // prevent overlapping periods. Sequelize doesn't support this constraint
+      // at the moment so we can't define it here. See the "add-funding-period"
+      // migration for how it gets added.
     }
   })
 

@@ -26,6 +26,7 @@ router.get('/', async ctx => {
 })
 
 router.post('/', body({ multipart: true }), catchValidationError(), async ctx => {
+  const Op = ctx.db.Sequelize.Op
   const requestFields = ctx.request.body.fields || ctx.request.body
   const assignableTripFields = [
     'startDate',
@@ -43,11 +44,6 @@ router.post('/', body({ multipart: true }), catchValidationError(), async ctx =>
     'yearOfTerminalDegree',
     'contactEmail'
   ]
-  const createTripFields = {
-    ...pick(requestFields, assignableTripFields),
-    submitterNetId: ctx.session.netid
-  }
-
   const costFormTableFieldPairs = [
     ['primaryTransport', 'Primary Transport'],
     ['secondaryTransport', 'Secondary Transport'],
@@ -57,7 +53,17 @@ router.post('/', body({ multipart: true }), catchValidationError(), async ctx =>
   ]
 
   const trip = await ctx.db.sequelize.transaction(async transaction => {
+    const fundingPeriod = await ctx.db.FundingPeriod.findOne({
+      attributes: ['id'],
+      where: { period: { [Op.contains]: requestFields.startDate } }
+    })
+    const createTripFields = {
+      ...pick(requestFields, assignableTripFields),
+      submitterNetId: ctx.session.netid,
+      FundingPeriodId: fundingPeriod && fundingPeriod.id
+    }
     const trip = await ctx.db.Trip.create(createTripFields, { transaction })
+
     const createCostFields = costFormTableFieldPairs
       .map(([formField, tableField]) => ({
         expenseCategory: tableField,
@@ -66,6 +72,7 @@ router.post('/', body({ multipart: true }), catchValidationError(), async ctx =>
       }))
     await Promise.all(createCostFields.map(fields =>
       ctx.db.Cost.create(fields, { transaction })))
+
     return trip
   })
 
