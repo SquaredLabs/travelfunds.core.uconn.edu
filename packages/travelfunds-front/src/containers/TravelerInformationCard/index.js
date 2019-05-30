@@ -29,7 +29,7 @@ class extends React.Component {
   render () {
     const { FormState, ValidationState } = this.props
 
-    const validNetID = !ValidationState.traveler.errors.netid && FormState.traveler.netid !== ''
+    const validNetID = !ValidationState.traveler.errors.netid && FormState.traveler.netid.length === 8
 
     return <div className={styles.container}>
       <div className={styles.identityFields}>
