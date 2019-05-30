@@ -27,18 +27,18 @@ const formSteps = [
     component: ContactInformationCard
   },
   {
-    title: lang.formSteps.traveler,
-    shortName: 'traveler',
-    completed: () => ValidationState.traveler.passes,
-    hasErrors: () => ValidationState.traveler.hasErrors,
-    component: TravelerInformationCard
-  },
-  {
     title: lang.formSteps.travelDetails,
     shortName: 'travelDetails',
     completed: () => ValidationState.travelDetails.passes,
     hasErrors: () => ValidationState.travelDetails.hasErrors,
     component: TravelDetailsCard
+  },
+  {
+    title: lang.formSteps.traveler,
+    shortName: 'traveler',
+    completed: () => ValidationState.traveler.passes,
+    hasErrors: () => ValidationState.traveler.hasErrors,
+    component: TravelerInformationCard
   },
   {
     title: lang.formSteps.travelCosts,

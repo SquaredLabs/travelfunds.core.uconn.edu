@@ -1,8 +1,8 @@
 export default {
   formSteps: {
     contact: 'Contact Information',
-    traveler: 'Traveler Information',
     travelDetails: 'Travel Details',
+    traveler: 'Traveler Information',
     travelCosts: 'Travel Costs'
   },
 
