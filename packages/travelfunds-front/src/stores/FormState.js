@@ -8,6 +8,8 @@ import lang from 'lang/en_US'
 class FormState {
   @observable currentFormIndex = 0
   @observable submittedSuccessfully = false
+  @observable successfullyLoadedFundingPeriods = false
+  @observable failedToLoadFundingPeriods = false
 
   @observable.shallow traveler = {
     netid: '',

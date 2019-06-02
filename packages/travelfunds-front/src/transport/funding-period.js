@@ -4,8 +4,12 @@ export const getAll = () =>
   get('/api/funding-periods')
     .then(x => x.json())
 
-export const getActive = () =>
-  get('/api/funding-periods/active')
+export const getOpen = () =>
+  get('/api/funding-periods/open')
+    .then(x => x.json())
+
+export const getUpcoming = () =>
+  get('/api/funding-periods/upcoming')
     .then(x => x.json())
 
 export const update = fundingPeriod =>

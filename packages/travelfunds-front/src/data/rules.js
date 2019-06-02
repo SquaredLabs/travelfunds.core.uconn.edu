@@ -1,4 +1,6 @@
 import Validator from 'validatorjs'
+import FundingPeriodStore from 'stores/FundingPeriodStore'
+import { inDateRange } from 'utils'
 import { titles, participationLevels, primaryMethodsOfTravel } from 'config'
 
 // https://stackoverflow.com/questions/4149276/javascript-camelcase-to-regular-form
@@ -16,6 +18,14 @@ Validator.register(
   'traveler_must_be_a_junior_faculty_if_senior_funds_are_used',
   value => (!window.closedForSeniors || value >= (new Date()).getFullYear() - 8),
   'Your year of terminal degree indicates that you are a senior faculty member. All funds for senior faculty have been allocated for the current fiscal year. If you believe this is a mistake, please email phyllis.horvith@uconn.edu'
+)
+
+Validator.register(
+  'open_funding_period',
+  value => FundingPeriodStore.openFundingPeriods
+    .map(fundingPeriod => fundingPeriod.open)
+    .some(open => inDateRange(open, value)),
+  `Travel requests with this date aren't being accepted at this moment.`
 )
 
 export const rules = {
@@ -38,7 +48,7 @@ export const rules = {
   },
 
   travelDetails: {
-    startDate: 'required|date',
+    startDate: 'required|date|open_funding_period',
     endDate: 'required|date|after_or_equal:startDate',
     eventTitle: 'required|string',
     destination: 'required|string',

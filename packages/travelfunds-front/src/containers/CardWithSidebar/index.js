@@ -46,22 +46,27 @@ class Sidebar extends React.Component {
   }
 }
 
-@inject('TransportState') @observer
+@inject('FormState', 'TransportState') @observer
 class ProgressOverlay extends React.Component {
   render () {
-    const { TransportState: { isSendingTravelRequest } } = this.props
+    const {
+      TransportState: { isSendingTravelRequest },
+      FormState: { successfullyLoadedFundingPeriods }
+    } = this.props
+
+    const show = isSendingTravelRequest || !successfullyLoadedFundingPeriods
 
     return (
       <CSSTransitionGroup
         className={cn(
           styles.progressOverlayContainer,
-          { [styles.progressActive]: isSendingTravelRequest }
+          { [styles.progressActive]: show }
         )}
         transitionName='progressOverlay'
         transitionEnterTimeout={100}
         transitionLeaveTimeout={100}
       >
-        { isSendingTravelRequest && (<div className={styles.progressOverlay}>
+        { show && (<div className={styles.progressOverlay}>
           <CircularProgress />
         </div>) }
       </CSSTransitionGroup>

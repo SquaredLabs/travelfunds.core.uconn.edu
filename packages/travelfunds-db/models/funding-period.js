@@ -1,3 +1,6 @@
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
+
 module.exports = (sequelize, DataTypes) => {
   const FundingPeriod = sequelize.define('FundingPeriod', {
     name: {
@@ -22,6 +25,16 @@ module.exports = (sequelize, DataTypes) => {
       // at the moment so we can't define it here. See the "add-funding-period"
       // migration for how it gets added.
     }
+  })
+
+  FundingPeriod.addScope('open', {
+    where: { open: { [Op.contains]: Sequelize.literal('current_date') } },
+    order: [['open', 'asc']]
+  })
+
+  FundingPeriod.addScope('upcoming', {
+    where: Sequelize.literal(`lower(open) > current_date`),
+    order: [['open', 'asc']]
   })
 
   FundingPeriod.associate = models => {

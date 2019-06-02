@@ -6,6 +6,7 @@ import Select from 'components/FormControlSelect'
 import MenuItem from '@material-ui/core/MenuItem'
 import { DatePicker } from '@material-ui/pickers'
 
+import ActiveFundingPeriods from 'containers/ActiveFundingPeriods'
 import SmartInput from 'containers/SmartInput'
 import BackNextButtons from 'containers/BackNextButtons'
 import { participationLevels, primaryMethodsOfTravel } from 'config'
@@ -18,6 +19,7 @@ class extends React.Component {
   render () {
     const { FormState } = this.props
     return <div className={styles.container}>
+      <ActiveFundingPeriods />
       <SmartInput
         component={DatePicker}
         label='Beginning Date'

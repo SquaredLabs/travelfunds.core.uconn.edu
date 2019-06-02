@@ -22,8 +22,12 @@ router.get('/', async ctx => {
   })
 })
 
-router.get('/active', async ctx => {
-  ctx.body = await ctx.db.FundingPeriod.findAll()
+router.get('/open', async ctx => {
+  ctx.body = await ctx.db.FundingPeriod.scope('open').findAll()
+})
+
+router.get('/upcoming', async ctx => {
+  ctx.body = await ctx.db.FundingPeriod.scope('upcoming').findAll()
 })
 
 router.put('/:id([0-9]+)', body(), async ctx => {

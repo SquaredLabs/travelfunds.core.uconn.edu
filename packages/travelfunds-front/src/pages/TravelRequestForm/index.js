@@ -5,6 +5,10 @@ import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import StepButton from '@material-ui/core/StepButton'
 import Icon from '@material-ui/core/Icon'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 import ContactInformationCard from 'containers/ContactInformationCard'
 import TravelerInformationCard from 'containers/TravelerInformationCard'
@@ -71,8 +75,22 @@ class FormSteps extends React.Component {
 }
 
 export default
-@inject('FormState') @observer
+@inject('FormState', 'FundingPeriodStore') @observer
 class extends React.Component {
+  async componentDidMount () {
+    const { FormState, FundingPeriodStore } = this.props
+    try {
+      await Promise.all([
+        FundingPeriodStore.fetchOpen(),
+        FundingPeriodStore.fetchUpcoming()
+      ])
+      FormState.successfullyLoadedFundingPeriods = true
+    } catch (err) {
+      FormState.failedToLoadFundingPeriods = true
+      throw err
+    }
+  }
+
   renderStepperContent (stepIndex) {
     const Component = formSteps[stepIndex].component
     return <Component />
@@ -82,6 +100,14 @@ class extends React.Component {
     const { FormState } = this.props
 
     return <div className={styles.container}>
+      <Dialog open={FormState.failedToLoadFundingPeriods}>
+        <DialogTitle>Error</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            There was an error loading neccessary information for this form. Please refresh the page and try again later.
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
       <BackendErrors />
       <CardWithSidebar className={styles.card}>
         <FormSteps />

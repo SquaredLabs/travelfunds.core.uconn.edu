@@ -1,21 +1,39 @@
 import { observable, action, computed } from 'mobx'
 import { groupBy } from 'lodash'
-import { getAll, update as updateFundingPeriod } from 'transport/funding-period'
+import { getAll, getOpen, getUpcoming, update as updateFundingPeriod } from 'transport/funding-period'
 import { update as updateBudgetAllocation } from 'transport/budget-allocation'
 
 class FundingPeriodStore {
-  @observable fetching = false
+  @observable fetches = 0
   @observable fundingPeriods = []
+  @observable openFundingPeriods = []
+  @observable upcomingFundingPeriods = []
+
+  @action async fetchGeneric (transportFn) {
+    this.fetches++
+    try {
+      var json = await transportFn()
+    } finally {
+      this.fetches--
+    }
+    return json.sort((a, b) =>
+      a.period[0].value < b.period[0].value ? -1 : 1)
+  }
 
   @action async fetch () {
-    this.fetching = true
-    try {
-      var json = await getAll()
-    } finally {
-      this.fetching = false
-    }
-    this.fundingPeriods = json
-      .sort((a, b) => a.period[0].value < b.period[0].value ? -1 : 1)
+    this.fundingPeriods = await this.fetchGeneric(getAll)
+  }
+
+  @action async fetchOpen () {
+    this.openFundingPeriods = await this.fetchGeneric(getOpen)
+  }
+
+  @action async fetchUpcoming () {
+    this.upcomingFundingPeriods = await this.fetchGeneric(getUpcoming)
+  }
+
+  @computed get fetching () {
+    return this.fetches.length === 0
   }
 
   @action async update (id) {
