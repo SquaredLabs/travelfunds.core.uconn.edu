@@ -9,6 +9,7 @@
     "lint": "standard && (cd packages/travelfunds-front && npm run lint)"
   },
   "devDependencies": {
+    "babel-jest": "^24.8.0",
     "jest": "^24.7.1",
     "lerna": "^3.13.3",
     "nodemon": "^1.18.11",

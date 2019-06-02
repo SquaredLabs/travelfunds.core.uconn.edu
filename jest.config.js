@@ -9,6 +9,10 @@ module.exports = {
       displayName: 'travelfunds-db',
       rootDir: 'packages/travelfunds-db',
       testEnvironment: 'node'
+    },
+    {
+      displayName: 'travelfunds-front',
+      rootDir: 'packages/travelfunds-front'
     }
   ]
 }
