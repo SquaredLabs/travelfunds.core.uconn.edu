@@ -59,7 +59,7 @@ class TripStore {
   }
 
   @computed get sortedTrips () {
-    return this.trips.sort((a, b) => {
+    return this.trips.slice().sort((a, b) => {
       let aVal = get(a, this.sortProperty)
       let bVal = get(b, this.sortProperty)
       if (typeof aVal === 'string') aVal = aVal.toLowerCase()
