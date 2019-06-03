@@ -26,6 +26,25 @@ steps:
       SMTP_HOST: mail
       SMTP_PORT: 1025
 
+  - name: backup
+    image: instrumentisto/rsync-ssh
+    environment:
+      SSH_KEY:
+        from_secret: ssh_key
+      KNOWN_HOSTS:
+        from_secret: known_Hosts
+    when:
+      branch:
+        - master
+    commands:
+      - mkdir ~/.ssh
+      - echo "$SSH_KEY" > ~/.ssh/id_ed25519
+      - chmod 600 ~/.ssh/id_ed25519
+      - echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - project="travel-funds"
+      - stamp=$(date +"%Y-%m-%d @ %H:%M")
+      - 'ssh drone@travelfunds.core.uconn.edu pg_dump --clean --no-owner travelfunds | ssh borg@s3.core.uconn.edu "borg create --compression lz4 -v --stats \"$project::$stamp.sql\" -"'
+
 services:
   - name: database
     image: postgres:11.2-alpine
