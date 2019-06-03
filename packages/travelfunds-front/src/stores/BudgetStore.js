@@ -14,7 +14,7 @@ class BudgetStore {
       this.fetching = false
     }
     this.budgets = json
-      .sort((a, b) => a.id < b.id ? 1 : -1)
+      .sort((a, b) => a.id < b.id ? -1 : 1)
   }
 
   @action async update (id) {
