@@ -11,9 +11,11 @@ class ActiveFundingPeriods extends React.Component {
     const { FundingPeriodStore } = this.props
 
     return <div className={styles.container}>
-      <p>Submissions are open for trips that fall in the following funding periods.</p>
+      {FundingPeriodStore.openFundingPeriods.length > 0 &&
+        <p>Submissions are open for trips that fall in the following funding periods.</p>}
       <FundingPeriodList fundingPeriods={FundingPeriodStore.openFundingPeriods} />
-      <p>You may submit funding requests for the following after the corresponding open dates.</p>
+      {FundingPeriodStore.upcomingFundingPeriods.length > 0 &&
+        <p>You may submit funding requests for the following after the corresponding open dates.</p>}
       <FundingPeriodList fundingPeriods={FundingPeriodStore.upcomingFundingPeriods} />
     </div>
   }
