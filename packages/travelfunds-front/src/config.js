@@ -45,3 +45,5 @@ export const primaryMethodsOfTravel = [
   'Personal Car',
   'Train'
 ]
+
+export const guidelinesUrl = 'https://ovpr.uconn.edu/services/research-development/faculty-travel'
