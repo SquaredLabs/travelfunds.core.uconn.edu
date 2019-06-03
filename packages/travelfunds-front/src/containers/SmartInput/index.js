@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField'
 import MaterialAutosuggest from 'components/MaterialAutosuggest'
 import { DatePicker } from '@material-ui/pickers'
 
-import lang from 'lang/en_US.js'
+import lang from 'lang/en_US'
 
 /*
  * There's a lot of similarities between all of our inputs. They include:

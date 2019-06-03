@@ -1,4 +1,5 @@
-import { guidelinesUrl } from '../config'
+import { guidelinesUrl } from '../consts'
+
 export default {
   formSteps: {
     contact: 'Contact Information',
