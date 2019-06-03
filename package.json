@@ -11,7 +11,7 @@
   "devDependencies": {
     "babel-jest": "^24.8.0",
     "jest": "^24.7.1",
-    "lerna": "^3.13.3",
+    "lerna": "^3.14.1",
     "nodemon": "^1.18.11",
     "pg": "^7.10.0",
     "pg-hstore": "^2.3.2",
