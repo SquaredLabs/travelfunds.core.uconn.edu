@@ -12,6 +12,7 @@ import TripStore from 'stores/TripStore'
 import EmailLogStore from 'stores/EmailLogStore'
 import FundingPeriodStore from 'stores/FundingPeriodStore'
 import BudgetStore from 'stores/BudgetStore'
+import FiscalYearStore from 'stores/FiscalYearStore'
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
@@ -51,7 +52,8 @@ const stores = {
   TripStore,
   EmailLogStore,
   FundingPeriodStore,
-  BudgetStore
+  BudgetStore,
+  FiscalYearStore
 }
 
 const App = () =>

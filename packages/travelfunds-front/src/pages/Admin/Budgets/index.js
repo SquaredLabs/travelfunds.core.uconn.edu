@@ -1,25 +1,24 @@
 import React from 'react'
-import { observable } from 'mobx'
-import { observer } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import Paper from '@material-ui/core/Paper'
 import { Link } from 'react-router-dom'
-import { getAll } from 'transport/fiscal-year'
+import CreateNewFiscalYearForm from 'components/CreateNewFiscalYearForm'
 
 import styles from './styles.scss'
 
 export default
+@inject('FiscalYearStore')
 @observer
 class Budgets extends React.Component {
-  @observable fiscalYears = []
-
-  async componentDidMount () {
-    this.fiscalYears = await getAll()
+  componentDidMount () {
+    this.props.FiscalYearStore.fetch()
   }
 
   render () {
+    const { FiscalYearStore } = this.props
     return <div className={styles.container}>
-      {this.fiscalYears.map(year =>
+      {FiscalYearStore.fiscalYears.map(year =>
         <ButtonBase focusRipple key={year} className={styles.fiscalYearButton}>
           <Link to={`/admin/budgets/${year}`}>
             <Paper className={styles.fiscalYearPaper}>
@@ -27,6 +26,7 @@ class Budgets extends React.Component {
             </Paper>
           </Link>
         </ButtonBase>)}
+      <CreateNewFiscalYearForm />
     </div>
   }
 }
