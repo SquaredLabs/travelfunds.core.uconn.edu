@@ -40,11 +40,9 @@ class FundingPeriodCard extends React.Component {
             label='Name'
             value={fundingPeriod.name}
             onChange={ev => { fundingPeriod.name = ev.target.value }}
+            variant='filled'
           />
-          <TextField
-            label='Fiscal Year'
-            value={fundingPeriod.fiscalYear}
-          />
+          <br />
           <DatePicker
             label='Start Date'
             value={parseISO(fundingPeriod.period[0].value)}
