@@ -51,7 +51,7 @@
     "standard": "^12.0.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --mode=development",
+    "start": "webpack-dev-server --host 0.0.0.0 --mode=development",
     "build": "webpack --mode=production",
     "clean": "rm -rf public/build",
     "lint": "standard",
