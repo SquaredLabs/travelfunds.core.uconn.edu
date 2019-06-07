@@ -25,6 +25,7 @@ module.exports = {
     hot: true,
     contentBase: path.join(__dirname, frontendRoot),
     historyApiFallback: true,
+    public: 'travelfunds.core.vm',
     proxy: {
       '/api': backendUrl,
       '/login': backendUrl,

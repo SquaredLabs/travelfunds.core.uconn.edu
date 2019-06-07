@@ -5,8 +5,8 @@
 ## Setup
 
 ```sh
-$ npm install
-$ npx lerna bootstrap
+npm install
+npx lerna bootstrap
 ```
 
 ## Development
@@ -17,3 +17,7 @@ npm run dev:frontend
 ```
 
 Setting up MailHog is highly recommended for local email delivery testing: https://github.com/mailhog/MailHog
+
+## CAS in development
+
+You can set the `CAS_DEV_USER` in `.env` to your NetID to automatically have your account logged in without needing to use the CAS system.
