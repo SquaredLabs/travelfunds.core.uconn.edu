@@ -197,13 +197,20 @@ module.exports = (sequelize, DataTypes) => {
   Trip.fullExport = async function () {
     // We have to build a dynamic query since the number of returned columns
     // depends on how many budgets we have.
-    const budgets = await sequelize.models.Budget.findAll({
-      attributes: ['id', 'name'],
-      include: {
-        model: sequelize.models.FundingPeriod,
-        attributes: ['fiscalYear', 'name']
-      }
+    const budgetAllocations = await sequelize.models.BudgetAllocation.findAll({
+      attributes: ['id', 'BudgetId'],
+      include: [
+          {
+            model: sequelize.models.FundingPeriod,
+            attributes: ['fiscalYear', 'name']
+          },
+          {
+            model: sequelize.models.Budget,
+            attributes: ['name']
+          },
+      ]
     })
+
     const exportStatement = /* @sql */`
       SELECT
           "Trips".id as "ID",
@@ -223,9 +230,9 @@ module.exports = (sequelize, DataTypes) => {
           "Trips"."yearOfTerminalDegree" as "yearOfTerminalDegree",
           sum("Costs".amount) as "Requested",
           sum("Grants".amount) as "Granted"
-          ${budgets.map(() => `,
+          ${budgetAllocations.map(() => `,
             sum(
-                CASE WHEN "Grants"."BudgetId" = ?
+                CASE WHEN "Grants"."BudgetAllocationId" = ?
                 THEN "Grants".amount
                 ELSE 0
                 END
@@ -242,8 +249,8 @@ module.exports = (sequelize, DataTypes) => {
 
     const res = await sequelize.query(exportStatement, {
       model: Trip,
-      replacements: budgets
-        .map(x => [x.id, `${x.name} ${x.FundingPeriod.name}`])
+      replacements: budgetAllocations
+        .map(x => [x.id, `${x.Budget.name} ${x.FundingPeriod.name}`])
         .reduce((acc, el) => [...acc, ...el], [])
     })
 
