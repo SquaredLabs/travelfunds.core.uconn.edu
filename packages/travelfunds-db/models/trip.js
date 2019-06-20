@@ -224,6 +224,8 @@ module.exports = (sequelize, DataTypes) => {
           "Trips"."participationLevel" as "Participation Level",
           "Trips"."startDate" as "Travel Start Date",
           "Trips"."endDate" as "Travel End Date",
+          "Trips"."eventTitle" as "Event Title",
+          "Trips"."destination" as "Event Location",
           "Trips"."createdAt" as "Submitted",
           max("Grants"."updatedAt") as "Award Date",
           "Trips"."contactEmail" as "Contact Email",
