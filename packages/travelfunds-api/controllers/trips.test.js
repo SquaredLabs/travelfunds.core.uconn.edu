@@ -137,3 +137,13 @@ test('ensure Trip FundingPeriodId is NULL if there are no matching periods', asy
   const tripRecord = await getTripFromResponse(response)
   expect(tripRecord).toHaveProperty('FundingPeriodId', null)
 })
+
+test('ensure export works with a single valid trip in the DB', async () => {
+  const body = createForm(validTrip)
+  await expect(fetch('/trips', { method: 'POST', body }))
+    .resolves.toHaveProperty('status', 201)
+  expect(db.Trip.count()).resolves.toBe(1)
+
+  const data = await db.Trip.fullExport()
+  expect(data).not.toBeNull()
+})
