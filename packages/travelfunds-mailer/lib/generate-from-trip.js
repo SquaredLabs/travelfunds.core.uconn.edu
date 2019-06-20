@@ -34,6 +34,7 @@ const generate = async trip =>
   render(trip.status.toLowerCase(), {
     ...trip.dataValues,
     subject: getSubjectFromTrip(trip),
+    fullId: await trip.getFullId(),
     createdAt: format(trip.createdAt, 'MMMM Do YYYY, h:mm a'),
     updatedAt: format(trip.updatedAt, 'MMMM Do YYYY, h:mm a'),
     duration: [trip.startDate, trip.endDate]

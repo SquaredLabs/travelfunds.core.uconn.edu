@@ -86,6 +86,11 @@ module.exports = (sequelize, DataTypes) => {
     return fundingPeriod && fundingPeriod.fiscalYear
   }
 
+  Trip.prototype.getFullId = async function () {
+    const fiscalYear = await this.getFiscalYear()
+    return 'FY' + (fiscalYear % 100) + '-' + this.get('id')
+  }
+
   Trip.prototype.getBudgetAllocations = async function () {
     // When a trip is moved to a different funding period (which has different
     // budgets, it retains the grants from the previous budgets. In these
