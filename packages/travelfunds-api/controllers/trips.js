@@ -81,8 +81,8 @@ router.post('/', body({ multipart: true }), catchValidationError(), async ctx =>
 
   // This is an async function, but we're not going to wait for it to finish
   // before returning an HTTP response.
-  if (process.env.NODE_ENV != 'test') {
-      mailer.send(trip)
+  if (process.env.NODE_ENV !== 'test') {
+    mailer.send(trip)
   } else {
     // However, if we don't wait here when running tests, they will fail.
     // I'd like to remove this hack if I can find a better way

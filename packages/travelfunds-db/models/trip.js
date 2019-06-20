@@ -200,14 +200,14 @@ module.exports = (sequelize, DataTypes) => {
     const budgetAllocations = await sequelize.models.BudgetAllocation.findAll({
       attributes: ['id', 'BudgetId'],
       include: [
-          {
-            model: sequelize.models.FundingPeriod,
-            attributes: ['fiscalYear', 'name']
-          },
-          {
-            model: sequelize.models.Budget,
-            attributes: ['name']
-          },
+        {
+          model: sequelize.models.FundingPeriod,
+          attributes: ['fiscalYear', 'name']
+        },
+        {
+          model: sequelize.models.Budget,
+          attributes: ['name']
+        }
       ]
     })
 
