@@ -21,3 +21,41 @@ Setting up MailHog is highly recommended for local email delivery testing: https
 ## CAS in development
 
 You can set the `CAS_DEV_USER` in `.env` to your NetID to automatically have your account logged in without needing to use the CAS system.
+
+## Deploying to production
+
+Change to deployment directory
+
+```
+cd /var/www/travelfunds.core.uconn.edu
+```
+
+Pull changes
+
+```
+git pull
+```
+
+bootstrap lerna
+
+```
+npx lerna bootstrap
+```
+
+Run build
+
+```
+npm run build
+```
+
+Migrate DB
+
+```
+NODE_ENV=production npx sequelize db:migrate
+```
+
+Reload pm2
+
+```
+pm2 reload travelfunds
+```
