@@ -6,7 +6,9 @@
     "dev:backend": "NODE_ENV=development DEBUG=koa* nodemon packages/travelfunds -i packages/travelfunds-front",
     "dev:frontend": "cd packages/travelfunds-front && npm start",
     "test": "jest",
-    "lint": "standard && (cd packages/travelfunds-front && npm run lint)"
+    "test:detectOpenHandles": "jest --detectOpenHandles",
+    "lint": "standard && (cd packages/travelfunds-front && npm run lint)",
+    "lint:fix": "standard --fix && (cd packages/travelfunds-front && npm run lint --fix)"
   },
   "devDependencies": {
     "babel-jest": "^24.8.0",
