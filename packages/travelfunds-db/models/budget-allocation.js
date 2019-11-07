@@ -84,16 +84,24 @@ module.exports = (sequelize, DataTypes) => {
       SELECT
         COALESCE(SUM("Grants".amount), 0)
       FROM
-        "Grants"
-        JOIN "BudgetAllocations"
-          ON "BudgetAllocations".id = "Grants"."BudgetAllocationId"
+        "Budgets"
+        JOIN "BudgetAllocations" ON "BudgetAllocations"."BudgetId" = "Budgets".id
+        JOIN "Grants" ON "Grants"."BudgetAllocationId" = "BudgetAllocations".id
         JOIN "Costs" ON "Costs".id = "Grants"."CostId"
         JOIN "Trips" ON "Trips".id = "Costs"."TripId"
       WHERE
-        "BudgetAllocations".id = :budgetAllocationId and
+        "Budgets".id = (
+          SELECT "BudgetId"
+          FROM "BudgetAllocations"
+          WHERE id = :budgetAllocationId
+        )
+        AND
         "Trips"."yearOfTerminalDegree" <=
           (extract(year FROM "Trips"."startDate")::int - :yearsUntilSenior)
+      GROUP BY
+        "Budgets".id
     `
+
     const query = /* @sql */`
       SELECT LEAST(
         (${getSeniorAllocationAmountSubquery}) - (${getSeniorGrantsTotal}),
