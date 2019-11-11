@@ -227,7 +227,7 @@ module.exports = (sequelize, DataTypes) => {
           "Trips".title as "Title",
           "Trips".department as "Department",
           "Trips"."participationLevel" as "Participation Level",
-          "Trips"."startDate" as "Travel Start Date",
+          "Trips"."startDate",
           "Trips"."endDate" as "Travel End Date",
           "Trips"."eventTitle" as "Event Title",
           "Trips"."destination" as "Event Location",
@@ -264,6 +264,7 @@ module.exports = (sequelize, DataTypes) => {
     return res.map(trip => ({
       ID: trip.id,
       'Standing': trip.isForSenior ? 'Senior' : 'Junior',
+      'Travel Start Date': trip.startDate,
       ...omit(trip.dataValues, [
         'id',
         'yearOfTerminalDegree'
