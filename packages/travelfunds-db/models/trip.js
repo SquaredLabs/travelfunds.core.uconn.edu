@@ -267,7 +267,8 @@ module.exports = (sequelize, DataTypes) => {
       'Travel Start Date': trip.startDate,
       ...omit(trip.dataValues, [
         'id',
-        'yearOfTerminalDegree'
+        'yearOfTerminalDegree',
+        'startDate'
       ])
     }))
   }
